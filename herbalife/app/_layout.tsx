@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { WishlistProvider } from '../contexts/WishlistContext';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -17,34 +18,44 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <StatusBar style="dark" backgroundColor="#f8f9f5" />
-      <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#7c9885',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: '600',
-          },
-        }}
-      >
-        <Stack.Screen 
-          name="index" 
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="body-zone" 
-          options={{ title: 'Sélection de la zone' }}
-        />
-        <Stack.Screen 
-          name="recommendations" 
-          options={{ title: 'Plantes recommandées' }}
-        />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <WishlistProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <StatusBar style="dark" backgroundColor="#f8f9f5" />
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#7c9885',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: '600',
+            },
+          }}
+        >
+          <Stack.Screen 
+            name="index" 
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen 
+            name="contraindications" 
+            options={{ title: 'Contre-indications' }}
+          />
+          <Stack.Screen 
+            name="body-zone" 
+            options={{ title: 'Sélection de la zone' }}
+          />
+          <Stack.Screen 
+            name="recommendations" 
+            options={{ title: 'Plantes recommandées' }}
+          />
+          <Stack.Screen 
+            name="wishlist" 
+            options={{ title: 'Ma Wishlist 🌿' }}
+          />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </ThemeProvider>
+    </WishlistProvider>
   );
 }
 
