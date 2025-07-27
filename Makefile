@@ -120,7 +120,24 @@ logs-backend: ## Affiche les logs du backend
 # Tunnel et partage
 tunnel: ## Lance Expo avec tunnel pour partage externe
 	@echo "$(GREEN)Démarrage d'Expo avec tunnel...$(NC)"
+	@echo "$(YELLOW)Cela peut prendre quelques minutes pour établir la connexion tunnel...$(NC)"
 	@cd $(FRONTEND_DIR) && npx expo start --tunnel
+
+tunnel-web: ## Lance Expo avec tunnel et ouvre automatiquement le web
+	@echo "$(GREEN)Démarrage d'Expo avec tunnel + web...$(NC)"
+	@cd $(FRONTEND_DIR) && npx expo start --tunnel --web
+
+tunnel-clear: ## Lance Expo avec tunnel en effaçant le cache
+	@echo "$(GREEN)Démarrage d'Expo avec tunnel (cache effacé)...$(NC)"
+	@cd $(FRONTEND_DIR) && npx expo start --tunnel --clear
+
+lan: ## Lance Expo en mode LAN (réseau local uniquement)
+	@echo "$(GREEN)Démarrage d'Expo en mode LAN...$(NC)"
+	@cd $(FRONTEND_DIR) && npx expo start --lan
+
+localhost: ## Lance Expo en mode localhost uniquement
+	@echo "$(GREEN)Démarrage d'Expo en mode localhost...$(NC)"
+	@cd $(FRONTEND_DIR) && npx expo start --localhost
 
 # Commandes de maintenance
 status: ## Affiche le statut du projet
@@ -151,3 +168,5 @@ s: start ## Raccourci pour start
 b: build ## Raccourci pour build
 t: test ## Raccourci pour test
 l: lint ## Raccourci pour lint
+tu: tunnel ## Raccourci pour tunnel
+tuw: tunnel-web ## Raccourci pour tunnel-web

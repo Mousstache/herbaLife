@@ -1,9 +1,14 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useMemo } from 'react';
 import { Plant, Product } from '../data/DataPlant';
+import { useContraindications } from './ContraindicationsContext';
+import { isPlantDangerous } from '../utils/contraindicationChecker';
 
 interface WishlistContextType {
   favorites: Plant[];
   favoriteProducts: Product[];
+  filteredFavorites: Plant[]; // Nouvelles plantes filtrées par contre-indications
+  safeFavorites: Plant[]; // Plantes favorites sans danger
+  dangerousFavorites: Plant[]; // Plantes favorites avec contre-indications
   addToFavorites: (plant: Plant) => void;
   removeFromFavorites: (plantId: string) => void;
   isFavorite: (plantId: string) => boolean;
@@ -12,6 +17,8 @@ interface WishlistContextType {
   removeProductFromFavorites: (productId: string) => void;
   isProductFavorite: (productId: string) => boolean;
   toggleProductFavorite: (product: Product) => void;
+  filterBySafety: boolean;
+  setFilterBySafety: (filter: boolean) => void;
 }
 
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
@@ -19,6 +26,32 @@ const WishlistContext = createContext<WishlistContextType | undefined>(undefined
 export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [favorites, setFavorites] = useState<Plant[]>([]);
   const [favoriteProducts, setFavoriteProducts] = useState<Product[]>([]);
+  const [filterBySafety, setFilterBySafety] = useState<boolean>(false);
+  
+  // Accès aux contre-indications de l'utilisateur
+  const { userContraindications } = useContraindications();
+
+  // Calcul des plantes filtrées par sécurité
+  const { filteredFavorites, safeFavorites, dangerousFavorites } = useMemo(() => {
+    const safe: Plant[] = [];
+    const dangerous: Plant[] = [];
+    
+    favorites.forEach(plant => {
+      if (isPlantDangerous(plant, userContraindications)) {
+        dangerous.push(plant);
+      } else {
+        safe.push(plant);
+      }
+    });
+    
+    const filtered = filterBySafety ? safe : favorites;
+    
+    return {
+      filteredFavorites: filtered,
+      safeFavorites: safe,
+      dangerousFavorites: dangerous
+    };
+  }, [favorites, userContraindications, filterBySafety]);
 
   const addToFavorites = (plant: Plant) => {
     setFavorites(prev => [...prev, plant]);
@@ -72,6 +105,9 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     <WishlistContext.Provider value={{
       favorites,
       favoriteProducts,
+      filteredFavorites,
+      safeFavorites,
+      dangerousFavorites,
       addToFavorites,
       removeFromFavorites,
       isFavorite,
@@ -79,7 +115,9 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       addProductToFavorites,
       removeProductFromFavorites,
       isProductFavorite,
-      toggleProductFavorite
+      toggleProductFavorite,
+      filterBySafety,
+      setFilterBySafety
     }}>
       {children}
     </WishlistContext.Provider>

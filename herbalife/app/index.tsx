@@ -1,93 +1,180 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
 import { responsive } from '../utils/responsive';
-import { useWishlist } from '../contexts/WishlistContext';
+import { firstLaunchService } from '../utils/firstLaunchService';
 
 export default function HomeScreen() {
-  const { favorites, addToFavorites } = useWishlist();
+  const [isLoading, setIsLoading] = useState(true);
+  const [shouldShowWelcome, setShouldShowWelcome] = useState(false);
 
-  // Test pour ajouter une plante fictive
-  const testAddPlant = () => {
-    const testPlant = {
-      id: 'test-plant',
-      name: 'Plante Test',
-      latinName: 'Plantae testis',
-      emoji: '🌿',
-      shortDescription: 'Une plante pour tester',
-      fullDescription: 'Description complète de test',
-      mainBenefits: ['Test 1', 'Test 2'],
-      usage: 'Usage de test',
-      contraindications: 'Aucune pour le test',
-      products: []
-    };
-    console.log('🧪 Test - Ajout d\'une plante de test');
-    addToFavorites(testPlant);
+  useEffect(() => {
+    checkFirstLaunch();
+  }, []);
+
+  const checkFirstLaunch = async () => {
+    try {
+      const isFirst = await firstLaunchService.isFirstLaunch();
+      const onboardingDone = await firstLaunchService.isOnboardingCompleted();
+      
+      console.log('Debug: isFirst =', isFirst);
+      console.log('Debug: onboardingDone =', onboardingDone);
+
+      if (isFirst) {
+        // Première visite -> afficher la page de bienvenue
+        console.log('Debug: Affichage de la page de bienvenue');
+        setShouldShowWelcome(true);
+      } else if (!onboardingDone) {
+        // Pas première visite mais onboarding pas fini -> contre-indications
+        console.log('Debug: Redirection vers contraindications');
+        router.replace('/contraindications');
+        return;
+      } else {
+        // Tout est fait -> directement aux zones du corps
+        console.log('Debug: Redirection vers body-zones');
+        router.replace('/body-zones');
+        return;
+      }
+    } catch (error) {
+      console.error('Erreur lors de la vérification du premier lancement:', error);
+      setShouldShowWelcome(true); // Fallback sur la page de bienvenue
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const handleStartJourney = async () => {
+    try {
+      // Marquer que l'app a été lancée
+      await firstLaunchService.markAsLaunched();
+      // Aller aux contre-indications
+      router.push('/contraindications');
+    } catch (error) {
+      console.error('Erreur lors du démarrage:', error);
+      router.push('/contraindications');
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={[styles.container, styles.loadingContainer]}>
+        <ActivityIndicator size="large" color="#7c9885" />
+        <Text style={styles.loadingText}>
+          Chargement...
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (!shouldShowWelcome) {
+    return null; // Ne rien afficher si on redirige
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
+        {/* En-tête */}
         <View style={styles.header}>
-          <Text style={styles.appName}>PhytoConseil</Text>
+          <Text style={styles.appName}>
+            HerbaLife
+          </Text>
           <View style={styles.leafIcon}>
-            <Text style={styles.leafEmoji}>🌿</Text>
+            <Text style={styles.leafEmoji}>
+              🌿
+            </Text>
           </View>
-          
-          {/* Bouton Wishlist */}
-          <TouchableOpacity 
-            style={styles.wishlistButton}
-            onPress={() => router.push('/wishlist' as any)}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.wishlistIcon}>♥</Text>
-            {favorites.length > 0 && (
-              <View style={styles.wishlistBadge}>
-                <Text style={styles.wishlistBadgeText}>{favorites.length}</Text>
-              </View>
-            )}
-          </TouchableOpacity>
         </View>
 
+        {/* Illustration principale */}
         <View style={styles.illustrationContainer}>
-          <Text style={styles.plantEmoji}>🌱</Text>
+          <Text style={styles.plantEmoji}>
+            🌱
+          </Text>
         </View>
 
+        {/* Texte de bienvenue */}
         <View style={styles.textContainer}>
           <Text style={styles.welcomeText}>
-            Bienvenue dans PhytoConseil, votre guide personnalisé pour découvrir les plantes médicinales adaptées à vos besoins.
+            Bienvenue dans votre guide des plantes médicinales
           </Text>
           <Text style={styles.descriptionText}>
-            Explorez des remèdes naturels basés sur la phytothérapie et l'homéopathie.
+            Découvrez des remèdes naturels personnalisés selon vos besoins et contre-indications.
           </Text>
         </View>
 
+        {/* Bouton principal */}
         <TouchableOpacity
           style={styles.startButton}
-          onPress={() => router.push('/contraindications')}
+          onPress={handleStartJourney}
           activeOpacity={0.8}
         >
-          <Text style={styles.startButtonText}>Commencer</Text>
+          <Text style={styles.startButtonText}>
+            🌿 Commencer mon parcours
+          </Text>
         </TouchableOpacity>
 
-        {/* Bouton de test temporaire */}
+        {/* Bouton debug temporaire */}
         <TouchableOpacity
-          style={[styles.startButton, { backgroundColor: '#dc2626', marginTop: 10 }]}
-          onPress={testAddPlant}
+          style={[styles.startButton, styles.debugButton]}
+          onPress={async () => {
+            try {
+              // Supprimer les clés pour simuler une première visite
+              await firstLaunchService.markAsLaunched();
+              await firstLaunchService.markOnboardingCompleted();
+              console.log('Debug: Stockage reinitialise, rechargez app');
+              alert('Stockage reinitialise, rechargez app');
+            } catch (error) {
+              console.error('Erreur reset:', error);
+            }
+          }}
           activeOpacity={0.8}
         >
-          <Text style={styles.startButtonText}>🧪 Test Wishlist ({favorites.length})</Text>
+          <Text style={[styles.startButtonText, styles.debugButtonText]}>
+            🔄 Reset pour tester (DEBUG)
+          </Text>
         </TouchableOpacity>
 
+        {/* Informations rassurantes */}
+        <View style={styles.featuresContainer}>
+          <View style={styles.feature}>
+            <Text style={styles.featureEmoji}>
+              🛡️
+            </Text>
+            <Text style={styles.featureText}>
+              Prise en compte de vos contre-indications
+            </Text>
+          </View>
+          
+          <View style={styles.feature}>
+            <Text style={styles.featureEmoji}>
+              🎯
+            </Text>
+            <Text style={styles.featureText}>
+              Recommandations personnalisées selon vos symptômes
+            </Text>
+          </View>
+          
+          <View style={styles.feature}>
+            <Text style={styles.featureEmoji}>
+              📚
+            </Text>
+            <Text style={styles.featureText}>
+              Base de données complète de plantes médicinales
+            </Text>
+          </View>
+        </View>
+
+        {/* Footer */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            Conseil personnalisé • Remèdes naturels • Bien-être
+            🌿 HerbaLife - Votre guide des plantes médicinales
           </Text>
         </View>
       </View>
@@ -98,7 +185,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8faf9',
+    backgroundColor: '#f5f7f6',
   },
   content: {
     flex: 1,
@@ -111,37 +198,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     position: 'relative',
-  },
-  wishlistButton: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    backgroundColor: 'rgba(124, 152, 133, 0.1)',
-    borderRadius: 20,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  wishlistIcon: {
-    fontSize: 20,
-    color: '#7c9885',
-  },
-  wishlistBadge: {
-    position: 'absolute',
-    top: -5,
-    right: -5,
-    backgroundColor: '#ff4444',
-    borderRadius: 10,
-    minWidth: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  wishlistBadgeText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
   },
   appName: {
     fontSize: responsive.fontSize.bigTitle,
@@ -201,6 +257,38 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0.5,
   },
+  debugButton: {
+    backgroundColor: '#ff6b6b',
+    marginBottom: responsive.spacing.sm,
+  },
+  debugButtonText: {
+    fontSize: responsive.fontSize.small,
+  },
+  featuresContainer: {
+    alignItems: 'center',
+    marginVertical: responsive.spacing.xl,
+    paddingHorizontal: responsive.spacing.lg,
+  },
+  feature: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: responsive.spacing.md,
+    paddingVertical: responsive.spacing.sm,
+    paddingHorizontal: responsive.spacing.md,
+    backgroundColor: 'rgba(124, 152, 133, 0.1)',
+    borderRadius: responsive.borderRadius.medium,
+    minWidth: '90%',
+  },
+  featureEmoji: {
+    fontSize: responsive.fontSize.title,
+    marginRight: responsive.spacing.md,
+  },
+  featureText: {
+    fontSize: responsive.fontSize.medium,
+    color: '#2d5738',
+    fontWeight: '500',
+    flex: 1,
+  },
   footer: {
     alignItems: 'center',
     paddingBottom: responsive.spacing.xl,
@@ -210,5 +298,15 @@ const styles = StyleSheet.create({
     color: '#7c9885',
     fontWeight: '500',
     letterSpacing: 0.3,
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: responsive.fontSize.medium,
+    color: '#7c9885',
+    marginTop: responsive.spacing.md,
+    fontWeight: '500',
   },
 });

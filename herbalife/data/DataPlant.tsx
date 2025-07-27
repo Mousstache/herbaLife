@@ -1,3 +1,366 @@
+// Types pour les zones corporelles avec navigation par symptômes
+export interface BodyZone {
+  id: string;
+  name: string;
+  emoji: string;
+  description: string;
+  functions: string;
+  symptoms: string[];
+  color: string;
+}
+
+// Zones corporelles avec leurs symptômes associés pour la navigation
+export const bodyZones: BodyZone[] = [
+  {
+    id: 'nerveux-mental',
+    name: 'Système nerveux',
+    emoji: '🧠',
+    description: 'Cerveau, nerfs, stress, fatigue mentale',
+    functions: 'cerveau, nerfs, stress, fatigue mentale',
+    color: '#8B5CF6',
+    symptoms: [
+      'Fatigue chronique',
+      'Troubles du sommeil',
+      'Stress',
+      'Anxiété',
+      'Troubles de la mémoire',
+      'Maux de tête',
+      'Vertiges',
+      'Irritabilité',
+      'Brouillard mental'
+    ]
+  },
+  {
+    id: 'cardiovasculaire',
+    name: 'Système cardiovasculaire',
+    emoji: '❤️',
+    description: 'Cœur, circulation, tension',
+    functions: 'cœur, circulation, tension',
+    color: '#EF4444',
+    symptoms: [
+      'Hypertension',
+      'Hypotension',
+      'Palpitations',
+      'Jambes lourdes',
+      'Varices',
+      'Œdèmes',
+      'Tachycardie',
+      'Sensation d\'oppression'
+    ]
+  },
+  {
+    id: 'respiratoire',
+    name: 'Système respiratoire',
+    emoji: '🫁',
+    description: 'Poumons, gorge, voies respiratoires',
+    functions: 'poumons, gorge, voies respiratoires',
+    color: '#06B6D4',
+    symptoms: [
+      'Rhume',
+      'Sinusite',
+      'Bronchite',
+      'Toux sèche',
+      'Toux grasse',
+      'Allergies respiratoires',
+      'Gorge irritée',
+      'Enrouement',
+      'Essoufflement'
+    ]
+  },
+  {
+    id: 'digestif',
+    name: 'Système digestif',
+    emoji: '🍽️',
+    description: 'Estomac, intestins, foie',
+    functions: 'estomac, intestins, foie',
+    color: '#F59E0B',
+    symptoms: [
+      'Ballonnements',
+      'Gaz',
+      'Constipation',
+      'Diarrhée',
+      'Reflux acide',
+      'Nausées',
+      'Foie engorgé',
+      'Mauvaise haleine',
+      'Ulcère débutant'
+    ]
+  },
+  {
+    id: 'immunitaire',
+    name: 'Système immunitaire',
+    emoji: '🛡️',
+    description: 'Défense naturelle, résistance',
+    functions: 'défense naturelle, résistance',
+    color: '#10B981',
+    symptoms: [
+      'Infections fréquentes',
+      'Infections ORL',
+      'Fatigue post-infectieuse',
+      'Ganglions enflés',
+      'Inflammation chronique',
+      'Baisse d\'immunité',
+      'Réaction saisonnière'
+    ]
+  },
+  {
+    id: 'musculo-squelettique',
+    name: 'Articulations & muscles',
+    emoji: '🦴',
+    description: 'Mobilité, douleurs, tension physique',
+    functions: 'mobilité, douleurs, tension physique',
+    color: '#8B5A2B',
+    symptoms: [
+      'Douleurs articulaires',
+      'Crampes musculaires',
+      'Rhumatismes',
+      'Fibromyalgie',
+      'Raideur matinale',
+      'Douleurs dorsales',
+      'Tensions cervicales'
+    ]
+  },
+  {
+    id: 'peau-cheveux-ongles',
+    name: 'Peau, cheveux & ongles',
+    emoji: '🧴',
+    description: 'Peau, cuir chevelu, ongles',
+    functions: 'peau, cuir chevelu, ongles',
+    color: '#EC4899',
+    symptoms: [
+      'Acné',
+      'Eczéma',
+      'Psoriasis',
+      'Peau sèche',
+      'Chute de cheveux',
+      'Ongles cassants',
+      'Teint terne',
+      'Transpiration excessive'
+    ]
+  },
+  {
+    id: 'hormonal-reproducteur',
+    name: 'Système hormonal & reproducteur',
+    emoji: '🔁',
+    description: 'Cycle féminin, libido, hormones',
+    functions: 'cycle féminin, libido, hormones',
+    color: '#F472B6',
+    symptoms: [
+      'SPM',
+      'Bouffées de chaleur',
+      'Règles douloureuses',
+      'Libido faible',
+      'Fatigue hormonale',
+      'Ovulation douloureuse',
+      'Sécheresse vaginale'
+    ]
+  },
+  {
+    id: 'urinaire-detox',
+    name: 'Système urinaire & détox',
+    emoji: '💧',
+    description: 'Reins, vessie, élimination',
+    functions: 'reins, vessie, élimination',
+    color: '#3B82F6',
+    symptoms: [
+      'Infections urinaires',
+      'Difficulté à uriner',
+      'Rétention d\'eau',
+      'Urines foncées',
+      'Transpiration odorante',
+      'Surcharge hépatique',
+      'Calculs rénaux'
+    ]
+  },
+  {
+    id: 'yeux-vision',
+    name: 'Yeux & vision',
+    emoji: '👁️',
+    description: 'Fatigue visuelle, vision nocturne, yeux secs',
+    functions: 'fatigue visuelle, vision nocturne, yeux secs',
+    color: '#6366F1',
+    symptoms: [
+      'Fatigue oculaire',
+      'Sécheresse des yeux',
+      'Vision floue temporaire',
+      'Sensibilité à la lumière'
+    ]
+  }
+];
+
+// Structure des symptômes par système corporel
+export interface SymptomCategory {
+  id: string;
+  name: string;
+  emoji: string;
+  symptoms: string[];
+}
+
+export const symptomCategories: SymptomCategory[] = [
+  {
+    id: 'nervous_mental',
+    name: 'Système nerveux & mental',
+    emoji: '🧠',
+    symptoms: [
+      'Fatigue chronique',
+      'Troubles du sommeil / insomnie',
+      'Stress',
+      'Anxiété',
+      'Irritabilité',
+      'Nervosité',
+      'Troubles de la mémoire',
+      'Difficulté de concentration',
+      'Maux de tête',
+      'Migraines',
+      'Vertiges',
+      'Burn-out',
+      'Dépression légère',
+      'Tics nerveux',
+      'Spasmes musculaires liés au stress',
+      'Hypersensibilité sensorielle',
+      'Brouillard mental ("brouillard cérébral")',
+      'Confusion passagère'
+    ]
+  },
+  {
+    id: 'cardiovascular',
+    name: 'Système cardiovasculaire & circulation',
+    emoji: '❤️',
+    symptoms: [
+      'Hypertension',
+      'Hypotension',
+      'Palpitations',
+      'Jambes lourdes',
+      'Varices',
+      'Œdèmes',
+      'Circulation périphérique faible (mains/pieds froids)',
+      'Tachycardie légère',
+      'Sensation d\'oppression thoracique (non cardiaque)'
+    ]
+  },
+  {
+    id: 'respiratory',
+    name: 'Système respiratoire',
+    emoji: '🫁',
+    symptoms: [
+      'Toux sèche',
+      'Toux grasse',
+      'Rhume',
+      'Rhinite allergique',
+      'Sinusite',
+      'Bronchite',
+      'Asthme léger',
+      'Essoufflement',
+      'Enrouement',
+      'Sécheresse des muqueuses',
+      'Gorge irritée'
+    ]
+  },
+  {
+    id: 'digestive',
+    name: 'Système digestif',
+    emoji: '🍽️',
+    symptoms: [
+      'Ballonnements',
+      'Gaz intestinaux',
+      'Constipation',
+      'Diarrhée',
+      'Digestion lente',
+      'Nausées',
+      'Reflux acide',
+      'Crampes intestinales',
+      'Perte d\'appétit',
+      'Foie engorgé',
+      'Mauvaise haleine (halitose)',
+      'Sensation de lourdeur après repas',
+      'Ulcère débutant',
+      'Bouche pâteuse au réveil'
+    ]
+  },
+  {
+    id: 'immune',
+    name: 'Système immunitaire',
+    emoji: '🦠',
+    symptoms: [
+      'Infections fréquentes',
+      'Fatigue post-infectieuse',
+      'Faible immunité générale',
+      'Infections ORL récurrentes',
+      'Inflammation chronique',
+      'Ganglions légèrement enflés',
+      'Sensibilité aux changements de saison',
+      'Fatigue après vaccination ou virus'
+    ]
+  },
+  {
+    id: 'musculoskeletal',
+    name: 'Articulations & muscles',
+    emoji: '💀',
+    symptoms: [
+      'Douleurs articulaires',
+      'Rhumatismes',
+      'Arthrose',
+      'Raideurs musculaires',
+      'Douleurs lombaires',
+      'Crampes nocturnes',
+      'Fibromyalgie / douleurs diffuses',
+      'Raideur matinale',
+      'Tensions cervicales'
+    ]
+  },
+  {
+    id: 'skin_hair_nails',
+    name: 'Peau, ongles & cheveux',
+    emoji: '🔬',
+    symptoms: [
+      'Acné',
+      'Peau sèche',
+      'Eczéma',
+      'Psoriasis',
+      'Démangeaisons cutanées',
+      'Irritation du cuir chevelu',
+      'Pellicules',
+      'Cheveux ternes',
+      'Chute de cheveux',
+      'Ongles cassants',
+      'Teint terne',
+      'Transpiration excessive',
+      'Transpiration malodorante inhabituelle'
+    ]
+  },
+  {
+    id: 'hormonal_reproductive',
+    name: 'Système hormonal & reproducteur',
+    emoji: '🔁',
+    symptoms: [
+      'SPM (syndrome prémenstruel)',
+      'Règles douloureuses',
+      'Règles irrégulières',
+      'Bouffées de chaleur',
+      'Sécheresse vaginale',
+      'Libido basse',
+      'Fatigue hormonale',
+      'Ovulation douloureuse',
+      'Érection faible (stress/fatigue)'
+    ]
+  },
+  {
+    id: 'urinary_detox',
+    name: 'Système urinaire & détox',
+    emoji: '🧽',
+    symptoms: [
+      'Rétention d\'eau',
+      'Besoin fréquent d\'uriner',
+      'Infections urinaires',
+      'Difficulté à uriner',
+      'Urines foncées (hors déshydratation)',
+      'Transpiration odorante liée au foie',
+      'Calculs rénaux',
+      'Surcharge hépatique'
+    ]
+  }
+];
+
 export interface Product {
   id?: string;
   name: string;
@@ -17,7 +380,51 @@ export interface Plant {
   usage: string;
   contraindications: string;
   products: Product[];
+  targetedSymptoms?: string[]; // Symptômes que cette plante peut traiter
+  systemsTargeted?: string[]; // IDs des systèmes corporels ciblés
 }
+
+// Fonction utilitaire pour rechercher des plantes par symptômes
+export const findPlantsBySymptoms = (symptoms: string[]): Plant[] => {
+  const allPlants = Object.values(plantsData).flat();
+  
+  return allPlants.filter(plant => {
+    if (!plant.targetedSymptoms) return false;
+    
+    // Retourne true si la plante traite au moins un des symptômes recherchés
+    return symptoms.some(symptom => 
+      plant.targetedSymptoms!.some(targetSymptom => 
+        targetSymptom.toLowerCase().includes(symptom.toLowerCase()) ||
+        symptom.toLowerCase().includes(targetSymptom.toLowerCase())
+      )
+    );
+  });
+};
+
+// Fonction pour obtenir les plantes par système corporel
+export const getPlantsBySystem = (systemId: string): Plant[] => {
+  const allPlants = Object.values(plantsData).flat();
+  
+  return allPlants.filter(plant => 
+    plant.systemsTargeted?.includes(systemId)
+  );
+};
+
+// Fonction pour obtenir les plantes par zone corporelle
+export const getPlantsByBodyZone = (zoneId: string): Plant[] => {
+  const allPlants = Object.values(plantsData).flat();
+  
+  return allPlants.filter(plant => 
+    plant.systemsTargeted?.includes(zoneId)
+  );
+};
+
+// Fonction pour obtenir tous les symptômes disponibles
+export const getAllSymptoms = (): string[] => {
+  return symptomCategories.reduce((acc, category) => {
+    return [...acc, ...category.symptoms];
+  }, [] as string[]);
+};
 
 export const plantsData: { [key: string]: Plant[] } = {
   tete: [
@@ -36,6 +443,15 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Prendre 120-240mg d\'extrait standardisé par jour, de préférence pendant les repas. Cure de 2-3 mois recommandée.',
       contraindications: 'Déconseillé aux personnes sous anticoagulants. Éviter avant une intervention chirurgicale.',
+      targetedSymptoms: [
+        'Troubles de la mémoire',
+        'Difficulté de concentration',
+        'Vertiges',
+        'Brouillard mental ("brouillard cérébral")',
+        'Confusion passagère',
+        'Circulation périphérique faible (mains/pieds froids)'
+      ],
+      systemsTargeted: ['nervous_mental', 'cardiovascular'],
       products: [
         {
           id: 'ginkgo-capsules',
@@ -68,6 +484,17 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Prendre 200-400mg d\'extrait standardisé le matin à jeun. Éviter la prise le soir.',
       contraindications: 'Déconseillé aux femmes enceintes et allaitantes. Éviter en cas de troubles bipolaires.',
+      targetedSymptoms: [
+        'Fatigue chronique',
+        'Stress',
+        'Anxiété',
+        'Burn-out',
+        'Fatigue post-infectieuse',
+        'Irritabilité',
+        'Nervosité',
+        'Difficulté de concentration'
+      ],
+      systemsTargeted: ['nervous_mental', 'immune'],
       products: [
         {
           id: 'rhodiola-premium',
@@ -93,6 +520,15 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1 cuillère à café de feuilles séchées dans 250ml d\'eau bouillante, 2-3 fois par jour.',
       contraindications: 'Éviter les doses élevées chez la femme enceinte. Déconseillé en cas d\'hypertension sévère.',
+      targetedSymptoms: [
+        'Troubles de la mémoire',
+        'Difficulté de concentration',
+        'Fatigue chronique',
+        'Brouillard mental ("brouillard cérébral")',
+        'Circulation périphérique faible (mains/pieds froids)',
+        'Hypotension'
+      ],
+      systemsTargeted: ['nervous_mental', 'cardiovascular'],
       products: [
         {
           id: 'romarin-tisane-bio',
@@ -166,6 +602,19 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1-2 cuillères à café de sommités fleuries dans 250ml d\'eau chaude, 2-3 fois par jour.',
       contraindications: 'Nombreuses interactions médicamenteuses. Photosensibilisant. Consulter un professionnel de santé.',
+      targetedSymptoms: [
+        'dépression légère à modérée',
+        'baisse de moral',
+        'tristesse saisonnière',
+        'fatigue mentale',
+        'troubles de l\'humeur',
+        'irritabilité',
+        'manque de motivation',
+        'pessimisme',
+        'burn-out',
+        'troubles du sommeil liés au stress'
+      ],
+      systemsTargeted: ['nervous_mental'],
       products: [
         {
           name: 'Millepertuis Bio - Sommités',
@@ -262,6 +711,18 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1 cuillère à café de fleurs séchées dans 250ml d\'eau chaude, le soir.',
       contraindications: 'Éviter en cas d\'allergie aux Lamiacées. Prudence pendant la grossesse.',
+      targetedSymptoms: [
+        'anxiété',
+        'stress',
+        'maux de tête',
+        'tension nerveuse',
+        'troubles du sommeil',
+        'nervosité',
+        'agitation',
+        'spasmes musculaires',
+        'migraines de tension'
+      ],
+      systemsTargeted: ['nerveux-mental'],
       products: [
         {
           name: 'Lavande Vraie Bio - Fleurs',
@@ -336,6 +797,18 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1 cuillère à café de thym séché dans 250ml d\'eau bouillante, 3 fois par jour. Ou en inhalation.',
       contraindications: 'Éviter les doses élevées chez la femme enceinte. Peut irriter les muqueuses sensibles.',
+      targetedSymptoms: [
+        'infections fréquentes',
+        'toux grasse',
+        'bronchite',
+        'nez bouché',
+        'rhume',
+        'gorge irritée',
+        'mal de gorge',
+        'infections respiratoires',
+        'expectoration difficile'
+      ],
+      systemsTargeted: ['respiratoire', 'immunitaire'],
       products: [
         {
           name: 'Thym Bio - Tisane',
@@ -486,6 +959,18 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1 cuillère à café de feuilles séchées dans 250ml d\'eau chaude, 2-3 fois par jour. Inhalation possible.',
       contraindications: 'Éviter chez les enfants de moins de 6 ans. Prudence en cas d\'asthme.',
+      targetedSymptoms: [
+        'toux sèche',
+        'toux grasse',
+        'bronchite',
+        'rhume',
+        'sinusite',
+        'mal de gorge',
+        'enrouement',
+        'essoufflement',
+        'congestion respiratoire'
+      ],
+      systemsTargeted: ['respiratoire'],
       products: [
         {
           name: 'Eucalyptus Bio - Feuilles',
@@ -638,6 +1123,73 @@ export const plantsData: { [key: string]: Plant[] } = {
           composition: 'Feuilles d\'Origanum vulgare bio 100%'
         }
       ]
+    },
+    {
+      id: 'tussilage',
+      name: 'Tussilage',
+      latinName: 'Tussilago farfara',
+      emoji: '🌼',
+      shortDescription: 'Fleurs dorées pour la toux grasse et l\'expectoration.',
+      fullDescription: 'Plante précoce aux fleurs jaune d\'or qui apparaissent avant les feuilles, le tussilage pousse sur les terrains humides et argileux. Traditionnellement appelé "pas-d\'âne" en raison de la forme de ses grandes feuilles, il est réputé pour ses propriétés expectorantes exceptionnelles. Ses fleurs riches en mucilages facilitent l\'évacuation des sécrétions bronchiques.',
+      mainBenefits: [
+        'Expectorant puissant pour toux grasse',
+        'Facilite l\'évacuation des mucosités',
+        'Apaise l\'inflammation bronchique',
+        'Adoucit les voies respiratoires'
+      ],
+      usage: 'Infusion : 1 cuillère à soupe de fleurs dans 250ml d\'eau chaude, 3-4 fois par jour.',
+      contraindications: 'Usage à court terme recommandé (max 6 semaines/an). Éviter pendant la grossesse.',
+      targetedSymptoms: [
+        'toux grasse',
+        'expectoration difficile',
+        'bronchite',
+        'encombrement bronchique',
+        'mucosités épaisses',
+        'inflammation des voies respiratoires'
+      ],
+      systemsTargeted: ['respiratory'],
+      products: [
+        {
+          name: 'Tussilage Bio - Fleurs',
+          price: '18,90€',
+          description: 'Fleurs de tussilage bio pour toux grasse',
+          composition: 'Fleurs de Tussilago farfara bio 100%'
+        }
+      ]
+    },
+    {
+      id: 'ronce_feuilles',
+      name: 'Ronce (Feuilles)',
+      latinName: 'Rubus fruticosus',
+      emoji: '🍃',
+      shortDescription: 'Feuilles astringentes pour la gorge et les diarrhées.',
+      fullDescription: 'Arbuste épineux des haies et lisières, la ronce développe ses tiges arquées et ses feuilles riches en tanins. Traditionnellement utilisées pour leurs propriétés astringentes, les feuilles de ronce resserrent les muqueuses et apaisent les inflammations. Particulièrement efficaces pour les maux de gorge et les troubles digestifs.',
+      mainBenefits: [
+        'Astringent pour la gorge',
+        'Apaise les inflammations buccales',
+        'Resserre les muqueuses',
+        'Anti-diarrhéique naturel'
+      ],
+      usage: 'Gargarisme : décoction de 2 cuillères à soupe de feuilles dans 250ml d\'eau, bouillir 10 min.',
+      contraindications: 'Aucune contre-indication majeure connue.',
+      targetedSymptoms: [
+        'maux de gorge',
+        'angine',
+        'pharyngite',
+        'aphtes',
+        'gingivite',
+        'diarrhée',
+        'intestin irritable'
+      ],
+      systemsTargeted: ['respiratory', 'digestive'],
+      products: [
+        {
+          name: 'Ronce Bio - Feuilles',
+          price: '12,90€',
+          description: 'Feuilles de ronce bio pour gargarisme et tisane',
+          composition: 'Feuilles de Rubus fruticosus bio 100%'
+        }
+      ]
     }
   ],
   ventre: [
@@ -656,6 +1208,18 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1 cuillère à soupe de feuilles dans 250ml d\'eau chaude, après les repas. Ou 1-2 gouttes d\'huile essentielle sur un sucre.',
       contraindications: 'Éviter chez les enfants de moins de 3 ans. Déconseillé en cas de reflux gastro-œsophagien sévère.',
+      targetedSymptoms: [
+        'ballonnements',
+        'maux de tête',
+        'nausées',
+        'halitose',
+        'spasmes digestifs',
+        'digestion lente',
+        'mauvaise haleine',
+        'nez bouché',
+        'sinusite'
+      ],
+      systemsTargeted: ['digestif', 'nerveux-mental', 'respiratoire'],
       products: [
         {
           name: 'Menthe Poivrée Bio',
@@ -686,6 +1250,17 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1 cuillère à café de graines écrasées dans 250ml d\'eau bouillante, après les repas.',
       contraindications: 'Éviter les doses élevées chez la femme enceinte. Déconseillé en cas d\'allergie aux Apiacées.',
+      targetedSymptoms: [
+        'ballonnements',
+        'gaz intestinaux',
+        'spasmes digestifs',
+        'digestion lente',
+        'coliques',
+        'flatulences',
+        'troubles digestifs nerveux',
+        'intestin irritable'
+      ],
+      systemsTargeted: ['digestif'],
       products: [
         {
           name: 'Graines de Fenouil Bio',
@@ -710,6 +1285,18 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1 cuillère à soupe de fleurs dans 250ml d\'eau chaude, 2-3 fois par jour.',
       contraindications: 'Éviter en cas d\'allergie aux Astéracées. Prudence chez les personnes allergiques aux pollens.',
+      targetedSymptoms: [
+        'ballonnements',
+        'douleurs abdominales',
+        'crampes musculaires',
+        'troubles du sommeil',
+        'anxiété',
+        'stress',
+        'inflammations',
+        'irritations cutanées',
+        'douleurs digestives'
+      ],
+      systemsTargeted: ['digestif', 'nerveux-mental', 'peau-cheveux-ongles'],
       products: [
         {
           name: 'Camomille Matricaire Bio',
@@ -1216,6 +1803,19 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Prendre 500-1000mg d\'extrait standardisé par jour avec de la pipérine pour améliorer l\'absorption.',
       contraindications: 'Éviter en cas de calculs biliaires. Déconseillé avant une intervention chirurgicale.',
+      targetedSymptoms: [
+        'douleurs articulaires',
+        'rhumatismes',
+        'arthrose',
+        'tendinites',
+        'inflammation chronique',
+        'raideurs matinales',
+        'douleurs musculaires',
+        'fibromyalgie',
+        'douleurs lombaires',
+        'inflammation digestive'
+      ],
+      systemsTargeted: ['musculoskeletal', 'digestive'],
       products: [
         {
           name: 'Curcuma + Pipérine',
@@ -1336,6 +1936,19 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Décoction : 1 cuillère à café de racine dans 250ml d\'eau, bouillir 15 min.',
       contraindications: 'Éviter en cas d\'ulcères, grossesse, allaitement, calculs biliaires.',
+      targetedSymptoms: [
+        'douleurs articulaires',
+        'arthrose',
+        'rhumatismes',
+        'douleurs lombaires',
+        'sciatique',
+        'tendinites',
+        'raideurs articulaires',
+        'inflammation articulaire',
+        'douleurs musculaires',
+        'douleurs du dos'
+      ],
+      systemsTargeted: ['musculoskeletal'],
       products: [
         {
           name: 'Harpagophyton Bio - Racine',
@@ -1410,6 +2023,17 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1 cuillère à soupe de fleurs et feuilles dans 250ml d\'eau chaude, 2-3 fois par jour.',
       contraindications: 'Interactions possibles avec les médicaments cardiaques. Consulter un professionnel de santé.',
+      targetedSymptoms: [
+        'palpitations',
+        'hypertension',
+        'troubles circulatoires',
+        'sensation d\'oppression',
+        'stress',
+        'anxiété',
+        'troubles du rythme cardiaque',
+        'tension nerveuse'
+      ],
+      systemsTargeted: ['cardiovasculaire', 'nerveux-mental'],
       products: [
         {
           name: 'Aubépine Bio - Sommités',
@@ -1562,6 +2186,76 @@ export const plantsData: { [key: string]: Plant[] } = {
           composition: 'Feuilles d\'Allium ursinum bio 100%'
         }
       ]
+    },
+    {
+      id: 'vigne_rouge',
+      name: 'Vigne Rouge',
+      latinName: 'Vitis vinifera',
+      emoji: '🍇',
+      shortDescription: 'Feuilles pour la circulation veineuse et les jambes lourdes.',
+      fullDescription: 'Cultivée depuis l\'Antiquité, la vigne rouge développe ses feuilles qui rougissent à l\'automne, riches en anthocyanes et flavonoïdes. Traditionnellement utilisées pour leurs propriétés veinotoniques, elles renforcent la paroi des veines et améliorent le retour veineux. Particulièrement efficaces pour soulager les jambes lourdes et les troubles circulatoires.',
+      mainBenefits: [
+        'Améliore la circulation veineuse',
+        'Soulage les jambes lourdes',
+        'Renforce la paroi des veines',
+        'Propriétés antioxydantes'
+      ],
+      usage: 'Infusion : 1 cuillère à soupe de feuilles séchées dans 250ml d\'eau bouillante, 2-3 fois par jour.',
+      contraindications: 'Aucune contre-indication majeure connue. Éviter en cas de traitement anticoagulant.',
+      targetedSymptoms: [
+        'jambes lourdes',
+        'varices',
+        'œdèmes des membres inférieurs',
+        'circulation veineuse défaillante',
+        'sensation de jambes gonflées',
+        'fourmillements dans les jambes',
+        'crampes nocturnes',
+        'hémorroïdes'
+      ],
+      systemsTargeted: ['cardiovascular'],
+      products: [
+        {
+          name: 'Vigne Rouge Bio - Feuilles',
+          price: '14,90€',
+          description: 'Feuilles de vigne rouge bio pour circulation veineuse',
+          composition: 'Feuilles de Vitis vinifera bio 100%'
+        }
+      ]
+    },
+    {
+      id: 'hamamélis',
+      name: 'Hamamélis',
+      latinName: 'Hamamelis virginiana',
+      emoji: '🌿',
+      shortDescription: 'Feuilles astringentes pour les varices et la circulation.',
+      fullDescription: 'Arbuste nord-américain aux fleurs jaunes spectaculaires qui éclosent en hiver, l\'hamamélis développe des feuilles riches en tanins. Reconnu pour ses propriétés astringentes et veinotoniques exceptionnelles, il tonifie les vaisseaux sanguins et soulage les troubles circulatoires. Particulièrement efficace en usage externe pour les varices.',
+      mainBenefits: [
+        'Propriétés astringentes puissantes',
+        'Tonifie les vaisseaux sanguins',
+        'Soulage les varices',
+        'Anti-inflammatoire circulatoire'
+      ],
+      usage: 'Usage externe : compresses avec décoction de feuilles. Interne : infusion 1 cuillère à café dans 250ml d\'eau.',
+      contraindications: 'Usage externe : test cutané recommandé. Éviter l\'usage interne prolongé.',
+      targetedSymptoms: [
+        'varices',
+        'hémorroïdes',
+        'jambes lourdes',
+        'circulation veineuse insuffisante',
+        'fragilité capillaire',
+        'ecchymoses fréquentes',
+        'saignements de nez',
+        'couperose'
+      ],
+      systemsTargeted: ['cardiovascular', 'skin_hair_nails'],
+      products: [
+        {
+          name: 'Hamamélis Bio - Feuilles',
+          price: '16,90€',
+          description: 'Feuilles d\'hamamélis bio pour usage externe et tisane',
+          composition: 'Feuilles d\'Hamamelis virginiana bio 100%'
+        }
+      ]
     }
   ],
   peau: [
@@ -1580,6 +2274,20 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Appliquer le gel pur sur la peau 2-3 fois par jour. Peut être utilisé en masque facial 1-2 fois par semaine.',
       contraindications: 'Éviter l\'ingestion du latex d\'aloe. Test cutané recommandé avant première utilisation.',
+      targetedSymptoms: [
+        'peau sèche',
+        'coups de soleil',
+        'brûlures mineures',
+        'coupures et écorchures',
+        'eczéma',
+        'psoriasis',
+        'acné inflammatoire',
+        'démangeaisons cutanées',
+        'irritations de rasage',
+        'vieillissement cutané',
+        'cicatrices récentes'
+      ],
+      systemsTargeted: ['skin_hair_nails'],
       products: [
         {
           name: 'Gel Aloe Vera Pur',
@@ -1822,6 +2530,19 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Prendre 300-600mg d\'extrait sec 30 minutes avant le coucher. Ou en tisane : 2-3g de racine séchée.',
       contraindications: 'Éviter avec l\'alcool et les sédatifs. Déconseillé aux enfants de moins de 12 ans.',
+      targetedSymptoms: [
+        'troubles du sommeil',
+        'insomnie',
+        'anxiété',
+        'stress chronique',
+        'agitation mentale',
+        'nervosité',
+        'difficultés d\'endormissement',
+        'réveils nocturnes',
+        'tension nerveuse',
+        'spasmes musculaires'
+      ],
+      systemsTargeted: ['nerveux-mental', 'musculo-squelettique'],
       products: [
         {
           name: 'Valériane Bio - Gélules',
@@ -1846,6 +2567,19 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1-2 cuillères à soupe de feuilles fraîches ou séchées dans 250ml d\'eau chaude, le soir.',
       contraindications: 'Aucune contre-indication majeure. Éviter les doses élevées en cas d\'hypothyroïdie.',
+      targetedSymptoms: [
+        'stress chronique',
+        'anxiété',
+        'agitation mentale',
+        'troubles du sommeil',
+        'palpitations',
+        'nervosité',
+        'tension nerveuse',
+        'difficultés d\'endormissement',
+        'spasmes digestifs',
+        'ballonnements'
+      ],
+      systemsTargeted: ['nerveux-mental', 'cardiovasculaire', 'digestif'],
       products: [
         {
           name: 'Mélisse Bio - Tisane',
@@ -1870,6 +2604,18 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1 cuillère à soupe de feuilles dans 250ml d\'eau chaude, 30 minutes avant le coucher.',
       contraindications: 'Aucune contre-indication majeure connue. Usage modéré recommandé.',
+      targetedSymptoms: [
+        'stress chronique',
+        'tension nerveuse',
+        'nervosité',
+        'agitation mentale',
+        'spasmes digestifs',
+        'troubles du sommeil',
+        'anxiété légère',
+        'ballonnements',
+        'difficultés d\'endormissement'
+      ],
+      systemsTargeted: ['nerveux-mental', 'digestif'],
       products: [
         {
           name: 'Verveine Odorante Bio',
@@ -1894,6 +2640,20 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1 cuillère à soupe de parties aériennes dans 250ml d\'eau chaude, 30 minutes avant le coucher.',
       contraindications: 'Éviter pendant la grossesse. Interactions possibles avec les sédatifs.',
+      targetedSymptoms: [
+        'anxiété',
+        'angoisse',
+        'insomnie',
+        'difficultés d\'endormissement',
+        'réveils nocturnes',
+        'agitation',
+        'nervosité',
+        'stress',
+        'palpitations d\'origine nerveuse',
+        'hyperactivité mentale',
+        'ruminations'
+      ],
+      systemsTargeted: ['nervous_mental'],
       products: [
         {
           name: 'Passiflore Bio - Parties Aériennes',
@@ -1948,6 +2708,74 @@ export const plantsData: { [key: string]: Plant[] } = {
           price: '16,90€',
           description: 'Cônes de houblon bio séchés pour tisane du soir',
           composition: 'Cônes de Humulus lupulus bio 100%'
+        }
+      ]
+    },
+    {
+      id: 'coquelicot',
+      name: 'Coquelicot',
+      latinName: 'Papaver rhoeas',
+      emoji: '🌺',
+      shortDescription: 'Pétales doux pour le sommeil des enfants et des personnes sensibles.',
+      fullDescription: 'Fleur des champs aux pétales rouges délicats et soyeux, le coquelicot développe ses corolles éphémères dans les moissons. Particulièrement apprécié pour sa douceur, il convient aux enfants et personnes sensibles pour favoriser un sommeil paisible. Ses pétales contiennent des alcaloïdes doux qui calment sans effets secondaires.',
+      mainBenefits: [
+        'Sédatif doux pour enfants',
+        'Favorise l\'endormissement',
+        'Calme la toux nocturne',
+        'Très bien tolérée'
+      ],
+      usage: 'Infusion : 1 cuillère à soupe de pétales dans 250ml d\'eau chaude, 30 min avant le coucher.',
+      contraindications: 'Aucune connue aux doses recommandées. Convient aux enfants dès 3 ans.',
+      targetedSymptoms: [
+        'insomnie légère',
+        'agitation chez l\'enfant',
+        'toux nocturne',
+        'difficultés d\'endormissement',
+        'nervosité',
+        'surexcitation',
+        'troubles du sommeil légers'
+      ],
+      systemsTargeted: ['nervous_mental', 'respiratory'],
+      products: [
+        {
+          name: 'Coquelicot Bio - Pétales',
+          price: '15,90€',
+          description: 'Pétales de coquelicot bio pour tisane douce du soir',
+          composition: 'Pétales de Papaver rhoeas bio 100%'
+        }
+      ]
+    },
+    {
+      id: 'oranger_fleurs',
+      name: 'Oranger (Fleurs)',
+      latinName: 'Citrus aurantium',
+      emoji: '🌸',
+      shortDescription: 'Fleurs parfumées pour le stress léger et le sommeil des enfants.',
+      fullDescription: 'Arbre méditerranéen aux fleurs blanches intensément parfumées, l\'oranger bigaradier développe ses fleurs de néroli au printemps. Traditionnellement utilisées pour leurs propriétés calmantes douces, elles conviennent particulièrement aux enfants et personnes sensibles. Leur parfum délicat accompagne naturellement la détente et la préparation au sommeil.',
+      mainBenefits: [
+        'Calmant doux et naturel',
+        'Parfait pour les enfants',
+        'Favorise la relaxation',
+        'Parfum agréable et apaisant'
+      ],
+      usage: 'Infusion : 1 cuillère à soupe de fleurs dans 250ml d\'eau chaude, après le repas du soir.',
+      contraindications: 'Aucune contre-indication majeure. Convient aux enfants et femmes enceintes.',
+      targetedSymptoms: [
+        'stress léger',
+        'agitation chez l\'enfant',
+        'nervosité',
+        'difficultés d\'endormissement',
+        'anxiété légère',
+        'surmenage',
+        'troubles du sommeil légers'
+      ],
+      systemsTargeted: ['nervous_mental'],
+      products: [
+        {
+          name: 'Fleurs d\'Oranger Bio',
+          price: '17,90€',
+          description: 'Fleurs d\'oranger bigaradier bio pour tisane relaxante',
+          composition: 'Fleurs de Citrus aurantium bio 100%'
         }
       ]
     }
@@ -2016,6 +2844,19 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Décoction : 1 cuillère à soupe de racines dans 250ml d\'eau, bouillir 15 minutes, 2-3 fois par jour.',
       contraindications: 'Éviter en cas d\'hypertension. Déconseillé pendant la grossesse. Usage modéré.',
+      targetedSymptoms: [
+        'gorge irritée',
+        'toux sèche',
+        'laryngite',
+        'aphtes',
+        'irritations buccales',
+        'ulcères d\'estomac',
+        'gastrite',
+        'brûlures d\'estomac',
+        'inflammation digestive',
+        'stomatite'
+      ],
+      systemsTargeted: ['respiratory', 'digestive'],
       products: [
         {
           name: 'Réglisse Bio - Bâtons',
@@ -2027,6 +2868,41 @@ export const plantsData: { [key: string]: Plant[] } = {
     }
   ],
   immunite: [
+    {
+      id: 'ginseng',
+      name: 'Ginseng',
+      latinName: 'Panax ginseng',
+      emoji: '🏃‍♂️',
+      shortDescription: 'Racine adaptogène pour l\'énergie et la vitalité.',
+      fullDescription: 'Racine millénaire de la médecine traditionnelle asiatique, le ginseng développe ses propriétés adaptogènes uniques au fil de ses années de croissance. Cette plante précieuse, aux feuilles palmées caractéristiques, concentre des ginsénosides qui soutiennent l\'organisme face au stress et à la fatigue. Véritable trésor de vitalité, il accompagne la résistance physique et mentale.',
+      mainBenefits: [
+        'Combat la fatigue chronique',
+        'Améliore la résistance au stress',
+        'Soutient les performances physiques',
+        'Stimule les fonctions cognitives'
+      ],
+      usage: 'Prendre 200-400mg d\'extrait standardisé le matin, en cure de 6-8 semaines maximum.',
+      contraindications: 'Éviter en cas d\'hypertension non contrôlée. Déconseillé chez les enfants et femmes enceintes.',
+      targetedSymptoms: [
+        'fatigue chronique',
+        'baisse de tonus physique',
+        'stress',
+        'libido basse',
+        'troubles de la concentration',
+        'résistance faible aux infections',
+        'convalescence',
+        'épuisement'
+      ],
+      systemsTargeted: ['immunitaire', 'nerveux-mental', 'hormonal-reproducteur'],
+      products: [
+        {
+          name: 'Ginseng Rouge de Corée',
+          price: '35,90€',
+          description: 'Extrait de racine de ginseng rouge standardisé',
+          composition: 'Extrait de Panax ginseng (6% ginsénosides)'
+        }
+      ]
+    },
     {
       id: 'echinacea',
       name: 'Échinacée',
@@ -2042,6 +2918,17 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Prendre 300-500mg d\'extrait standardisé 3 fois par jour en cure de 10 jours maximum.',
       contraindications: 'Éviter en cas de maladies auto-immunes. Déconseillé aux personnes allergiques aux Astéracées.',
+      targetedSymptoms: [
+        'infections fréquentes',
+        'baisse d\'immunité',
+        'rhume',
+        'fatigue post-infectieuse',
+        'convalescence',
+        'allergies saisonnières',
+        'résistance faible',
+        'prévention infectieuse'
+      ],
+      systemsTargeted: ['immunitaire'],
       products: [
         {
           name: 'Échinacée Bio - Extrait',
@@ -2090,6 +2977,19 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 2 cuillères à soupe de feuilles séchées dans 250ml d\'eau bouillante, 2-3 fois par jour.',
       contraindications: 'Aucune contre-indication majeure. Récolter avec des gants pour éviter les piqûres.',
+      targetedSymptoms: [
+        'anémie',
+        'fatigue chronique',
+        'chute de cheveux',
+        'ongles cassants',
+        'règles douloureuses',
+        'saignements de nez',
+        'carences nutritionnelles',
+        'convalescence',
+        'faiblesse immunitaire',
+        'allergies saisonnières'
+      ],
+      systemsTargeted: ['immune', 'reproductive', 'skin_hair_nails'],
       products: [
         {
           name: 'Ortie Bio - Feuilles',
@@ -2138,6 +3038,19 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Infusion : 1 cuillère à soupe de feuilles ou racines séchées dans 250ml d\'eau bouillante, 2-3 fois par jour.',
       contraindications: 'Éviter en cas d\'obstruction des voies biliaires. Prudence en cas de calculs rénaux.',
+      targetedSymptoms: [
+        'rétention d\'eau',
+        'cellulite',
+        'calculs rénaux',
+        'troubles hépatiques',
+        'constipation',
+        'eczéma',
+        'acné',
+        'cholestérol élevé',
+        'surcharge hépatique',
+        'transpiration odorante liée au foie'
+      ],
+      systemsTargeted: ['excretory', 'skin_hair_nails', 'digestive'],
       products: [
         {
           name: 'Pissenlit Bio - Racines et Feuilles',
@@ -2330,6 +3243,19 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Commencer par 1g par jour (1/2 cuillère à café), augmenter progressivement jusqu\'à 3-5g par jour.',
       contraindications: 'Éviter en cas de phénylcétonurie. Prudence en cas de maladies auto-immunes.',
+      targetedSymptoms: [
+        'anémie',
+        'fatigue chronique',
+        'baisse d\'énergie',
+        'carences nutritionnelles',
+        'convalescence',
+        'faible masse musculaire',
+        'fatigue mentale',
+        'difficultés de concentration',
+        'cheveux ternes',
+        'ongles mous'
+      ],
+      systemsTargeted: ['immune', 'nervous_mental', 'skin_hair_nails'],
       products: [
         {
           name: 'Spiruline Bio - Paillettes',
@@ -2354,6 +3280,19 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Commencer par 1g par jour, augmenter progressivement jusqu\'à 3-5g par jour avec beaucoup d\'eau.',
       contraindications: 'Réactions possibles en début de cure (détox). Commencer par de petites doses.',
+      targetedSymptoms: [
+        'intoxication aux métaux lourds',
+        'brouillard mental',
+        'fatigue chronique inexpliquée',
+        'troubles de la digestion',
+        'surcharge hépatique',
+        'mauvaise haleine',
+        'teint terne',
+        'troubles de la concentration',
+        'constipation chronique',
+        'sensibilité chimique multiple'
+      ],
+      systemsTargeted: ['excretory', 'nervous_mental', 'digestive'],
       products: [
         {
           name: 'Chlorella Bio - Poudre',
@@ -2402,6 +3341,19 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Consommer 10-20g par jour (1-2 cuillères à soupe), telles quelles ou réhydratées.',
       contraindications: 'Interactions possibles avec anticoagulants. Modération en cas de diabète.',
+      targetedSymptoms: [
+        'fatigue visuelle',
+        'baisse de la vision',
+        'sécheresse oculaire',
+        'vieillissement prématuré',
+        'stress oxydatif',
+        'fatigue chronique',
+        'baisse d\'immunité',
+        'troubles de la concentration',
+        'perte de vitalité',
+        'récupération après effort'
+      ],
+      systemsTargeted: ['nervous_mental', 'immune', 'ocular'],
       products: [
         {
           name: 'Baies de Goji Bio',
@@ -2834,6 +3786,110 @@ export const plantsData: { [key: string]: Plant[] } = {
       ],
       usage: 'Consommer 1-2g de poudre par jour, de préférence le matin.',
       contraindications: 'Éviter en cas de sensibilité à la caféine. Ne pas prendre le soir.',
+      products: [
+        {
+          name: 'Guarana Bio - Poudre',
+          price: '24,90€',
+          description: 'Poudre de graines de guarana bio d\'Amazonie',
+          composition: 'Graines de Paullinia cupana bio 100%'
+        }
+      ]
+    },
+    {
+      id: 'psyllium',
+      name: 'Psyllium Blond',
+      latinName: 'Plantago ovata',
+      emoji: '🌾',
+      shortDescription: 'Fibres naturelles pour réguler le transit intestinal.',
+      fullDescription: 'Originaire d\'Inde, le psyllium blond développe ses épis floraux riches en graines mucilagineuses. Ces téguments gonflent au contact de l\'eau pour former un gel doux qui régule naturellement le transit. Riche en fibres solubles, il normalise aussi bien la constipation que les selles molles.',
+      mainBenefits: [
+        'Régule le transit intestinal',
+        'Riche en fibres solubles',
+        'Apaise les intestins irrités',
+        'Aide à normaliser les selles'
+      ],
+      usage: 'Mélanger 1-2 cuillères à café dans un grand verre d\'eau, boire immédiatement puis boire un second verre d\'eau.',
+      contraindications: 'Boire beaucoup d\'eau. Éviter en cas d\'obstruction intestinale. Espacer des médicaments.',
+      targetedSymptoms: [
+        'constipation',
+        'intestin paresseux',
+        'syndrome de l\'intestin irritable',
+        'selles molles',
+        'irrégularité du transit',
+        'ballonnements',
+        'cholestérol élevé',
+        'diabète (régulation glycémique)'
+      ],
+      systemsTargeted: ['digestive'],
+      products: [
+        {
+          name: 'Psyllium Blond Bio - Téguments',
+          price: '16,90€',
+          description: 'Téguments de psyllium blond bio, source de fibres',
+          composition: 'Téguments de Plantago ovata bio 100%'
+        }
+      ]
+    },
+    {
+      id: 'fenugrec',
+      name: 'Fénugrec',
+      latinName: 'Trigonella foenum-graecum',
+      emoji: '🌿',
+      shortDescription: 'Graines énergisantes et galactogènes pour la vitalité.',
+      fullDescription: 'Légumineuse méditerranéenne aux graines dorées au parfum caractéristique, le fénugrec concentre des mucilages, saponines et protéines. Traditionnellement utilisé pour stimuler l\'appétit et la lactation, il soutient la prise de poids saine et la vitalité générale.',
+      mainBenefits: [
+        'Stimule l\'appétit naturellement',
+        'Favorise la lactation',
+        'Soutient la prise de poids',
+        'Propriétés énergisantes'
+      ],
+      usage: 'Décoction : 1 cuillère à café de graines dans 250ml d\'eau, bouillir 10 minutes.',
+      contraindications: 'Éviter pendant la grossesse (sauf fin de grossesse). Odeur corporelle possible.',
+      targetedSymptoms: [
+        'perte d\'appétit',
+        'maigreur',
+        'convalescence',
+        'lactation insuffisante',
+        'fatigue',
+        'anémie',
+        'diabète (régulation glycémique)',
+        'cholestérol élevé'
+      ],
+      systemsTargeted: ['digestive', 'reproductive', 'metabolic'],
+      products: [
+        {
+          name: 'Fénugrec Bio - Graines',
+          price: '12,90€',
+          description: 'Graines de fénugrec bio entières',
+          composition: 'Graines de Trigonella foenum-graecum bio 100%'
+        }
+      ]
+    },
+    {
+      id: 'guarana',
+      name: 'Guarana',
+      latinName: 'Paullinia cupana',
+      emoji: '⚡',
+      shortDescription: 'Stimulant naturel d\'Amazonie pour l\'énergie mentale.',
+      fullDescription: 'Liane grimpante d\'Amazonie, le guarana développe ses fruits rouges contenant des graines riches en guaranine (caféine naturelle). Utilisé traditionnellement par les peuples amazoniens, il libère son énergie progressivement, favorisant la concentration et l\'endurance sans les pics et chutes de la caféine classique.',
+      mainBenefits: [
+        'Énergie naturelle progressive',
+        'Améliore la concentration',
+        'Soutient l\'endurance physique',
+        'Antioxydants naturels'
+      ],
+      usage: 'Consommer 1-2g de poudre par jour, de préférence le matin.',
+      contraindications: 'Éviter en cas de sensibilité à la caféine. Ne pas prendre le soir.',
+      targetedSymptoms: [
+        'fatigue matinale',
+        'manque d\'énergie',
+        'difficultés de concentration',
+        'somnolence',
+        'baisse de motivation',
+        'fatigue mentale',
+        'performance physique réduite'
+      ],
+      systemsTargeted: ['nervous_mental', 'metabolic'],
       products: [
         {
           name: 'Guarana Bio - Poudre',

@@ -25,7 +25,7 @@ interface Props {
 
 export default function PlantDetailModal({ plant, visible, onClose }: Props) {
   const translateY = useRef(new Animated.Value(0)).current;
-  const { favoriteProducts, toggleProductFavorite, isProductFavorite } = useWishlist();
+  const { favoriteProducts, toggleProductFavorite, isProductFavorite, isFavorite, toggleFavorite } = useWishlist();
   
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: (evt, gestureState) => {
@@ -100,6 +100,20 @@ export default function PlantDetailModal({ plant, visible, onClose }: Props) {
               <Text style={styles.emoji}>{plant.emoji}</Text>
               <Text style={styles.name}>{plant.name}</Text>
               <Text style={styles.latinName}>{plant.latinName}</Text>
+              
+              {/* Bouton pour ajouter la plante aux favoris */}
+              <TouchableOpacity
+                style={[styles.plantFavoriteButton, isFavorite(plant.id) && styles.plantFavoriteActive]}
+                onPress={() => toggleFavorite(plant)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.plantFavoriteIcon, isFavorite(plant.id) && styles.plantFavoriteIconActive]}>
+                  {isFavorite(plant.id) ? '♥' : '♡'}
+                </Text>
+                <Text style={[styles.plantFavoriteText, isFavorite(plant.id) && styles.plantFavoriteTextActive]}>
+                  {isFavorite(plant.id) ? 'Dans ma wishlist' : 'Ajouter à ma wishlist'}
+                </Text>
+              </TouchableOpacity>
             </View>
 
           <View style={styles.section}>
@@ -453,6 +467,38 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   addToWishlistTextActive: {
+    color: '#fff',
+  },
+  plantFavoriteButton: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(124, 152, 133, 0.1)',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#7c9885',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+    gap: 8,
+  },
+  plantFavoriteActive: {
+    backgroundColor: '#7c9885',
+  },
+  plantFavoriteIcon: {
+    fontSize: 20,
+    color: '#7c9885',
+    fontWeight: 'bold',
+  },
+  plantFavoriteIconActive: {
+    color: '#fff',
+  },
+  plantFavoriteText: {
+    color: '#7c9885',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  plantFavoriteTextActive: {
     color: '#fff',
   },
 });

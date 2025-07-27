@@ -8,7 +8,6 @@ import {
 import { Plant } from '../data/DataPlant';
 import { isPlantDangerous, getDangerLevel } from '../utils/contraindicationChecker';
 import { responsive } from '../utils/responsive';
-import { useWishlist } from '../contexts/WishlistContext';
 
 interface Props {
   plant: Plant;
@@ -17,29 +16,12 @@ interface Props {
 }
 
 export default function PlantCard({ plant, onPress, userContraindications = [] }: Props) {
-  const { isFavorite, toggleFavorite } = useWishlist();
   const dangerLevel = getDangerLevel(plant, userContraindications);
   const isDangerous = dangerLevel === 'dangerous';
   const isWarning = dangerLevel === 'warning';
-  const isPlantFavorite = isFavorite(plant.id);
-
-  const handleFavoritePress = () => {
-    toggleFavorite(plant);
-  };
 
   return (
     <View style={styles.cardWrapper}>
-      {/* Bouton favori au-dessus de tout */}
-      <TouchableOpacity 
-        style={styles.favoriteButton}
-        onPress={handleFavoritePress}
-        activeOpacity={0.7}
-        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-      >
-        <Text style={[styles.favoriteIcon, isPlantFavorite && styles.favoriteIconActive]}>
-          {isPlantFavorite ? '♥' : '♡'}
-        </Text>
-      </TouchableOpacity>
 
       <TouchableOpacity 
         style={[
@@ -275,33 +257,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   dangerousSeeMore: {
-    color: '#dc2626',
-  },
-  favoriteButton: {
-    position: 'absolute',
-    top: responsive.spacing.sm,
-    right: responsive.spacing.sm,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 999,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    elevation: 10,
-    borderWidth: 2,
-    borderColor: '#7c9885',
-  },
-  favoriteIcon: {
-    fontSize: 26,
-    color: '#7c9885',
-    fontWeight: 'bold',
-  },
-  favoriteIconActive: {
     color: '#dc2626',
   },
 });

@@ -27,7 +27,7 @@ export default function BodyZoneScreen() {
 
   const handleZonePress = (zone: string) => {
     router.push({
-      pathname: '/recommendations',
+      pathname: '/body-zone-symptoms' as any,
       params: { 
         zone,
         contraindications: JSON.stringify(userContraindications)
