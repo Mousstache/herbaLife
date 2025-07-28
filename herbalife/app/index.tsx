@@ -25,6 +25,13 @@ export default function HomeScreen() {
 
   const checkFirstLaunch = async () => {
     try {
+      // TEMPORAIRE : Toujours rediriger vers le menu pour tester
+      console.log('Debug: Redirection temporaire vers menu');
+      router.replace('/menu');
+      return;
+      
+      // Code original commenté pour test
+      /*
       const isFirst = await firstLaunchService.isFirstLaunch();
       const onboardingDone = await firstLaunchService.isOnboardingCompleted();
       
@@ -41,11 +48,12 @@ export default function HomeScreen() {
         router.replace('/contraindications');
         return;
       } else {
-        // Tout est fait -> directement aux zones du corps
-        console.log('Debug: Redirection vers body-zones');
-        router.replace('/body-zones');
+        // Tout est fait -> directement au menu
+        console.log('Debug: Redirection vers menu');
+        router.replace('/menu');
         return;
       }
+      */
     } catch (error) {
       console.error('Erreur lors de la vérification du premier lancement:', error);
       setShouldShowWelcome(true); // Fallback sur la page de bienvenue

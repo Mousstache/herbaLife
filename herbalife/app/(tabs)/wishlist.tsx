@@ -7,12 +7,19 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import { router } from 'expo-router';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from './_layout';
 import { useWishlist } from '../../contexts/WishlistContext';
 import PlantCard from '../../components/PlantCard';
 import { responsive } from '../../utils/responsive';
 
-export default function WishlistScreen() {
+type WishlistScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Wishlist'>;
+
+interface Props {
+  navigation: WishlistScreenNavigationProp;
+}
+
+export default function WishlistScreen({ navigation }: Props) {
   const { favorites, toggleFavorite } = useWishlist();
 
   const renderPlantCard = ({ item }: { item: any }) => (
@@ -34,7 +41,7 @@ export default function WishlistScreen() {
       </Text>
       <TouchableOpacity
         style={styles.exploreButton}
-        onPress={() => router.push('/contraindications')}
+        onPress={() => navigation.navigate('Home')}
         activeOpacity={0.8}
       >
         <Text style={styles.exploreButtonText}>Explorer les plantes</Text>
@@ -47,7 +54,7 @@ export default function WishlistScreen() {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.back()}
+          onPress={() => navigation.goBack()}
           activeOpacity={0.7}
         >
           <Text style={styles.backIcon}>←</Text>

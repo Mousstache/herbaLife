@@ -49,14 +49,18 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
+import MenuScreen from './MenuScreen';
 import HomeScreen from './HomeScreen';
 import BodyZoneScreen from './BodyZoneScreen';
 import RecommendationsScreen from './RecommendationScreen';
+import WishlistScreen from './wishlist';
 
 export type RootStackParamList = {
+  Menu: undefined;
   Home: undefined;
   BodyZone: undefined;
   Recommendations: { zone: string };
+  Wishlist: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -66,7 +70,7 @@ export default function App() {
     <NavigationContainer>
       <StatusBar style="dark" backgroundColor="#f8f9f5" />
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="Menu"
         screenOptions={{
           headerStyle: {
             backgroundColor: '#7c9885',
@@ -77,6 +81,11 @@ export default function App() {
           },
         }}
       >
+        <Stack.Screen 
+          name="Menu" 
+          component={MenuScreen} 
+          options={{ headerShown: false }}
+        />
         <Stack.Screen 
           name="Home" 
           component={HomeScreen} 
@@ -91,6 +100,11 @@ export default function App() {
           name="Recommendations" 
           component={RecommendationsScreen}
           options={{ title: 'Plantes recommandées' }}
+        />
+        <Stack.Screen 
+          name="Wishlist" 
+          component={WishlistScreen}
+          options={{ title: 'Ma Wishlist' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

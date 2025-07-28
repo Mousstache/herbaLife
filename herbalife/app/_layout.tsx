@@ -57,6 +57,10 @@ export default function RootLayout() {
             options={{ headerShown: false }}
           />
           <Stack.Screen 
+            name="menu" 
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen 
             name="contraindications" 
             options={{ title: 'Contre-indications' }}
           />
