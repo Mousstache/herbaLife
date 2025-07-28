@@ -14,14 +14,14 @@ Dimensions.addEventListener('change', ({ window }) => {
   screenHeight = window.height;
 });
 
-// Points de rupture standardisés (breakpoints)
+// Points de rupture optimisés pour mobile
 export const BREAKPOINTS = {
-  XS: 320,   // Très petits écrans (iPhone SE)
-  SM: 375,   // Petits écrans (iPhone standard)
-  MD: 414,   // Écrans moyens (iPhone Plus)
-  LG: 768,   // Tablettes
-  XL: 1024,  // Grandes tablettes
-  XXL: 1200  // Très grandes tablettes/Desktop
+  XS: 320,   // Très petits écrans (iPhone SE, anciens Android)
+  SM: 375,   // Petits écrans (iPhone 12 mini, iPhone SE 3)
+  MD: 390,   // Écrans moyens (iPhone 12/13/14 standard)
+  LG: 428,   // Grands écrans mobile (iPhone 14 Plus, Android large)
+  XL: 768,   // Tablettes small
+  XXL: 1024  // Tablettes large
 };
 
 // Catégories d'écrans améliorées
@@ -73,31 +73,31 @@ export const responsive = {
   get height() { return screenHeight; },
   get category() { return getScreenCategory(); },
   
-  // Tailles de police ultra-adaptatives
+  // Tailles de police ultra-adaptatives pour mobile
   fontSize: {
     get xs() { return getResponsiveValue({ xs: 10, sm: 11, md: 12, lg: 13, xl: 14, xxl: 15 }); },
     get small() { return getResponsiveValue({ xs: 12, sm: 13, md: 14, lg: 15, xl: 16, xxl: 17 }); },
     get medium() { return getResponsiveValue({ xs: 14, sm: 15, md: 16, lg: 17, xl: 18, xxl: 20 }); },
-    get large() { return getResponsiveValue({ xs: 16, sm: 18, md: 20, lg: 22, xl: 24, xxl: 26 }); },
-    get title() { return getResponsiveValue({ xs: 20, sm: 24, md: 28, lg: 32, xl: 36, xxl: 40 }); },
-    get bigTitle() { return getResponsiveValue({ xs: 24, sm: 28, md: 32, lg: 36, xl: 42, xxl: 48 }); },
-    get hero() { return getResponsiveValue({ xs: 28, sm: 32, md: 36, lg: 42, xl: 48, xxl: 54 }); }
+    get large() { return getResponsiveValue({ xs: 16, sm: 17, md: 18, lg: 19, xl: 20, xxl: 22 }); },
+    get title() { return getResponsiveValue({ xs: 18, sm: 20, md: 22, lg: 24, xl: 26, xxl: 28 }); },
+    get bigTitle() { return getResponsiveValue({ xs: 20, sm: 22, md: 24, lg: 26, xl: 28, xxl: 32 }); },
+    get hero() { return getResponsiveValue({ xs: 24, sm: 26, md: 28, lg: 30, xl: 34, xxl: 38 }); }
   },
   
-  // Espacements ultra-adaptatifs
+  // Espacements ultra-adaptatifs pour mobile
   spacing: {
-    get xs() { return getResponsiveValue({ xs: 2, sm: 4, md: 4, lg: 6, xl: 8, xxl: 10 }); },
-    get sm() { return getResponsiveValue({ xs: 4, sm: 6, md: 8, lg: 10, xl: 12, xxl: 16 }); },
-    get md() { return getResponsiveValue({ xs: 8, sm: 10, md: 12, lg: 16, xl: 20, xxl: 24 }); },
-    get lg() { return getResponsiveValue({ xs: 12, sm: 16, md: 20, lg: 24, xl: 28, xxl: 32 }); },
-    get xl() { return getResponsiveValue({ xs: 16, sm: 20, md: 24, lg: 28, xl: 32, xxl: 40 }); },
-    get xxl() { return getResponsiveValue({ xs: 20, sm: 24, md: 28, lg: 32, xl: 40, xxl: 48 }); }
+    get xs() { return getResponsiveValue({ xs: 2, sm: 3, md: 4, lg: 4, xl: 6, xxl: 8 }); },
+    get sm() { return getResponsiveValue({ xs: 4, sm: 6, md: 8, lg: 8, xl: 10, xxl: 12 }); },
+    get md() { return getResponsiveValue({ xs: 6, sm: 8, md: 10, lg: 12, xl: 16, xxl: 20 }); },
+    get lg() { return getResponsiveValue({ xs: 8, sm: 12, md: 16, lg: 16, xl: 20, xxl: 24 }); },
+    get xl() { return getResponsiveValue({ xs: 12, sm: 16, md: 20, lg: 20, xl: 24, xxl: 32 }); },
+    get xxl() { return getResponsiveValue({ xs: 16, sm: 20, md: 24, lg: 24, xl: 32, xxl: 40 }); }
   },
   
-  // Padding ultra-adaptatif
+  // Padding ultra-adaptatif pour mobile 
   padding: {
-    get xs() { return getResponsiveValue({ xs: 4, sm: 6, md: 8, lg: 10, xl: 12, xxl: 16 }); },
-    get sm() { return getResponsiveValue({ xs: 8, sm: 10, md: 12, lg: 14, xl: 16, xxl: 20 }); },
+    get xs() { return getResponsiveValue({ xs: 4, sm: 6, md: 6, lg: 8, xl: 10, xxl: 12 }); },
+    get sm() { return getResponsiveValue({ xs: 6, sm: 8, md: 10, lg: 10, xl: 12, xxl: 16 }); },
     get md() { return getResponsiveValue({ xs: 12, sm: 14, md: 16, lg: 18, xl: 20, xxl: 24 }); },
     get lg() { return getResponsiveValue({ xs: 16, sm: 18, md: 20, lg: 22, xl: 24, xxl: 28 }); },
     get xl() { return getResponsiveValue({ xs: 20, sm: 22, md: 24, lg: 26, xl: 28, xxl: 32 }); },

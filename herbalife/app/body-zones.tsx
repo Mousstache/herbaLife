@@ -61,23 +61,39 @@ export default function BodyZonesScreen() {
                 <Text style={styles.mainEmoji}>{zone.emoji}</Text>
               </View>
 
-              {/* Titre de la zone */}
-              <Text style={styles.zoneTitle}>
-                {zone.name}
-              </Text>
-
-              {/* Description */}
-              <Text style={styles.zoneDescription}>
-                {zone.description}
-              </Text>
-
-              {/* Compteur de symptômes */}
-              <View style={styles.symptomCounter}>
-                <Text style={styles.symptomIcon}>💊</Text>
-                <Text style={styles.symptomCountText}>
-                  {zone.symptoms.length} symptômes
-                </Text>
-              </View>
+              {/* Zone de contenu principal adaptatif */}
+              {responsive.width < 428 ? (
+                <View style={styles.mobileContentContainer}>
+                  <View style={styles.mobileHeaderRow}>
+                    <Text style={styles.zoneTitle}>{zone.name}</Text>
+                    <View style={styles.symptomCounter}>
+                      <Text style={styles.symptomIcon}>💊</Text>
+                      <Text style={styles.symptomCountText}>
+                        {zone.symptoms.length}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text style={styles.zoneDescription}>
+                    {zone.description}
+                  </Text>
+                </View>
+              ) : (
+                <>
+                  {/* Layout classique pour tablettes */}
+                  <Text style={styles.zoneTitle}>
+                    {zone.name}
+                  </Text>
+                  <Text style={styles.zoneDescription}>
+                    {zone.description}
+                  </Text>
+                  <View style={styles.symptomCounter}>
+                    <Text style={styles.symptomIcon}>💊</Text>
+                    <Text style={styles.symptomCountText}>
+                      {zone.symptoms.length} symptômes
+                    </Text>
+                  </View>
+                </>
+              )}
 
               {/* Indicateur de navigation */}
               <View style={styles.navigationIndicator}>
@@ -137,11 +153,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingHorizontal: responsive.spacing.lg,
-    paddingTop: responsive.spacing.xl,
-    paddingBottom: responsive.spacing.lg,
+    paddingHorizontal: responsive.spacing.md,
+    paddingTop: responsive.spacing.lg,
+    paddingBottom: responsive.spacing.md,
     backgroundColor: '#ffffff',
-    marginBottom: responsive.spacing.md,
+    marginBottom: responsive.spacing.sm,
     borderBottomLeftRadius: responsive.borderRadius.large,
     borderBottomRightRadius: responsive.borderRadius.large,
     ...responsive.shadow.small,
@@ -173,22 +189,23 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: responsive.spacing.lg,
-    justifyContent: 'space-between',
+    paddingHorizontal: responsive.spacing.md,
+    flexDirection: responsive.width < 428 ? 'column' : 'row',
+    flexWrap: responsive.width < 428 ? 'nowrap' : 'wrap',
+    justifyContent: responsive.width < 428 ? 'flex-start' : 'space-between',
   },
   zoneCard: {
-    width: responsive.width < 600 ? '48%' : '31%',
-    aspectRatio: 1, // Rend le carré parfait
+    width: responsive.width < 428 ? '100%' : '48%', // Une seule colonne sur petits écrans
     backgroundColor: '#ffffff',
     borderRadius: responsive.borderRadius.medium,
     padding: responsive.spacing.md,
     marginBottom: responsive.spacing.md,
-    borderWidth: 2,
+    marginHorizontal: responsive.width < 428 ? 0 : responsive.spacing.xs,
+    borderWidth: 1,
     borderColor: '#e8f0e8',
     position: 'relative',
-    justifyContent: 'center',
+    minHeight: responsive.width < 428 ? 120 : 160, // Hauteur adaptative
+    flexDirection: responsive.width < 428 ? 'row' : 'column',
     alignItems: 'center',
     ...responsive.shadow.medium,
   },
@@ -210,25 +227,31 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
     padding: responsive.spacing.sm,
     borderRadius: responsive.borderRadius.large,
-    marginBottom: responsive.spacing.xs,
+    marginBottom: responsive.width < 428 ? 0 : responsive.spacing.xs,
+    marginRight: responsive.width < 428 ? responsive.spacing.md : 0,
+    width: responsive.width < 428 ? 60 : 'auto',
+    height: responsive.width < 428 ? 60 : 'auto',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   mainEmoji: {
-    fontSize: responsive.fontSize.title + 4,
+    fontSize: responsive.width < 428 ? responsive.fontSize.title : responsive.fontSize.title + 4,
     textAlign: 'center',
   },
   zoneTitle: {
-    fontSize: responsive.fontSize.medium,
+    fontSize: responsive.width < 428 ? responsive.fontSize.medium : responsive.fontSize.medium,
     fontWeight: 'bold',
     color: '#2d5738',
-    textAlign: 'center',
-    marginBottom: responsive.spacing.xs,
+    textAlign: responsive.width < 428 ? 'left' : 'center',
+    marginBottom: responsive.width < 428 ? 0 : responsive.spacing.xs,
+    flex: responsive.width < 428 ? 1 : 0,
   },
   zoneDescription: {
     fontSize: responsive.fontSize.small,
     color: '#6b7c68',
-    textAlign: 'center',
+    textAlign: responsive.width < 428 ? 'left' : 'center',
     lineHeight: responsive.fontSize.small * 1.2,
-    marginBottom: responsive.spacing.xs,
+    marginBottom: responsive.width < 428 ? 0 : responsive.spacing.xs,
   },
   symptomCounter: {
     flexDirection: 'row',
@@ -237,7 +260,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: responsive.spacing.sm,
     paddingVertical: 2,
     borderRadius: responsive.borderRadius.small,
-    marginBottom: responsive.spacing.xs,
+    marginBottom: responsive.width < 428 ? 0 : responsive.spacing.xs,
+    alignSelf: responsive.width < 428 ? 'flex-start' : 'center',
   },
   symptomIcon: {
     fontSize: responsive.fontSize.small,
@@ -265,8 +289,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   infoContainer: {
-    paddingHorizontal: responsive.spacing.lg,
-    marginVertical: responsive.spacing.lg,
+    paddingHorizontal: responsive.spacing.md,
+    marginVertical: responsive.spacing.md,
   },
   infoCard: {
     backgroundColor: '#e8f4f8',
@@ -288,7 +312,7 @@ const styles = StyleSheet.create({
     lineHeight: responsive.fontSize.small * 1.4,
   },
   shortcutsContainer: {
-    paddingHorizontal: responsive.spacing.lg,
+    paddingHorizontal: responsive.spacing.md,
     marginBottom: responsive.spacing.lg,
   },
   shortcutsTitle: {
@@ -298,16 +322,17 @@ const styles = StyleSheet.create({
     marginBottom: responsive.spacing.md,
   },
   shortcutsGrid: {
-    flexDirection: 'row',
+    flexDirection: responsive.width < 428 ? 'column' : 'row',
     justifyContent: 'space-between',
+    gap: responsive.width < 428 ? responsive.spacing.sm : 0,
   },
   shortcutButton: {
-    flex: 1,
+    flex: responsive.width < 428 ? 0 : 1,
     backgroundColor: '#ffffff',
     borderRadius: responsive.borderRadius.medium,
     padding: responsive.spacing.md,
     alignItems: 'center',
-    marginHorizontal: responsive.spacing.xs,
+    marginHorizontal: responsive.width < 428 ? 0 : responsive.spacing.xs,
     borderWidth: 2,
     borderColor: '#e8f0e8',
     ...responsive.shadow.small,
@@ -324,5 +349,15 @@ const styles = StyleSheet.create({
   },
   bottomSpacer: {
     height: responsive.spacing.xl,
+  },
+  mobileContentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  mobileHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: responsive.spacing.xs,
   },
 });

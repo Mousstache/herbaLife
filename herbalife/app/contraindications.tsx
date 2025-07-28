@@ -13,6 +13,7 @@ import { router } from 'expo-router';
 import { responsive } from '../utils/responsive';
 import { useContraindications } from '../contexts/ContraindicationsContext';
 import { firstLaunchService } from '../utils/firstLaunchService';
+import { useMobileResponsive } from '../hooks/useMobileResponsive';
 
 interface Contraindication {
   id: string;
@@ -99,6 +100,7 @@ export default function ContraindicationsScreen() {
   const [selectedContraindications, setSelectedContraindications] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { userContraindications, saveContraindications, clearContraindications } = useContraindications();
+  const mobile = useMobileResponsive();
 
   useEffect(() => {
     if (!isLoading) {
@@ -152,6 +154,256 @@ export default function ContraindicationsScreen() {
     }
   };
 
+  // Fonction pour créer des styles dynamiques basés sur la taille d'écran
+  const createStyles = () => StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#f8faf9',
+    },
+    scrollView: {
+      flex: 1,
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: mobile.contentPadding,
+    },
+    loadingText: {
+      marginTop: mobile.safeSpacing,
+      fontSize: mobile.bodySize,
+      color: '#7c9885',
+      textAlign: 'center',
+      fontWeight: '500',
+    },
+    
+    // Header Section
+    header: {
+      paddingHorizontal: mobile.contentPadding,
+      paddingTop: mobile.safeSpacing * 1.5,
+      paddingBottom: mobile.safeSpacing,
+      backgroundColor: '#ffffff',
+      marginBottom: mobile.safeSpacing,
+      borderBottomLeftRadius: mobile.isMobile ? 16 : 20,
+      borderBottomRightRadius: mobile.isMobile ? 16 : 20,
+      ...responsive.shadow.small,
+    },
+    title: {
+      fontSize: mobile.titleSize,
+      fontWeight: 'bold',
+      color: '#2d5738',
+      textAlign: 'center',
+      marginBottom: mobile.safeSpacing / 2,
+    },
+    subtitle: {
+      fontSize: mobile.bodySize,
+      color: '#5a6b5d',
+      textAlign: 'center',
+      lineHeight: mobile.bodySize * 1.4,
+      marginBottom: mobile.safeSpacing,
+    },
+    progressIndicator: {
+      backgroundColor: 'rgba(124, 152, 133, 0.1)',
+      paddingHorizontal: mobile.safeSpacing,
+      paddingVertical: mobile.safeSpacing / 2,
+      borderRadius: mobile.isMobile ? 12 : 16,
+      alignSelf: 'center',
+    },
+    progressText: {
+      fontSize: mobile.bodySize - 2,
+      color: '#7c9885',
+      fontWeight: '600',
+    },
+
+    // Grid Container
+    gridContainer: {
+      paddingHorizontal: mobile.contentPadding,
+      flexDirection: mobile.isMobile ? 'column' : 'row',
+      flexWrap: mobile.isMobile ? 'nowrap' : 'wrap',
+      justifyContent: mobile.isMobile ? 'flex-start' : 'space-between',
+      gap: mobile.safeSpacing,
+    },
+
+    // Card Styles
+    contraindicationCard: {
+      width: mobile.isMobile ? '100%' : '48%',
+      backgroundColor: '#ffffff',
+      borderRadius: mobile.isMobile ? 12 : 16,
+      padding: mobile.safeSpacing,
+      marginBottom: mobile.isMobile ? mobile.safeSpacing : 0,
+      borderWidth: 2,
+      borderColor: '#e8f0e8',
+      position: 'relative',
+      minHeight: mobile.isMobile ? 100 : 140,
+      flexDirection: mobile.isMobile ? 'row' : 'column',
+      alignItems: mobile.isMobile ? 'center' : 'center',
+      ...responsive.shadow.medium,
+    },
+    selectedCard: {
+      borderColor: '#7c9885',
+      backgroundColor: '#f0f8f0',
+    },
+
+    // Badge Styles
+    categoryBadge: {
+      position: 'absolute',
+      top: mobile.safeSpacing / 2,
+      right: mobile.safeSpacing / 2,
+      backgroundColor: '#f0f0f0',
+      paddingHorizontal: mobile.safeSpacing / 2,
+      paddingVertical: 2,
+      borderRadius: mobile.isMobile ? 8 : 10,
+    },
+    selectedCategoryBadge: {
+      backgroundColor: '#7c9885',
+    },
+    categoryText: {
+      fontSize: mobile.bodySize - 4,
+      color: '#666666',
+      fontWeight: '600',
+    },
+    selectedCategoryText: {
+      color: '#ffffff',
+    },
+
+    // Emoji Container
+    emojiContainer: {
+      backgroundColor: '#f8f9fa',
+      padding: mobile.safeSpacing / 2,
+      borderRadius: mobile.isMobile ? 12 : 16,
+      marginBottom: mobile.isMobile ? 0 : mobile.safeSpacing / 2,
+      marginRight: mobile.isMobile ? mobile.safeSpacing : 0,
+      width: mobile.isMobile ? 60 : 'auto',
+      height: mobile.isMobile ? 60 : 'auto',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    mainEmoji: {
+      fontSize: mobile.isMobile ? mobile.iconSize : mobile.iconSize + 4,
+      textAlign: 'center',
+    },
+
+    // Mobile Content Layout
+    mobileContentContainer: {
+      flex: 1,
+      justifyContent: 'center',
+    },
+    mobileHeaderRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: mobile.safeSpacing / 3,
+    },
+
+    // Text Styles
+    contraindicationTitle: {
+      fontSize: mobile.isMobile ? mobile.bodySize : mobile.bodySize + 1,
+      fontWeight: 'bold',
+      color: '#2d5738',
+      textAlign: mobile.isMobile ? 'left' : 'center',
+      marginBottom: mobile.isMobile ? 0 : mobile.safeSpacing / 3,
+      flex: mobile.isMobile ? 1 : 0,
+    },
+    contraindicationDescription: {
+      fontSize: mobile.bodySize - 2,
+      color: '#6b7c68',
+      textAlign: mobile.isMobile ? 'left' : 'center',
+      lineHeight: (mobile.bodySize - 2) * 1.2,
+      marginBottom: mobile.isMobile ? 0 : mobile.safeSpacing / 2,
+    },
+
+    // Selection Indicator
+    selectionIndicator: {
+      position: mobile.isMobile ? 'relative' : 'absolute',
+      bottom: mobile.isMobile ? 0 : mobile.safeSpacing / 2,
+      right: mobile.isMobile ? 0 : mobile.safeSpacing / 2,
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: '#7c9885',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    checkIcon: {
+      color: '#ffffff',
+      fontSize: mobile.bodySize,
+      fontWeight: 'bold',
+    },
+
+    // Info Container
+    infoContainer: {
+      paddingHorizontal: mobile.contentPadding,
+      marginVertical: mobile.safeSpacing,
+    },
+    infoCard: {
+      backgroundColor: '#e8f4f8',
+      borderRadius: mobile.isMobile ? 12 : 16,
+      padding: mobile.safeSpacing,
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderLeftWidth: 4,
+      borderLeftColor: '#4a90a4',
+    },
+    infoEmoji: {
+      fontSize: mobile.bodySize + 2,
+      marginRight: mobile.safeSpacing / 2,
+    },
+    infoText: {
+      flex: 1,
+      fontSize: mobile.bodySize - 1,
+      color: '#2d4a52',
+      lineHeight: (mobile.bodySize - 1) * 1.4,
+    },
+
+    // Action Container
+    actionContainer: {
+      paddingHorizontal: mobile.contentPadding,
+      paddingVertical: mobile.safeSpacing,
+      gap: mobile.safeSpacing,
+    },
+    continueButton: {
+      backgroundColor: '#7c9885',
+      borderRadius: mobile.isMobile ? 12 : 16,
+      paddingVertical: mobile.safeSpacing,
+      paddingHorizontal: mobile.safeSpacing * 1.5,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...responsive.shadow.medium,
+    },
+    continueButtonText: {
+      color: '#ffffff',
+      fontSize: mobile.buttonSize,
+      fontWeight: 'bold',
+      marginRight: mobile.safeSpacing / 2,
+    },
+    buttonIcon: {
+      color: '#ffffff',
+      fontSize: mobile.buttonSize,
+      fontWeight: 'bold',
+    },
+    skipButton: {
+      backgroundColor: 'transparent',
+      borderWidth: 2,
+      borderColor: '#e8f0e8',
+      borderRadius: mobile.isMobile ? 12 : 16,
+      paddingVertical: mobile.safeSpacing,
+      paddingHorizontal: mobile.safeSpacing * 1.5,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    skipButtonText: {
+      color: '#7c9885',
+      fontSize: mobile.buttonSize,
+      fontWeight: '600',
+    },
+    bottomSpacer: {
+      height: mobile.safeSpacing * 2,
+    },
+  });
+
+  const styles = createStyles();
+
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -204,55 +456,72 @@ export default function ContraindicationsScreen() {
                 </View>
 
                 {/* Emoji principal */}
-                <Text style={styles.mainEmoji}>{contraindication.emoji}</Text>
+                <View style={styles.emojiContainer}>
+                  <Text style={styles.mainEmoji}>{contraindication.emoji}</Text>
+                </View>
 
-                {/* Titre */}
-                <Text style={[styles.cardTitle, isSelected && styles.selectedCardTitle]}>
-                  {contraindication.label}
-                </Text>
-
-                {/* Description */}
-                <Text style={[styles.cardDescription, isSelected && styles.selectedCardDescription]}>
-                  {contraindication.description}
-                </Text>
-
-                {/* Indicateur de sélection */}
-                {isSelected && (
-                  <View style={styles.selectedIndicator}>
-                    <Text style={styles.checkmark}>✓</Text>
+                {/* Contenu adaptatif */}
+                {mobile.isMobile ? (
+                  <View style={styles.mobileContentContainer}>
+                    <View style={styles.mobileHeaderRow}>
+                      <Text style={styles.contraindicationTitle}>{contraindication.label}</Text>
+                      {isSelected && (
+                        <View style={styles.selectionIndicator}>
+                          <Text style={styles.checkIcon}>✓</Text>
+                        </View>
+                      )}
+                    </View>
+                    <Text style={styles.contraindicationDescription}>
+                      {contraindication.description}
+                    </Text>
                   </View>
+                ) : (
+                  <>
+                    <Text style={styles.contraindicationTitle}>
+                      {contraindication.label}
+                    </Text>
+                    <Text style={styles.contraindicationDescription}>
+                      {contraindication.description}
+                    </Text>
+                    {isSelected && (
+                      <View style={styles.selectionIndicator}>
+                        <Text style={styles.checkIcon}>✓</Text>
+                      </View>
+                    )}
+                  </>
                 )}
               </TouchableOpacity>
             );
           })}
         </View>
 
-        {/* Informations supplémentaires */}
+        {/* Information supplémentaire */}
         <View style={styles.infoContainer}>
           <View style={styles.infoCard}>
             <Text style={styles.infoEmoji}>ℹ️</Text>
             <Text style={styles.infoText}>
-              Vos données restent privées et sont stockées localement sur votre appareil
+              Ces informations nous aident à filtrer les plantes qui pourraient ne pas vous convenir
             </Text>
           </View>
         </View>
 
         {/* Boutons d'action */}
-        <View style={styles.actionButtons}>
+        <View style={styles.actionContainer}>
           <TouchableOpacity
             style={styles.continueButton}
             onPress={continueToBodyZone}
             activeOpacity={0.8}
           >
             <Text style={styles.continueButtonText}>
-              Continuer ({selectedContraindications.length} sélectionnée(s))
+              Continuer
             </Text>
+            <Text style={styles.buttonIcon}>→</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.skipButton}
             onPress={skipContraindications}
-            activeOpacity={0.7}
+            activeOpacity={0.8}
           >
             <Text style={styles.skipButtonText}>
               Passer cette étape
@@ -260,210 +529,9 @@ export default function ContraindicationsScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Espace en bas pour éviter que le contenu soit coupé */}
+        {/* Espace en bas */}
         <View style={styles.bottomSpacer} />
       </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8faf9',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: responsive.spacing.lg,
-  },
-  loadingText: {
-    marginTop: responsive.spacing.md,
-    fontSize: responsive.fontSize.medium,
-    color: '#7c9885',
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-  header: {
-    paddingHorizontal: responsive.spacing.lg,
-    paddingTop: responsive.spacing.xl,
-    paddingBottom: responsive.spacing.lg,
-    backgroundColor: '#ffffff',
-    marginBottom: responsive.spacing.md,
-    borderBottomLeftRadius: responsive.borderRadius.large,
-    borderBottomRightRadius: responsive.borderRadius.large,
-    ...responsive.shadow.small,
-  },
-  title: {
-    fontSize: responsive.fontSize.title,
-    fontWeight: 'bold',
-    color: '#2d5738',
-    textAlign: 'center',
-    marginBottom: responsive.spacing.sm,
-  },
-  subtitle: {
-    fontSize: responsive.fontSize.medium,
-    color: '#5a6b5d',
-    textAlign: 'center',
-    lineHeight: responsive.fontSize.medium * 1.4,
-    marginBottom: responsive.spacing.md,
-  },
-  progressIndicator: {
-    backgroundColor: 'rgba(124, 152, 133, 0.1)',
-    paddingHorizontal: responsive.spacing.md,
-    paddingVertical: responsive.spacing.xs,
-    borderRadius: responsive.borderRadius.large,
-    alignSelf: 'center',
-  },
-  progressText: {
-    fontSize: responsive.fontSize.small,
-    color: '#7c9885',
-    fontWeight: '600',
-  },
-  gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: responsive.spacing.lg,
-    justifyContent: 'space-between',
-  },
-  contraindicationCard: {
-    width: responsive.width < 600 ? '48%' : '31%',
-    backgroundColor: '#ffffff',
-    borderRadius: responsive.borderRadius.medium,
-    padding: responsive.spacing.md,
-    marginBottom: responsive.spacing.md,
-    borderWidth: 2,
-    borderColor: '#e8f0e8',
-    position: 'relative',
-    minHeight: 140,
-    ...responsive.shadow.small,
-  },
-  selectedCard: {
-    borderColor: '#7c9885',
-    backgroundColor: '#f0f8f0',
-    transform: [{ scale: 1.02 }],
-    ...responsive.shadow.medium,
-  },
-  categoryBadge: {
-    position: 'absolute',
-    top: responsive.spacing.xs,
-    right: responsive.spacing.xs,
-    backgroundColor: '#e8f0e8',
-    paddingHorizontal: responsive.spacing.xs,
-    paddingVertical: 2,
-    borderRadius: responsive.borderRadius.small,
-  },
-  selectedCategoryBadge: {
-    backgroundColor: '#7c9885',
-  },
-  categoryText: {
-    fontSize: responsive.fontSize.xs,
-    color: '#7c9885',
-    fontWeight: '600',
-  },
-  selectedCategoryText: {
-    color: '#ffffff',
-  },
-  mainEmoji: {
-    fontSize: responsive.fontSize.title + 4,
-    textAlign: 'center',
-    marginBottom: responsive.spacing.xs,
-    marginTop: responsive.spacing.sm,
-  },
-  cardTitle: {
-    fontSize: responsive.fontSize.medium,
-    fontWeight: '700',
-    color: '#2d5738',
-    textAlign: 'center',
-    marginBottom: responsive.spacing.xs,
-  },
-  selectedCardTitle: {
-    color: '#1a3d21',
-  },
-  cardDescription: {
-    fontSize: responsive.fontSize.small,
-    color: '#6b7c68',
-    textAlign: 'center',
-    lineHeight: responsive.fontSize.small * 1.3,
-  },
-  selectedCardDescription: {
-    color: '#2d5738',
-  },
-  selectedIndicator: {
-    position: 'absolute',
-    top: responsive.spacing.xs,
-    left: responsive.spacing.xs,
-    backgroundColor: '#7c9885',
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  checkmark: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  infoContainer: {
-    paddingHorizontal: responsive.spacing.lg,
-    marginVertical: responsive.spacing.lg,
-  },
-  infoCard: {
-    backgroundColor: '#e8f4f8',
-    borderRadius: responsive.borderRadius.medium,
-    padding: responsive.spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderLeftWidth: 4,
-    borderLeftColor: '#4a90a4',
-  },
-  infoEmoji: {
-    fontSize: responsive.fontSize.large,
-    marginRight: responsive.spacing.sm,
-  },
-  infoText: {
-    flex: 1,
-    fontSize: responsive.fontSize.small,
-    color: '#2d4a52',
-    lineHeight: responsive.fontSize.small * 1.4,
-  },
-  actionButtons: {
-    paddingHorizontal: responsive.spacing.lg,
-    paddingVertical: responsive.spacing.md,
-  },
-  continueButton: {
-    backgroundColor: '#7c9885',
-    borderRadius: responsive.borderRadius.medium,
-    paddingVertical: responsive.padding.button + 4,
-    alignItems: 'center',
-    marginBottom: responsive.spacing.sm,
-    ...responsive.shadow.medium,
-  },
-  continueButtonText: {
-    fontSize: responsive.fontSize.large,
-    fontWeight: '600',
-    color: '#ffffff',
-    letterSpacing: 0.5,
-  },
-  skipButton: {
-    backgroundColor: 'transparent',
-    borderRadius: responsive.borderRadius.medium,
-    paddingVertical: responsive.padding.button,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#d1d9d1',
-  },
-  skipButtonText: {
-    fontSize: responsive.fontSize.medium,
-    fontWeight: '500',
-    color: '#6b7c68',
-  },
-  bottomSpacer: {
-    height: responsive.spacing.xl,
-  },
-});

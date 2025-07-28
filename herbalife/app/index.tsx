@@ -6,10 +6,14 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ActivityIndicator,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import { router } from 'expo-router';
 import { responsive } from '../utils/responsive';
 import { firstLaunchService } from '../utils/firstLaunchService';
+
+const { width: screenWidth } = Dimensions.get('window');
 
 export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +54,7 @@ export default function HomeScreen() {
     }
   };
 
-  const handleStartJourney = async () => {
+  const handleStartPress = async () => {
     try {
       // Marquer que l'app a été lancée
       await firstLaunchService.markAsLaunched();
@@ -79,105 +83,83 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        {/* En-tête */}
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Header avec logo */}
         <View style={styles.header}>
-          <Text style={styles.appName}>
-            HerbaLife
-          </Text>
-          <View style={styles.leafIcon}>
-            <Text style={styles.leafEmoji}>
-              🌿
-            </Text>
+          <View style={styles.logoContainer}>
+            <View style={styles.leafIcon}>
+              <Text style={styles.leafEmoji}>🌿</Text>
+            </View>
+            <Text style={styles.appName}>PhytoConseil</Text>
           </View>
+          <Text style={styles.tagline}>Votre guide naturel de bien-être</Text>
         </View>
 
         {/* Illustration principale */}
-        <View style={styles.illustrationContainer}>
-          <Text style={styles.plantEmoji}>
-            🌱
+        <View style={styles.heroSection}>
+          <View style={styles.illustrationContainer}>
+            <Text style={styles.plantEmoji}>🌱</Text>
+            <View style={styles.decorativeElements}>
+              <Text style={styles.decorEmoji}>✨</Text>
+              <Text style={styles.decorEmoji}>🍃</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Section de bienvenue */}
+        <View style={styles.welcomeSection}>
+          <Text style={styles.welcomeTitle}>
+            Découvrez la puissance des plantes
+          </Text>
+          <Text style={styles.welcomeText}>
+            Explorez des remèdes naturels personnalisés basés sur la phytothérapie et l'homéopathie pour améliorer votre bien-être.
           </Text>
         </View>
 
-        {/* Texte de bienvenue */}
-        <View style={styles.textContainer}>
-          <Text style={styles.welcomeText}>
-            Bienvenue dans votre guide des plantes médicinales
-          </Text>
-          <Text style={styles.descriptionText}>
-            Découvrez des remèdes naturels personnalisés selon vos besoins et contre-indications.
-          </Text>
+        {/* Avantages clés */}
+        <View style={styles.featuresSection}>
+          <View style={styles.featureCard}>
+            <Text style={styles.featureEmoji}>🎯</Text>
+            <Text style={styles.featureText}>Conseils personnalisés</Text>
+          </View>
+          <View style={styles.featureCard}>
+            <Text style={styles.featureEmoji}>🌿</Text>
+            <Text style={styles.featureText}>100% naturel</Text>
+          </View>
+          <View style={styles.featureCard}>
+            <Text style={styles.featureEmoji}>📚</Text>
+            <Text style={styles.featureText}>Base scientifique</Text>
+          </View>
         </View>
 
         {/* Bouton principal */}
-        <TouchableOpacity
-          style={styles.startButton}
-          onPress={handleStartJourney}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.startButtonText}>
-            🌿 Commencer mon parcours
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.actionSection}>
+          <TouchableOpacity
+            style={styles.startButton}
+            onPress={handleStartPress}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.startButtonText}>Commencer mon diagnostic</Text>
+            <Text style={styles.startButtonIcon}>→</Text>
+          </TouchableOpacity>
 
-        {/* Bouton debug temporaire */}
-        <TouchableOpacity
-          style={[styles.startButton, styles.debugButton]}
-          onPress={async () => {
-            try {
-              // Supprimer les clés pour simuler une première visite
-              await firstLaunchService.markAsLaunched();
-              await firstLaunchService.markOnboardingCompleted();
-              console.log('Debug: Stockage reinitialise, rechargez app');
-              alert('Stockage reinitialise, rechargez app');
-            } catch (error) {
-              console.error('Erreur reset:', error);
-            }
-          }}
-          activeOpacity={0.8}
-        >
-          <Text style={[styles.startButtonText, styles.debugButtonText]}>
-            🔄 Reset pour tester (DEBUG)
+          <Text style={styles.actionSubtext}>
+            En quelques minutes, obtenez des recommandations adaptées
           </Text>
-        </TouchableOpacity>
-
-        {/* Informations rassurantes */}
-        <View style={styles.featuresContainer}>
-          <View style={styles.feature}>
-            <Text style={styles.featureEmoji}>
-              🛡️
-            </Text>
-            <Text style={styles.featureText}>
-              Prise en compte de vos contre-indications
-            </Text>
-          </View>
-          
-          <View style={styles.feature}>
-            <Text style={styles.featureEmoji}>
-              🎯
-            </Text>
-            <Text style={styles.featureText}>
-              Recommandations personnalisées selon vos symptômes
-            </Text>
-          </View>
-          
-          <View style={styles.feature}>
-            <Text style={styles.featureEmoji}>
-              📚
-            </Text>
-            <Text style={styles.featureText}>
-              Base de données complète de plantes médicinales
-            </Text>
-          </View>
         </View>
 
-        {/* Footer */}
+        {/* Footer informations */}
         <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            🌿 HerbaLife - Votre guide des plantes médicinales
-          </Text>
+          <View style={styles.footerInfo}>
+            <Text style={styles.footerEmoji}>🔒</Text>
+            <Text style={styles.footerText}>Confidentiel et gratuit</Text>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -185,128 +167,197 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f7f6',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: responsive.spacing.lg,
-    justifyContent: 'space-between',
-  },
-  header: {
-    alignItems: 'center',
-    marginTop: responsive.spacing.xl + 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  appName: {
-    fontSize: responsive.fontSize.bigTitle,
-    fontWeight: 'bold',
-    color: '#2d5738',
-    letterSpacing: 0.5,
-  },
-  leafIcon: {
-    marginLeft: responsive.spacing.sm,
-  },
-  leafEmoji: {
-    fontSize: responsive.fontSize.title,
-  },
-  illustrationContainer: {
-    alignItems: 'center',
-    marginVertical: responsive.spacing.xxl,
-  },
-  plantEmoji: {
-    fontSize: responsive.width < 350 ? 100 : 120,
-    textShadowColor: 'rgba(124, 152, 133, 0.3)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
-  },
-  textContainer: {
-    alignItems: 'center',
-    marginBottom: responsive.spacing.xxl,
-    paddingHorizontal: responsive.spacing.md,
-  },
-  welcomeText: {
-    fontSize: responsive.fontSize.large,
-    fontWeight: '600',
-    color: '#2d5738',
-    textAlign: 'center',
-    lineHeight: responsive.fontSize.large * 1.4,
-    marginBottom: responsive.spacing.md,
-  },
-  descriptionText: {
-    fontSize: responsive.fontSize.medium,
-    color: '#5a6b5d',
-    textAlign: 'center',
-    lineHeight: responsive.fontSize.medium * 1.5,
-  },
-  startButton: {
-    backgroundColor: '#7c9885',
-    borderRadius: responsive.borderRadius.large,
-    paddingVertical: responsive.padding.button + 2,
-    paddingHorizontal: responsive.spacing.xxl * 2,
-    alignItems: 'center',
-    marginHorizontal: responsive.spacing.lg,
-    marginBottom: responsive.spacing.lg,
-    shadowColor: '#000',
-    ...responsive.shadow.medium,
-  },
-  startButtonText: {
-    color: '#fff',
-    fontSize: responsive.fontSize.large,
-    fontWeight: '600',
-    letterSpacing: 0.5,
-  },
-  debugButton: {
-    backgroundColor: '#ff6b6b',
-    marginBottom: responsive.spacing.sm,
-  },
-  debugButtonText: {
-    fontSize: responsive.fontSize.small,
-  },
-  featuresContainer: {
-    alignItems: 'center',
-    marginVertical: responsive.spacing.xl,
-    paddingHorizontal: responsive.spacing.lg,
-  },
-  feature: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: responsive.spacing.md,
-    paddingVertical: responsive.spacing.sm,
-    paddingHorizontal: responsive.spacing.md,
-    backgroundColor: 'rgba(124, 152, 133, 0.1)',
-    borderRadius: responsive.borderRadius.medium,
-    minWidth: '90%',
-  },
-  featureEmoji: {
-    fontSize: responsive.fontSize.title,
-    marginRight: responsive.spacing.md,
-  },
-  featureText: {
-    fontSize: responsive.fontSize.medium,
-    color: '#2d5738',
-    fontWeight: '500',
-    flex: 1,
-  },
-  footer: {
-    alignItems: 'center',
-    paddingBottom: responsive.spacing.xl,
-  },
-  footerText: {
-    fontSize: responsive.fontSize.small,
-    color: '#7c9885',
-    fontWeight: '500',
-    letterSpacing: 0.3,
+    backgroundColor: '#f8faf9',
   },
   loadingContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   loadingText: {
+    marginTop: responsive.spacing.md,
     fontSize: responsive.fontSize.medium,
     color: '#7c9885',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  
+  // Header Section
+  header: {
+    alignItems: 'center',
+    paddingHorizontal: responsive.spacing.lg,
+    paddingTop: responsive.spacing.xl,
+    paddingBottom: responsive.spacing.lg,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+  },
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: responsive.spacing.sm,
+  },
+  leafIcon: {
+    backgroundColor: '#7c9885',
+    borderRadius: responsive.width < 428 ? 20 : 25,
+    width: responsive.width < 428 ? 40 : 50,
+    height: responsive.width < 428 ? 40 : 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: responsive.spacing.sm,
+  },
+  leafEmoji: {
+    fontSize: responsive.width < 428 ? 20 : 24,
+  },
+  appName: {
+    fontSize: responsive.fontSize.bigTitle,
+    fontWeight: '700',
+    color: '#2d5738',
+  },
+  tagline: {
+    fontSize: responsive.fontSize.medium,
+    color: '#5a6b5d',
+    textAlign: 'center',
+    fontStyle: 'italic',
+  },
+
+  // Hero Section
+  heroSection: {
+    alignItems: 'center',
+    paddingVertical: responsive.spacing.xl,
+    paddingHorizontal: responsive.spacing.lg,
+  },
+  illustrationContainer: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  plantEmoji: {
+    fontSize: responsive.width < 428 ? 80 : 120,
+    textAlign: 'center',
+  },
+  decorativeElements: {
+    position: 'absolute',
+    top: -10,
+    right: -10,
+    flexDirection: 'row',
+  },
+  decorEmoji: {
+    fontSize: responsive.fontSize.large,
+    marginLeft: responsive.spacing.sm,
+  },
+
+  // Welcome Section
+  welcomeSection: {
+    paddingHorizontal: responsive.spacing.lg,
+    paddingVertical: responsive.spacing.lg,
+    backgroundColor: '#ffffff',
+    marginHorizontal: responsive.spacing.md,
+    borderRadius: responsive.borderRadius.large,
+    marginBottom: responsive.spacing.lg,
+    ...responsive.shadow.medium,
+  },
+  welcomeTitle: {
+    fontSize: responsive.fontSize.title,
+    fontWeight: 'bold',
+    color: '#2d5738',
+    textAlign: 'center',
+    marginBottom: responsive.spacing.md,
+    lineHeight: responsive.fontSize.title * 1.2,
+  },
+  welcomeText: {
+    fontSize: responsive.fontSize.medium,
+    color: '#5a6b5d',
+    textAlign: 'center',
+    lineHeight: responsive.fontSize.medium * 1.4,
+  },
+
+  // Features Section
+  featuresSection: {
+    flexDirection: screenWidth < 428 ? 'column' : 'row',
+    paddingHorizontal: responsive.spacing.lg,
+    marginBottom: responsive.spacing.xl,
+    gap: responsive.spacing.md,
+  },
+  featureCard: {
+    flex: screenWidth < 428 ? 0 : 1,
+    backgroundColor: '#ffffff',
+    borderRadius: responsive.borderRadius.medium,
+    padding: responsive.spacing.lg,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e8f0e8',
+    ...responsive.shadow.small,
+  },
+  featureEmoji: {
+    fontSize: responsive.fontSize.bigTitle,
+    marginBottom: responsive.spacing.sm,
+  },
+  featureText: {
+    fontSize: responsive.fontSize.medium,
+    color: '#2d5738',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+
+  // Action Section
+  actionSection: {
+    paddingHorizontal: responsive.spacing.lg,
+    paddingVertical: responsive.spacing.xl,
+    alignItems: 'center',
+  },
+  startButton: {
+    backgroundColor: '#7c9885',
+    borderRadius: responsive.borderRadius.large,
+    paddingVertical: responsive.spacing.lg,
+    paddingHorizontal: responsive.spacing.xl,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: '80%',
+    ...responsive.shadow.medium,
+  },
+  startButtonText: {
+    color: '#ffffff',
+    fontSize: responsive.fontSize.large,
+    fontWeight: 'bold',
+    marginRight: responsive.spacing.sm,
+  },
+  startButtonIcon: {
+    color: '#ffffff',
+    fontSize: responsive.fontSize.large,
+    fontWeight: 'bold',
+  },
+  actionSubtext: {
+    fontSize: responsive.fontSize.small,
+    color: '#6b7c68',
+    textAlign: 'center',
     marginTop: responsive.spacing.md,
-    fontWeight: '500',
+    lineHeight: responsive.fontSize.small * 1.3,
+  },
+
+  // Footer
+  footer: {
+    paddingHorizontal: responsive.spacing.lg,
+    paddingVertical: responsive.spacing.xl,
+    alignItems: 'center',
+  },
+  footerInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(124, 152, 133, 0.1)',
+    paddingHorizontal: responsive.spacing.md,
+    paddingVertical: responsive.spacing.sm,
+    borderRadius: responsive.borderRadius.large,
+  },
+  footerEmoji: {
+    fontSize: responsive.fontSize.medium,
+    marginRight: responsive.spacing.sm,
+  },
+  footerText: {
+    fontSize: responsive.fontSize.small,
+    color: '#7c9885',
+    fontWeight: '600',
   },
 });
