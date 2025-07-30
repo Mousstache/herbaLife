@@ -55,6 +55,14 @@ export default function ZoneSymptomsScreen() {
     <SafeAreaView style={styles.container}>
       {/* En-tête avec informations de la zone */}
       <View style={[styles.header, { borderBottomColor: zoneColor as string + '20' }]}>
+        {/* Barre de progression */}
+        <View style={styles.progressSection}>
+          <Text style={styles.stepIndicator}>Étape 3/3</Text>
+          <View style={styles.progressBar}>
+            <View style={styles.progressFill} />
+          </View>
+        </View>
+
         <View style={styles.zoneInfo}>
           <Text style={[styles.zoneEmoji, { fontSize: responsive.fontSize.hero }]}>
             {zoneEmoji}
@@ -90,9 +98,9 @@ export default function ZoneSymptomsScreen() {
                 style={[
                   styles.symptomCard,
                   {
-                    backgroundColor: isSelected ? (zoneColor as string + '15') : '#FFFFFF',
-                    borderColor: isSelected ? zoneColor as string : '#E5E7EB',
-                    borderWidth: isSelected ? 2 : 1,
+                    backgroundColor: isSelected ? 'rgba(56, 224, 120, 0.1)' : '#122117',
+                    borderColor: isSelected ? '#38E078' : 'transparent',
+                    borderWidth: isSelected ? 2 : 0,
                     marginBottom: responsive.spacing.sm,
                     padding: responsive.padding.card,
                     borderRadius: responsive.borderRadius.medium
@@ -102,33 +110,33 @@ export default function ZoneSymptomsScreen() {
                 activeOpacity={0.7}
               >
                 <View style={styles.symptomContent}>
-                  <View style={[
-                    styles.checkBox,
-                    {
-                      backgroundColor: isSelected ? zoneColor as string : 'transparent',
-                      borderColor: isSelected ? zoneColor as string : '#D1D5DB',
-                      width: responsive.iconSize.medium,
-                      height: responsive.iconSize.medium,
-                      borderRadius: responsive.borderRadius.small
-                    }
-                  ]}>
-                    {isSelected && (
-                      <Text style={[styles.checkMark, { fontSize: responsive.fontSize.small }]}>
-                        ✓
-                      </Text>
-                    )}
-                  </View>
-                  
                   <Text style={[
                     styles.symptomText,
                     {
                       fontSize: responsive.fontSize.medium,
-                      color: isSelected ? zoneColor as string : '#374151',
+                      color: isSelected ? '#FFFFFF' : '#96C4A8',
                       fontWeight: isSelected ? '600' : '400'
                     }
                   ]}>
                     {symptom}
                   </Text>
+                  
+                  <View style={[
+                    styles.checkBox,
+                    {
+                      backgroundColor: isSelected ? '#38E078' : 'transparent',
+                      borderColor: isSelected ? '#38E078' : '#96C4A8',
+                      width: 20,
+                      height: 20,
+                      borderRadius: 3
+                    }
+                  ]}>
+                    {isSelected && (
+                      <Text style={[styles.checkMark, { fontSize: 14 }]}>
+                        ✓
+                      </Text>
+                    )}
+                  </View>
                 </View>
               </TouchableOpacity>
             );
@@ -146,7 +154,8 @@ export default function ZoneSymptomsScreen() {
             style={[
               styles.searchButton,
               {
-                backgroundColor: zoneColor as string,
+                backgroundColor: '#38E078',
+                borderWidth: 0,
                 height: responsive.buttonHeight.medium,
                 borderRadius: responsive.borderRadius.medium,
                 paddingHorizontal: responsive.padding.lg
@@ -155,7 +164,7 @@ export default function ZoneSymptomsScreen() {
             onPress={searchPlants}
             activeOpacity={0.9}
           >
-            <Text style={[styles.searchButtonText, { fontSize: responsive.fontSize.medium }]}>
+            <Text style={[styles.searchButtonText, { fontSize: responsive.fontSize.medium, color: '#FFFFFF' }]}>
               Voir les remèdes ({selectedSymptoms.length} symptôme{selectedSymptoms.length > 1 ? 's' : ''})
             </Text>
           </TouchableOpacity>
@@ -168,35 +177,64 @@ export default function ZoneSymptomsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#122117',
   },
   header: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#1a2419',
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderBottomWidth: 2,
+    borderBottomColor: '#96C4A8',
+  },
+  progressSection: {
+    marginBottom: 16,
+  },
+  stepIndicator: {
+    fontSize: 14,
+    color: '#96C4A8',
+    textAlign: 'center',
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  progressBar: {
+    width: '100%',
+    height: 4,
+    backgroundColor: 'rgba(150, 196, 168, 0.2)',
+    borderRadius: 2,
+    marginBottom: 8,
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#38E078',
+    borderRadius: 2,
+    width: '100%', // Étape 3/3 = 100%
   },
   zoneInfo: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     marginBottom: 16,
   },
   zoneEmoji: {
-    marginRight: 16,
+    marginBottom: 8,
+    textAlign: 'center',
   },
   zoneDetails: {
     flex: 1,
+    alignItems: 'center',
   },
   zoneTitle: {
     fontWeight: 'bold',
     marginBottom: 4,
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
   zoneDescription: {
-    color: '#6B7280',
+    color: '#96C4A8',
     lineHeight: 20,
+    textAlign: 'center',
   },
   subtitle: {
-    color: '#6B7280',
+    color: '#96C4A8',
     textAlign: 'center',
     fontStyle: 'italic',
   },
@@ -219,12 +257,13 @@ const styles = StyleSheet.create({
   symptomContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   checkBox: {
     borderWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginLeft: 16,
   },
   checkMark: {
     color: '#FFFFFF',
@@ -235,9 +274,9 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   searchButtonContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#122117',
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: '#96C4A8',
   },
   searchButton: {
     justifyContent: 'center',

@@ -110,7 +110,7 @@ export default function RecommendationsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9f5',
+    backgroundColor: '#122117',
   },
   content: {
     flex: 1,

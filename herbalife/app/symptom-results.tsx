@@ -145,7 +145,7 @@ export default function SymptomResultsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9f5',
+    backgroundColor: '#122117',
   },
   content: {
     flex: 1,
@@ -153,19 +153,19 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    color: '#1f2937',
+    color: '#FFFFFF',
     textAlign: 'center',
     marginTop: responsive.spacing.md,
     marginBottom: responsive.spacing.lg,
   },
   symptomsContainer: {
-    backgroundColor: '#e0f2fe',
+    backgroundColor: '#1a2419',
     borderWidth: 1,
-    borderColor: '#7c9885',
+    borderColor: '#38E078',
   },
   symptomsTitle: {
     fontWeight: '600',
-    color: '#1f2937',
+    color: '#FFFFFF',
     marginBottom: responsive.spacing.sm,
   },
   symptomsGrid: {
@@ -174,52 +174,58 @@ const styles = StyleSheet.create({
     gap: responsive.spacing.xs,
   },
   symptomTag: {
-    backgroundColor: '#7c9885',
+    backgroundColor: '#122117',
+    borderWidth: 1,
+    borderColor: '#96C4A8',
   },
   symptomTagText: {
-    color: '#fff',
+    color: '#96C4A8',
     fontWeight: '500',
   },
   resultsCount: {
     fontWeight: '600',
-    color: '#1f2937',
+    color: '#FFFFFF',
     marginBottom: responsive.spacing.md,
     textAlign: 'center',
   },
   noResults: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1a2419',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#96C4A8',
     ...responsive.shadow.medium,
   },
   noResultsTitle: {
     fontWeight: 'bold',
-    color: '#1f2937',
+    color: '#FFFFFF',
     marginBottom: responsive.spacing.sm,
     textAlign: 'center',
   },
   noResultsText: {
-    color: '#6b7280',
+    color: '#96C4A8',
     textAlign: 'center',
     lineHeight: 22,
   },
   backButton: {
-    backgroundColor: '#7c9885',
+    backgroundColor: '#122117',
+    borderWidth: 2,
+    borderColor: '#38E078',
   },
   backButtonText: {
-    color: '#fff',
+    color: '#38E078',
     fontWeight: '600',
   },
   plantsContainer: {
     gap: responsive.spacing.md,
   },
   newSearchButton: {
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#122117',
     borderWidth: 2,
-    borderColor: '#7c9885',
+    borderColor: '#38E078',
     alignItems: 'center',
   },
   newSearchButtonText: {
-    color: '#7c9885',
+    color: '#38E078',
     fontWeight: '600',
   },
 });

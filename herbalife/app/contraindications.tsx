@@ -8,11 +8,30 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  Image,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import { router } from 'expo-router';
 import { responsive } from '../utils/responsive';
 import { useContraindications } from '../contexts/ContraindicationsContext';
 import { firstLaunchService } from '../utils/firstLaunchService';
+import { useMobileResponsive } from '../hooks/useMobileResponsive';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+// Mapping des images pour chaque contre-indication
+const contraindicationImages: { [key: string]: any } = {
+  'grossesse': require('../assets/images/grossesse.png'),
+  'allaitement': require('../assets/images/grossesse.png'), // Réutilise grossesse pour allaitement
+  'hypertension': require('../assets/images/hypertension.png'),
+  'anticoagulants': require('../assets/images/medicaments.png'),
+  'allergies_asteracees': require('../assets/images/medecin.png'),
+  'diabete': require('../assets/images/diabete.png'),
+  'troubles_hepatiques': require('../assets/images/hepatique.png'),
+  'troubles_renaux': require('../assets/images/reins.png'),
+  'epilepsie': require('../assets/images/medecin.png'),
+  'chirurgie': require('../assets/images/medecin.png'),
+};
 
 interface Contraindication {
   id: string;
@@ -99,6 +118,8 @@ export default function ContraindicationsScreen() {
   const [selectedContraindications, setSelectedContraindications] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { userContraindications, saveContraindications, clearContraindications } = useContraindications();
+  const mobile = useMobileResponsive();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     if (!isLoading) {
@@ -152,28 +173,272 @@ export default function ContraindicationsScreen() {
     }
   };
 
+  // Fonction pour créer des styles dynamiques basés sur la taille d'écran
+  const createStyles = () => StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#122117',
+      paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight || 0, // Gestion Android
+    },
+    scrollView: {
+      flex: 1,
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: mobile.contentPadding,
+    },
+    loadingText: {
+      marginTop: mobile.safeSpacing,
+      fontSize: mobile.bodySize,
+      color: '#96C4A8',
+      textAlign: 'center',
+      fontWeight: '500',
+    },
+    
+    // Header Section
+    header: {
+      paddingHorizontal: mobile.contentPadding,
+      paddingTop: Math.max(insets.top, mobile.safeSpacing * 1.5), // Respecte les safe areas
+      paddingBottom: mobile.safeSpacing,
+      backgroundColor: 'transparent',
+      marginBottom: mobile.safeSpacing,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+    headerTop: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: mobile.safeSpacing / 2,
+    },
+    continueHeaderButton: {
+      backgroundColor: '#38E078',
+      paddingHorizontal: mobile.safeSpacing,
+      paddingVertical: mobile.safeSpacing / 2,
+      borderRadius: mobile.isMobile ? 8 : 10,
+    },
+    continueHeaderButtonText: {
+      color: '#ffffff',
+      fontSize: mobile.bodySize - 2,
+      fontWeight: '600',
+    },
+    nextButton: {
+      backgroundColor: '#38E078',
+      paddingHorizontal: mobile.safeSpacing,
+      paddingVertical: mobile.safeSpacing / 2,
+      borderRadius: mobile.isMobile ? 8 : 10,
+    },
+    nextButtonText: {
+      color: '#ffffff',
+      fontSize: mobile.bodySize - 2,
+      fontWeight: '600',
+    },
+    title: {
+      fontSize: mobile.titleSize,
+      fontWeight: 'bold',
+      color: '#FFFFFF',
+      textAlign: 'center',
+      marginBottom: 0,
+      flex: 1,
+    },
+    subtitle: {
+      fontSize: mobile.bodySize,
+      color: '#96C4A8',
+      textAlign: 'center',
+      lineHeight: mobile.bodySize * 1.4,
+      marginBottom: mobile.safeSpacing,
+    },
+    progressIndicator: {
+      backgroundColor: 'rgba(124, 152, 133, 0.1)',
+      paddingHorizontal: mobile.safeSpacing,
+      paddingVertical: mobile.safeSpacing / 2,
+      borderRadius: mobile.isMobile ? 12 : 16,
+      alignSelf: 'center',
+    },
+    progressText: {
+      fontSize: mobile.bodySize - 2,
+      color: '#96C4A8',
+      fontWeight: '600',
+    },
+    skipButtonHeader: {
+      backgroundColor: 'transparent',
+      borderWidth: 1,
+      borderColor: '#96C4A8',
+      borderRadius: mobile.isMobile ? 8 : 10,
+      paddingHorizontal: mobile.safeSpacing,
+      paddingVertical: mobile.safeSpacing / 2,
+      alignSelf: 'center',
+      marginBottom: mobile.safeSpacing / 2,
+    },
+    skipButtonHeaderText: {
+      color: '#96C4A8',
+      fontSize: mobile.bodySize - 3,
+      fontWeight: '600',
+      textAlign: 'center',
+    },
+
+    // Grid Container
+    gridContainer: {
+      paddingHorizontal: mobile.contentPadding,
+      flexDirection: 'column',
+      gap: mobile.safeSpacing / 2,
+    },
+
+    // Card Styles
+    contraindicationCard: {
+      width: '100%',
+      backgroundColor: 'transparent',
+      borderRadius: mobile.isMobile ? 8 : 10,
+      padding: mobile.safeSpacing / 1.5,
+      marginBottom: 0,
+      borderWidth: 0,
+      borderColor: 'transparent',
+      position: 'relative',
+      minHeight: mobile.isMobile ? 80 : 100,
+      flexDirection: 'row',
+      alignItems: 'center',
+      ...responsive.shadow.small,
+    },
+    selectedCard: {
+      borderWidth: 2,
+      borderColor: '#38E078',
+      backgroundColor: 'rgba(56, 224, 120, 0.1)',
+    },
+
+    // Image Container
+    imageContainer: {
+      backgroundColor: 'transparent',
+      padding: 0,
+      borderRadius: 0,
+      marginBottom: 0,
+      marginLeft: mobile.safeSpacing / 2,
+      width: mobile.isMobile ? 60 : 80,
+      height: mobile.isMobile ? 60 : 80,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    contraindicationImage: {
+      width: mobile.isMobile ? 50 : 70,
+      height: mobile.isMobile ? 50 : 70,
+    },
+
+    // Content Container
+    contentContainer: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      paddingRight: mobile.safeSpacing / 2,
+    },
+
+    // Text Styles
+    contraindicationTitle: {
+      fontSize: mobile.isMobile ? mobile.bodySize : mobile.bodySize + 1,
+      fontWeight: 'bold',
+      color: '#FFFFFF',
+      textAlign: 'left',
+      marginBottom: mobile.safeSpacing / 4,
+      flex: 0,
+    },
+    contraindicationDescription: {
+      fontSize: mobile.bodySize - 2,
+      color: '#96C4A8',
+      textAlign: 'left',
+      lineHeight: (mobile.bodySize - 2) * 1.2,
+      marginBottom: 0,
+    },
+
+    // Selection Indicator
+    selectionIndicator: {
+      position: 'absolute',
+      bottom: mobile.safeSpacing / 2,
+      right: mobile.safeSpacing / 2,
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: '#38E078',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    checkIcon: {
+      color: '#ffffff',
+      fontSize: mobile.bodySize,
+      fontWeight: 'bold',
+    },
+
+    // Info Container
+    infoContainer: {
+      paddingHorizontal: mobile.contentPadding,
+      marginVertical: mobile.safeSpacing,
+    },
+    infoCard: {
+      backgroundColor: '#e8f4f8',
+      borderRadius: mobile.isMobile ? 12 : 16,
+      padding: mobile.safeSpacing,
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderLeftWidth: 4,
+      borderLeftColor: '#4a90a4',
+    },
+    infoEmoji: {
+      fontSize: mobile.bodySize + 2,
+      marginRight: mobile.safeSpacing / 2,
+    },
+    infoText: {
+      flex: 1,
+      fontSize: mobile.bodySize - 1,
+      color: '#2d4a52',
+      lineHeight: (mobile.bodySize - 1) * 1.4,
+    },
+    bottomSpacer: {
+      height: mobile.safeSpacing * 2,
+    },
+  });
+
+  const styles = createStyles();
+
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor="#122117" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#7c9885" />
           <Text style={styles.loadingText}>
             Préparation de vos contre-indications...
           </Text>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#122117" />
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* En-tête */}
         <View style={styles.header}>
-          <Text style={styles.title}>🛡️ Contre-indications</Text>
+          <View style={styles.headerTop}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => router.back()}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.backIcon}>←</Text>
+            </TouchableOpacity>
+          </View>
           <Text style={styles.subtitle}>
             Sélectionnez vos conditions médicales pour recevoir des recommandations sécurisées
           </Text>
+          <TouchableOpacity
+            style={styles.skipButtonHeader}
+            onPress={skipContraindications}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.skipButtonHeaderText}>
+              Ignorer cette étape
+            </Text>
+          </TouchableOpacity>
           <View style={styles.progressIndicator}>
             <Text style={styles.progressText}>
               {selectedContraindications.length} sélectionnée(s)
@@ -196,30 +461,27 @@ export default function ContraindicationsScreen() {
                 onPress={() => toggleContraindication(contraindication.id)}
                 activeOpacity={0.8}
               >
-                {/* Badge de catégorie */}
-                <View style={[styles.categoryBadge, isSelected && styles.selectedCategoryBadge]}>
-                  <Text style={[styles.categoryText, isSelected && styles.selectedCategoryText]}>
-                    {contraindication.category}
+                {/* Contenu principal avec titre et description à gauche */}
+                <View style={styles.contentContainer}>
+                  <Text style={styles.contraindicationTitle}>{contraindication.label}</Text>
+                  <Text style={styles.contraindicationDescription}>
+                    {contraindication.description}
                   </Text>
                 </View>
 
-                {/* Emoji principal */}
-                <Text style={styles.mainEmoji}>{contraindication.emoji}</Text>
-
-                {/* Titre */}
-                <Text style={[styles.cardTitle, isSelected && styles.selectedCardTitle]}>
-                  {contraindication.label}
-                </Text>
-
-                {/* Description */}
-                <Text style={[styles.cardDescription, isSelected && styles.selectedCardDescription]}>
-                  {contraindication.description}
-                </Text>
+                {/* Image principale à droite */}
+                <View style={styles.imageContainer}>
+                  <Image
+                    source={contraindicationImages[contraindication.id]}
+                    style={styles.contraindicationImage}
+                    resizeMode="contain"
+                  />
+                </View>
 
                 {/* Indicateur de sélection */}
                 {isSelected && (
-                  <View style={styles.selectedIndicator}>
-                    <Text style={styles.checkmark}>✓</Text>
+                  <View style={styles.selectionIndicator}>
+                    <Text style={styles.checkIcon}>✓</Text>
                   </View>
                 )}
               </TouchableOpacity>
@@ -227,243 +489,19 @@ export default function ContraindicationsScreen() {
           })}
         </View>
 
-        {/* Informations supplémentaires */}
+        {/* Information supplémentaire */}
         <View style={styles.infoContainer}>
           <View style={styles.infoCard}>
             <Text style={styles.infoEmoji}>ℹ️</Text>
             <Text style={styles.infoText}>
-              Vos données restent privées et sont stockées localement sur votre appareil
+              Ces informations nous aident à filtrer les plantes qui pourraient ne pas vous convenir
             </Text>
           </View>
         </View>
 
-        {/* Boutons d'action */}
-        <View style={styles.actionButtons}>
-          <TouchableOpacity
-            style={styles.continueButton}
-            onPress={continueToBodyZone}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.continueButtonText}>
-              Continuer ({selectedContraindications.length} sélectionnée(s))
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.skipButton}
-            onPress={skipContraindications}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.skipButtonText}>
-              Passer cette étape
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Espace en bas pour éviter que le contenu soit coupé */}
+        {/* Espace en bas */}
         <View style={styles.bottomSpacer} />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8faf9',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: responsive.spacing.lg,
-  },
-  loadingText: {
-    marginTop: responsive.spacing.md,
-    fontSize: responsive.fontSize.medium,
-    color: '#7c9885',
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-  header: {
-    paddingHorizontal: responsive.spacing.lg,
-    paddingTop: responsive.spacing.xl,
-    paddingBottom: responsive.spacing.lg,
-    backgroundColor: '#ffffff',
-    marginBottom: responsive.spacing.md,
-    borderBottomLeftRadius: responsive.borderRadius.large,
-    borderBottomRightRadius: responsive.borderRadius.large,
-    ...responsive.shadow.small,
-  },
-  title: {
-    fontSize: responsive.fontSize.title,
-    fontWeight: 'bold',
-    color: '#2d5738',
-    textAlign: 'center',
-    marginBottom: responsive.spacing.sm,
-  },
-  subtitle: {
-    fontSize: responsive.fontSize.medium,
-    color: '#5a6b5d',
-    textAlign: 'center',
-    lineHeight: responsive.fontSize.medium * 1.4,
-    marginBottom: responsive.spacing.md,
-  },
-  progressIndicator: {
-    backgroundColor: 'rgba(124, 152, 133, 0.1)',
-    paddingHorizontal: responsive.spacing.md,
-    paddingVertical: responsive.spacing.xs,
-    borderRadius: responsive.borderRadius.large,
-    alignSelf: 'center',
-  },
-  progressText: {
-    fontSize: responsive.fontSize.small,
-    color: '#7c9885',
-    fontWeight: '600',
-  },
-  gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: responsive.spacing.lg,
-    justifyContent: 'space-between',
-  },
-  contraindicationCard: {
-    width: responsive.width < 600 ? '48%' : '31%',
-    backgroundColor: '#ffffff',
-    borderRadius: responsive.borderRadius.medium,
-    padding: responsive.spacing.md,
-    marginBottom: responsive.spacing.md,
-    borderWidth: 2,
-    borderColor: '#e8f0e8',
-    position: 'relative',
-    minHeight: 140,
-    ...responsive.shadow.small,
-  },
-  selectedCard: {
-    borderColor: '#7c9885',
-    backgroundColor: '#f0f8f0',
-    transform: [{ scale: 1.02 }],
-    ...responsive.shadow.medium,
-  },
-  categoryBadge: {
-    position: 'absolute',
-    top: responsive.spacing.xs,
-    right: responsive.spacing.xs,
-    backgroundColor: '#e8f0e8',
-    paddingHorizontal: responsive.spacing.xs,
-    paddingVertical: 2,
-    borderRadius: responsive.borderRadius.small,
-  },
-  selectedCategoryBadge: {
-    backgroundColor: '#7c9885',
-  },
-  categoryText: {
-    fontSize: responsive.fontSize.xs,
-    color: '#7c9885',
-    fontWeight: '600',
-  },
-  selectedCategoryText: {
-    color: '#ffffff',
-  },
-  mainEmoji: {
-    fontSize: responsive.fontSize.title + 4,
-    textAlign: 'center',
-    marginBottom: responsive.spacing.xs,
-    marginTop: responsive.spacing.sm,
-  },
-  cardTitle: {
-    fontSize: responsive.fontSize.medium,
-    fontWeight: '700',
-    color: '#2d5738',
-    textAlign: 'center',
-    marginBottom: responsive.spacing.xs,
-  },
-  selectedCardTitle: {
-    color: '#1a3d21',
-  },
-  cardDescription: {
-    fontSize: responsive.fontSize.small,
-    color: '#6b7c68',
-    textAlign: 'center',
-    lineHeight: responsive.fontSize.small * 1.3,
-  },
-  selectedCardDescription: {
-    color: '#2d5738',
-  },
-  selectedIndicator: {
-    position: 'absolute',
-    top: responsive.spacing.xs,
-    left: responsive.spacing.xs,
-    backgroundColor: '#7c9885',
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  checkmark: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  infoContainer: {
-    paddingHorizontal: responsive.spacing.lg,
-    marginVertical: responsive.spacing.lg,
-  },
-  infoCard: {
-    backgroundColor: '#e8f4f8',
-    borderRadius: responsive.borderRadius.medium,
-    padding: responsive.spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderLeftWidth: 4,
-    borderLeftColor: '#4a90a4',
-  },
-  infoEmoji: {
-    fontSize: responsive.fontSize.large,
-    marginRight: responsive.spacing.sm,
-  },
-  infoText: {
-    flex: 1,
-    fontSize: responsive.fontSize.small,
-    color: '#2d4a52',
-    lineHeight: responsive.fontSize.small * 1.4,
-  },
-  actionButtons: {
-    paddingHorizontal: responsive.spacing.lg,
-    paddingVertical: responsive.spacing.md,
-  },
-  continueButton: {
-    backgroundColor: '#7c9885',
-    borderRadius: responsive.borderRadius.medium,
-    paddingVertical: responsive.padding.button + 4,
-    alignItems: 'center',
-    marginBottom: responsive.spacing.sm,
-    ...responsive.shadow.medium,
-  },
-  continueButtonText: {
-    fontSize: responsive.fontSize.large,
-    fontWeight: '600',
-    color: '#ffffff',
-    letterSpacing: 0.5,
-  },
-  skipButton: {
-    backgroundColor: 'transparent',
-    borderRadius: responsive.borderRadius.medium,
-    paddingVertical: responsive.padding.button,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#d1d9d1',
-  },
-  skipButtonText: {
-    fontSize: responsive.fontSize.medium,
-    fontWeight: '500',
-    color: '#6b7c68',
-  },
-  bottomSpacer: {
-    height: responsive.spacing.xl,
-  },
-});
