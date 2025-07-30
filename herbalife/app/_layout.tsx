@@ -65,14 +65,6 @@ export default function RootLayout() {
             options={{ title: 'Contre-indications' }}
           />
           <Stack.Screen 
-            name="body-zone" 
-            options={{ title: 'Sélection de la zone' }}
-          />
-          <Stack.Screen 
-            name="body-zone-symptoms" 
-            options={{ title: 'Symptômes de la zone' }}
-          />
-          <Stack.Screen 
             name="body-zones" 
             options={{ title: 'Zones du corps' }}
           />
@@ -83,10 +75,6 @@ export default function RootLayout() {
           <Stack.Screen 
             name="recommendations" 
             options={{ title: 'Plantes recommandées' }}
-          />
-          <Stack.Screen 
-            name="responsive-test" 
-            options={{ title: 'Test Responsive' }}
           />
           <Stack.Screen 
             name="symptom-search" 
