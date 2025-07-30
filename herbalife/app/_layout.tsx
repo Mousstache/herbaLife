@@ -40,18 +40,7 @@ export default function RootLayout() {
     <ContraindicationsProvider>
       <WishlistProvider>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <StatusBar style="light" backgroundColor="#122117" />
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: '#122117',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: '600',
-            },
-          }}
-        >
+        <Stack>
           <Stack.Screen 
             name="index" 
             options={{ headerShown: false }}
@@ -62,11 +51,11 @@ export default function RootLayout() {
           />
           <Stack.Screen 
             name="contraindications" 
-            options={{ title: 'Contre-indications' }}
+            options={{ headerShown: false }}
           />
           <Stack.Screen 
             name="body-zones" 
-            options={{ title: 'Zones du corps' }}
+            options={{ headerShown: false }}
           />
           <Stack.Screen 
             name="zone-symptoms" 
