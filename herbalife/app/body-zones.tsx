@@ -6,10 +6,25 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Image,
 } from 'react-native';
 import { router } from 'expo-router';
 import { bodyZones } from '../data/DataPlant';
 import { responsive } from '../utils/responsive';
+
+// Mapping des images pour chaque zone
+const zoneImages: { [key: string]: any } = {
+  'nerveux-mental': require('../assets/images/systeme_hormonale.png'),
+  'cardiovasculaire': require('../assets/images/coeur_zone.png'),
+  'respiratoire': require('../assets/images/gorge.png'),
+  'digestif': require('../assets/images/systeme_digestif.png'),
+  'immunitaire': require('../assets/images/systeme_immunitaire.png'),
+  'musculo-squelettique': require('../assets/images/articulation.png'),
+  'peau-cheveux-ongles': require('../assets/images/peau.png'),
+  'hormonal-reproducteur': require('../assets/images/systeme_hormonale.png'),
+  'urinaire-detox': require('../assets/images/systeme_urinaire.png'),
+  'yeux-vision': require('../assets/images/oeil.png'),
+};
 
 export default function BodyZonesScreen() {
   const handleZonePress = (zone: any) => {
@@ -56,9 +71,13 @@ export default function BodyZonesScreen() {
                 </Text>
               </View>
 
-              {/* Emoji principal */}
-              <View style={styles.emojiContainer}>
-                <Text style={styles.mainEmoji}>{zone.emoji}</Text>
+              {/* Image de la zone */}
+              <View style={styles.imageContainer}>
+                <Image
+                  source={zoneImages[zone.id]}
+                  style={styles.zoneImage}
+                  resizeMode="contain"
+                />
               </View>
 
               {/* Zone de contenu principal adaptatif */}
@@ -119,7 +138,7 @@ export default function BodyZonesScreen() {
           <View style={styles.shortcutsGrid}>
             <TouchableOpacity
               style={styles.shortcutButton}
-              onPress={() => router.push('/symptom-search')}
+              onPress={() => router.push('/contraindications')}
               activeOpacity={0.8}
             >
               <Text style={styles.shortcutEmoji}>🔍</Text>
@@ -223,20 +242,20 @@ const styles = StyleSheet.create({
     color: '#666666',
     fontWeight: '600',
   },
-  emojiContainer: {
+  imageContainer: {
     backgroundColor: '#f8f9fa',
     padding: responsive.spacing.sm,
     borderRadius: responsive.borderRadius.large,
     marginBottom: responsive.width < 428 ? 0 : responsive.spacing.xs,
     marginRight: responsive.width < 428 ? responsive.spacing.md : 0,
-    width: responsive.width < 428 ? 60 : 'auto',
-    height: responsive.width < 428 ? 60 : 'auto',
+    width: responsive.width < 428 ? 60 : 80,
+    height: responsive.width < 428 ? 60 : 80,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  mainEmoji: {
-    fontSize: responsive.width < 428 ? responsive.fontSize.title : responsive.fontSize.title + 4,
-    textAlign: 'center',
+  zoneImage: {
+    width: responsive.width < 428 ? 40 : 50,
+    height: responsive.width < 428 ? 40 : 50,
   },
   zoneTitle: {
     fontSize: responsive.width < 428 ? responsive.fontSize.medium : responsive.fontSize.medium,

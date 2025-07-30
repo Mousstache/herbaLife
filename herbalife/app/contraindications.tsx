@@ -8,12 +8,27 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { router } from 'expo-router';
 import { responsive } from '../utils/responsive';
 import { useContraindications } from '../contexts/ContraindicationsContext';
 import { firstLaunchService } from '../utils/firstLaunchService';
 import { useMobileResponsive } from '../hooks/useMobileResponsive';
+
+// Mapping des images pour chaque contre-indication
+const contraindicationImages: { [key: string]: any } = {
+  'grossesse': require('../assets/images/grossesse.png'),
+  'allaitement': require('../assets/images/grossesse.png'), // Réutilise grossesse pour allaitement
+  'hypertension': require('../assets/images/hypertension.png'),
+  'anticoagulants': require('../assets/images/medicaments.png'),
+  'allergies_asteracees': require('../assets/images/medecin.png'),
+  'diabete': require('../assets/images/diabete.png'),
+  'troubles_hepatiques': require('../assets/images/hepatique.png'),
+  'troubles_renaux': require('../assets/images/reins.png'),
+  'epilepsie': require('../assets/images/medecin.png'),
+  'chirurgie': require('../assets/images/medecin.png'),
+};
 
 interface Contraindication {
   id: string;
@@ -266,21 +281,21 @@ export default function ContraindicationsScreen() {
       color: '#ffffff',
     },
 
-    // Emoji Container
-    emojiContainer: {
+    // Image Container
+    imageContainer: {
       backgroundColor: '#f8f9fa',
       padding: mobile.safeSpacing / 2,
       borderRadius: mobile.isMobile ? 12 : 16,
       marginBottom: mobile.isMobile ? 0 : mobile.safeSpacing / 2,
       marginRight: mobile.isMobile ? mobile.safeSpacing : 0,
-      width: mobile.isMobile ? 60 : 'auto',
-      height: mobile.isMobile ? 60 : 'auto',
+      width: mobile.isMobile ? 60 : 80,
+      height: mobile.isMobile ? 60 : 80,
       justifyContent: 'center',
       alignItems: 'center',
     },
-    mainEmoji: {
-      fontSize: mobile.isMobile ? mobile.iconSize : mobile.iconSize + 4,
-      textAlign: 'center',
+    contraindicationImage: {
+      width: mobile.isMobile ? 40 : 50,
+      height: mobile.isMobile ? 40 : 50,
     },
 
     // Mobile Content Layout
@@ -455,9 +470,13 @@ export default function ContraindicationsScreen() {
                   </Text>
                 </View>
 
-                {/* Emoji principal */}
-                <View style={styles.emojiContainer}>
-                  <Text style={styles.mainEmoji}>{contraindication.emoji}</Text>
+                {/* Image principale */}
+                <View style={styles.imageContainer}>
+                  <Image
+                    source={contraindicationImages[contraindication.id]}
+                    style={styles.contraindicationImage}
+                    resizeMode="contain"
+                  />
                 </View>
 
                 {/* Contenu adaptatif */}

@@ -35,7 +35,7 @@ export default function MenuScreen() {
           {/* Option 1: Recherche */}
           <TouchableOpacity
             style={[styles.menuCard, styles.searchCard]}
-            onPress={() => router.push('/body-zones')}
+            onPress={() => router.push('/contraindications')}
             activeOpacity={0.85}
           >
             <View style={styles.cardContent}>
