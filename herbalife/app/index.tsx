@@ -175,7 +175,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8faf9',
+    backgroundColor: '#122117',
   },
   loadingContainer: {
     justifyContent: 'center',
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: responsive.spacing.md,
     fontSize: responsive.fontSize.medium,
-    color: '#7c9885',
+    color: '#96C4A8',
   },
   scrollView: {
     flex: 1,
@@ -221,11 +221,11 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: responsive.fontSize.bigTitle,
     fontWeight: '700',
-    color: '#2d5738',
+    color: '#FFFFFF',
   },
   tagline: {
     fontSize: responsive.fontSize.medium,
-    color: '#5a6b5d',
+    color: '#96C4A8',
     textAlign: 'center',
     fontStyle: 'italic',
   },
@@ -269,14 +269,14 @@ const styles = StyleSheet.create({
   welcomeTitle: {
     fontSize: responsive.fontSize.title,
     fontWeight: 'bold',
-    color: '#2d5738',
+    color: '#FFFFFF',
     textAlign: 'center',
     marginBottom: responsive.spacing.md,
     lineHeight: responsive.fontSize.title * 1.2,
   },
   welcomeText: {
     fontSize: responsive.fontSize.medium,
-    color: '#5a6b5d',
+    color: '#96C4A8',
     textAlign: 'center',
     lineHeight: responsive.fontSize.medium * 1.4,
   },
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: responsive.fontSize.medium,
-    color: '#2d5738',
+    color: '#96C4A8',
     fontWeight: '600',
     textAlign: 'center',
   },

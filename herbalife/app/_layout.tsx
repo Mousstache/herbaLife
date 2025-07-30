@@ -40,11 +40,11 @@ export default function RootLayout() {
     <ContraindicationsProvider>
       <WishlistProvider>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <StatusBar style="dark" backgroundColor="#f8f9f5" />
+        <StatusBar style="light" backgroundColor="#122117" />
         <Stack
           screenOptions={{
             headerStyle: {
-              backgroundColor: '#7c9885',
+              backgroundColor: '#122117',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {

@@ -150,8 +150,16 @@ export default function SymptomSearchScreen() {
                       { fontSize: responsive.fontSize.small },
                       selectedSymptoms.includes(symptom) && styles.symptomTextSelected
                     ]}>
-                      {selectedSymptoms.includes(symptom) ? '✓ ' : ''}{symptom}
+                      {symptom}
                     </Text>
+                    <View style={[
+                      styles.checkbox,
+                      selectedSymptoms.includes(symptom) && styles.checkboxSelected
+                    ]}>
+                      {selectedSymptoms.includes(symptom) && (
+                        <Text style={styles.checkmark}>✓</Text>
+                      )}
+                    </View>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -166,7 +174,7 @@ export default function SymptomSearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9f5',
+    backgroundColor: '#122117',
   },
   content: {
     flex: 1,
@@ -174,25 +182,25 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    color: '#1f2937',
+    color: '#FFFFFF',
     textAlign: 'center',
     marginTop: responsive.spacing.md,
     marginBottom: responsive.spacing.sm,
   },
   subtitle: {
-    color: '#6b7280',
+    color: '#96C4A8',
     textAlign: 'center',
     marginBottom: responsive.spacing.lg,
     lineHeight: 22,
   },
   selectedContainer: {
-    backgroundColor: '#e0f2fe',
+    backgroundColor: '#1a2419',
     borderWidth: 2,
-    borderColor: '#7c9885',
+    borderColor: '#38E078',
   },
   selectedTitle: {
     fontWeight: '600',
-    color: '#1f2937',
+    color: '#FFFFFF',
     marginBottom: responsive.spacing.sm,
   },
   selectedGrid: {
@@ -201,25 +209,31 @@ const styles = StyleSheet.create({
     gap: responsive.spacing.xs,
   },
   selectedSymptom: {
-    backgroundColor: '#7c9885',
+    backgroundColor: '#122117',
+    borderWidth: 1,
+    borderColor: '#96C4A8',
   },
   selectedSymptomText: {
-    color: '#fff',
+    color: '#96C4A8',
     fontWeight: '500',
   },
   searchButton: {
-    backgroundColor: '#7c9885',
+    backgroundColor: '#122117',
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#38E078',
   },
   searchButtonText: {
-    color: '#fff',
+    color: '#38E078',
     fontWeight: '600',
   },
   categoryContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1a2419',
+    borderWidth: 1,
+    borderColor: '#96C4A8',
   },
   categoryHeader: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1a2419',
   },
   categoryHeaderContent: {
     flex: 1,
@@ -232,37 +246,60 @@ const styles = StyleSheet.create({
   categoryName: {
     flex: 1,
     fontWeight: '600',
-    color: '#1f2937',
+    color: '#FFFFFF',
   },
   categoryCount: {
-    color: '#6b7280',
-    backgroundColor: '#f3f4f6',
+    color: '#96C4A8',
+    backgroundColor: '#122117',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
     marginRight: responsive.spacing.sm,
   },
   expandIcon: {
-    color: '#7c9885',
+    color: '#38E078',
     fontWeight: 'bold',
   },
   symptomsContainer: {
-    backgroundColor: '#f9fafb',
+    backgroundColor: '#122117',
   },
   symptomItem: {
-    backgroundColor: '#fff',
+    backgroundColor: '#122117',
     borderWidth: 1,
     borderColor: '#e5e7eb',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   symptomSelected: {
     backgroundColor: '#7c9885',
     borderColor: '#7c9885',
   },
   symptomText: {
-    color: '#374151',
+    color: '#FFFFFF',
+    flex: 1,
   },
   symptomTextSelected: {
     color: '#fff',
     fontWeight: '500',
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderColor: '#96C4A8',
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3,
+  },
+  checkboxSelected: {
+    backgroundColor: '#38E078',
+    borderColor: '#38E078',
+  },
+  checkmark: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });

@@ -9,12 +9,15 @@ import {
   Alert,
   ActivityIndicator,
   Image,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import { router } from 'expo-router';
 import { responsive } from '../utils/responsive';
 import { useContraindications } from '../contexts/ContraindicationsContext';
 import { firstLaunchService } from '../utils/firstLaunchService';
 import { useMobileResponsive } from '../hooks/useMobileResponsive';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Mapping des images pour chaque contre-indication
 const contraindicationImages: { [key: string]: any } = {
@@ -116,6 +119,7 @@ export default function ContraindicationsScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const { userContraindications, saveContraindications, clearContraindications } = useContraindications();
   const mobile = useMobileResponsive();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     if (!isLoading) {
@@ -173,7 +177,8 @@ export default function ContraindicationsScreen() {
   const createStyles = () => StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#f8faf9',
+      backgroundColor: '#122117',
+      paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight || 0, // Gestion Android
     },
     scrollView: {
       flex: 1,
@@ -187,7 +192,7 @@ export default function ContraindicationsScreen() {
     loadingText: {
       marginTop: mobile.safeSpacing,
       fontSize: mobile.bodySize,
-      color: '#7c9885',
+      color: '#96C4A8',
       textAlign: 'center',
       fontWeight: '500',
     },
@@ -195,24 +200,51 @@ export default function ContraindicationsScreen() {
     // Header Section
     header: {
       paddingHorizontal: mobile.contentPadding,
-      paddingTop: mobile.safeSpacing * 1.5,
+      paddingTop: Math.max(insets.top, mobile.safeSpacing * 1.5), // Respecte les safe areas
       paddingBottom: mobile.safeSpacing,
-      backgroundColor: '#ffffff',
+      backgroundColor: 'transparent',
       marginBottom: mobile.safeSpacing,
-      borderBottomLeftRadius: mobile.isMobile ? 16 : 20,
-      borderBottomRightRadius: mobile.isMobile ? 16 : 20,
-      ...responsive.shadow.small,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+    headerTop: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: mobile.safeSpacing / 2,
+    },
+    continueHeaderButton: {
+      backgroundColor: '#38E078',
+      paddingHorizontal: mobile.safeSpacing,
+      paddingVertical: mobile.safeSpacing / 2,
+      borderRadius: mobile.isMobile ? 8 : 10,
+    },
+    continueHeaderButtonText: {
+      color: '#ffffff',
+      fontSize: mobile.bodySize - 2,
+      fontWeight: '600',
+    },
+    nextButton: {
+      backgroundColor: '#38E078',
+      paddingHorizontal: mobile.safeSpacing,
+      paddingVertical: mobile.safeSpacing / 2,
+      borderRadius: mobile.isMobile ? 8 : 10,
+    },
+    nextButtonText: {
+      color: '#ffffff',
+      fontSize: mobile.bodySize - 2,
+      fontWeight: '600',
     },
     title: {
       fontSize: mobile.titleSize,
       fontWeight: 'bold',
-      color: '#2d5738',
+      color: '#FFFFFF',
       textAlign: 'center',
-      marginBottom: mobile.safeSpacing / 2,
+      marginBottom: 0,
+      flex: 1,
     },
     subtitle: {
       fontSize: mobile.bodySize,
-      color: '#5a6b5d',
+      color: '#96C4A8',
       textAlign: 'center',
       lineHeight: mobile.bodySize * 1.4,
       marginBottom: mobile.safeSpacing,
@@ -226,116 +258,106 @@ export default function ContraindicationsScreen() {
     },
     progressText: {
       fontSize: mobile.bodySize - 2,
-      color: '#7c9885',
+      color: '#96C4A8',
       fontWeight: '600',
+    },
+    skipButtonHeader: {
+      backgroundColor: 'transparent',
+      borderWidth: 1,
+      borderColor: '#96C4A8',
+      borderRadius: mobile.isMobile ? 8 : 10,
+      paddingHorizontal: mobile.safeSpacing,
+      paddingVertical: mobile.safeSpacing / 2,
+      alignSelf: 'center',
+      marginBottom: mobile.safeSpacing / 2,
+    },
+    skipButtonHeaderText: {
+      color: '#96C4A8',
+      fontSize: mobile.bodySize - 3,
+      fontWeight: '600',
+      textAlign: 'center',
     },
 
     // Grid Container
     gridContainer: {
       paddingHorizontal: mobile.contentPadding,
-      flexDirection: mobile.isMobile ? 'column' : 'row',
-      flexWrap: mobile.isMobile ? 'nowrap' : 'wrap',
-      justifyContent: mobile.isMobile ? 'flex-start' : 'space-between',
-      gap: mobile.safeSpacing,
+      flexDirection: 'column',
+      gap: mobile.safeSpacing / 2,
     },
 
     // Card Styles
     contraindicationCard: {
-      width: mobile.isMobile ? '100%' : '48%',
-      backgroundColor: '#ffffff',
-      borderRadius: mobile.isMobile ? 12 : 16,
-      padding: mobile.safeSpacing,
-      marginBottom: mobile.isMobile ? mobile.safeSpacing : 0,
-      borderWidth: 2,
-      borderColor: '#e8f0e8',
+      width: '100%',
+      backgroundColor: 'transparent',
+      borderRadius: mobile.isMobile ? 8 : 10,
+      padding: mobile.safeSpacing / 1.5,
+      marginBottom: 0,
+      borderWidth: 0,
+      borderColor: 'transparent',
       position: 'relative',
-      minHeight: mobile.isMobile ? 100 : 140,
-      flexDirection: mobile.isMobile ? 'row' : 'column',
-      alignItems: mobile.isMobile ? 'center' : 'center',
-      ...responsive.shadow.medium,
+      minHeight: mobile.isMobile ? 80 : 100,
+      flexDirection: 'row',
+      alignItems: 'center',
+      ...responsive.shadow.small,
     },
     selectedCard: {
-      borderColor: '#7c9885',
-      backgroundColor: '#f0f8f0',
-    },
-
-    // Badge Styles
-    categoryBadge: {
-      position: 'absolute',
-      top: mobile.safeSpacing / 2,
-      right: mobile.safeSpacing / 2,
-      backgroundColor: '#f0f0f0',
-      paddingHorizontal: mobile.safeSpacing / 2,
-      paddingVertical: 2,
-      borderRadius: mobile.isMobile ? 8 : 10,
-    },
-    selectedCategoryBadge: {
-      backgroundColor: '#7c9885',
-    },
-    categoryText: {
-      fontSize: mobile.bodySize - 4,
-      color: '#666666',
-      fontWeight: '600',
-    },
-    selectedCategoryText: {
-      color: '#ffffff',
+      borderWidth: 2,
+      borderColor: '#38E078',
+      backgroundColor: 'rgba(56, 224, 120, 0.1)',
     },
 
     // Image Container
     imageContainer: {
-      backgroundColor: '#f8f9fa',
-      padding: mobile.safeSpacing / 2,
-      borderRadius: mobile.isMobile ? 12 : 16,
-      marginBottom: mobile.isMobile ? 0 : mobile.safeSpacing / 2,
-      marginRight: mobile.isMobile ? mobile.safeSpacing : 0,
+      backgroundColor: 'transparent',
+      padding: 0,
+      borderRadius: 0,
+      marginBottom: 0,
+      marginLeft: mobile.safeSpacing / 2,
       width: mobile.isMobile ? 60 : 80,
       height: mobile.isMobile ? 60 : 80,
       justifyContent: 'center',
       alignItems: 'center',
     },
     contraindicationImage: {
-      width: mobile.isMobile ? 40 : 50,
-      height: mobile.isMobile ? 40 : 50,
+      width: mobile.isMobile ? 50 : 70,
+      height: mobile.isMobile ? 50 : 70,
     },
 
-    // Mobile Content Layout
-    mobileContentContainer: {
+    // Content Container
+    contentContainer: {
       flex: 1,
+      flexDirection: 'column',
       justifyContent: 'center',
-    },
-    mobileHeaderRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: mobile.safeSpacing / 3,
+      alignItems: 'flex-start',
+      paddingRight: mobile.safeSpacing / 2,
     },
 
     // Text Styles
     contraindicationTitle: {
       fontSize: mobile.isMobile ? mobile.bodySize : mobile.bodySize + 1,
       fontWeight: 'bold',
-      color: '#2d5738',
-      textAlign: mobile.isMobile ? 'left' : 'center',
-      marginBottom: mobile.isMobile ? 0 : mobile.safeSpacing / 3,
-      flex: mobile.isMobile ? 1 : 0,
+      color: '#FFFFFF',
+      textAlign: 'left',
+      marginBottom: mobile.safeSpacing / 4,
+      flex: 0,
     },
     contraindicationDescription: {
       fontSize: mobile.bodySize - 2,
-      color: '#6b7c68',
-      textAlign: mobile.isMobile ? 'left' : 'center',
+      color: '#96C4A8',
+      textAlign: 'left',
       lineHeight: (mobile.bodySize - 2) * 1.2,
-      marginBottom: mobile.isMobile ? 0 : mobile.safeSpacing / 2,
+      marginBottom: 0,
     },
 
     // Selection Indicator
     selectionIndicator: {
-      position: mobile.isMobile ? 'relative' : 'absolute',
-      bottom: mobile.isMobile ? 0 : mobile.safeSpacing / 2,
-      right: mobile.isMobile ? 0 : mobile.safeSpacing / 2,
+      position: 'absolute',
+      bottom: mobile.safeSpacing / 2,
+      right: mobile.safeSpacing / 2,
       width: 24,
       height: 24,
       borderRadius: 12,
-      backgroundColor: '#7c9885',
+      backgroundColor: '#38E078',
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -369,49 +391,6 @@ export default function ContraindicationsScreen() {
       color: '#2d4a52',
       lineHeight: (mobile.bodySize - 1) * 1.4,
     },
-
-    // Action Container
-    actionContainer: {
-      paddingHorizontal: mobile.contentPadding,
-      paddingVertical: mobile.safeSpacing,
-      gap: mobile.safeSpacing,
-    },
-    continueButton: {
-      backgroundColor: '#7c9885',
-      borderRadius: mobile.isMobile ? 12 : 16,
-      paddingVertical: mobile.safeSpacing,
-      paddingHorizontal: mobile.safeSpacing * 1.5,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...responsive.shadow.medium,
-    },
-    continueButtonText: {
-      color: '#ffffff',
-      fontSize: mobile.buttonSize,
-      fontWeight: 'bold',
-      marginRight: mobile.safeSpacing / 2,
-    },
-    buttonIcon: {
-      color: '#ffffff',
-      fontSize: mobile.buttonSize,
-      fontWeight: 'bold',
-    },
-    skipButton: {
-      backgroundColor: 'transparent',
-      borderWidth: 2,
-      borderColor: '#e8f0e8',
-      borderRadius: mobile.isMobile ? 12 : 16,
-      paddingVertical: mobile.safeSpacing,
-      paddingHorizontal: mobile.safeSpacing * 1.5,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    skipButtonText: {
-      color: '#7c9885',
-      fontSize: mobile.buttonSize,
-      fontWeight: '600',
-    },
     bottomSpacer: {
       height: mobile.safeSpacing * 2,
     },
@@ -421,26 +400,45 @@ export default function ContraindicationsScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor="#122117" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#7c9885" />
           <Text style={styles.loadingText}>
             Préparation de vos contre-indications...
           </Text>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#122117" />
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* En-tête */}
         <View style={styles.header}>
-          <Text style={styles.title}>🛡️ Contre-indications</Text>
+          <View style={styles.headerTop}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => router.back()}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.backIcon}>←</Text>
+            </TouchableOpacity>
+          </View>
           <Text style={styles.subtitle}>
             Sélectionnez vos conditions médicales pour recevoir des recommandations sécurisées
           </Text>
+          <TouchableOpacity
+            style={styles.skipButtonHeader}
+            onPress={skipContraindications}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.skipButtonHeaderText}>
+              Ignorer cette étape
+            </Text>
+          </TouchableOpacity>
           <View style={styles.progressIndicator}>
             <Text style={styles.progressText}>
               {selectedContraindications.length} sélectionnée(s)
@@ -463,14 +461,15 @@ export default function ContraindicationsScreen() {
                 onPress={() => toggleContraindication(contraindication.id)}
                 activeOpacity={0.8}
               >
-                {/* Badge de catégorie */}
-                <View style={[styles.categoryBadge, isSelected && styles.selectedCategoryBadge]}>
-                  <Text style={[styles.categoryText, isSelected && styles.selectedCategoryText]}>
-                    {contraindication.category}
+                {/* Contenu principal avec titre et description à gauche */}
+                <View style={styles.contentContainer}>
+                  <Text style={styles.contraindicationTitle}>{contraindication.label}</Text>
+                  <Text style={styles.contraindicationDescription}>
+                    {contraindication.description}
                   </Text>
                 </View>
 
-                {/* Image principale */}
+                {/* Image principale à droite */}
                 <View style={styles.imageContainer}>
                   <Image
                     source={contraindicationImages[contraindication.id]}
@@ -479,35 +478,11 @@ export default function ContraindicationsScreen() {
                   />
                 </View>
 
-                {/* Contenu adaptatif */}
-                {mobile.isMobile ? (
-                  <View style={styles.mobileContentContainer}>
-                    <View style={styles.mobileHeaderRow}>
-                      <Text style={styles.contraindicationTitle}>{contraindication.label}</Text>
-                      {isSelected && (
-                        <View style={styles.selectionIndicator}>
-                          <Text style={styles.checkIcon}>✓</Text>
-                        </View>
-                      )}
-                    </View>
-                    <Text style={styles.contraindicationDescription}>
-                      {contraindication.description}
-                    </Text>
+                {/* Indicateur de sélection */}
+                {isSelected && (
+                  <View style={styles.selectionIndicator}>
+                    <Text style={styles.checkIcon}>✓</Text>
                   </View>
-                ) : (
-                  <>
-                    <Text style={styles.contraindicationTitle}>
-                      {contraindication.label}
-                    </Text>
-                    <Text style={styles.contraindicationDescription}>
-                      {contraindication.description}
-                    </Text>
-                    {isSelected && (
-                      <View style={styles.selectionIndicator}>
-                        <Text style={styles.checkIcon}>✓</Text>
-                      </View>
-                    )}
-                  </>
                 )}
               </TouchableOpacity>
             );
@@ -524,33 +499,9 @@ export default function ContraindicationsScreen() {
           </View>
         </View>
 
-        {/* Boutons d'action */}
-        <View style={styles.actionContainer}>
-          <TouchableOpacity
-            style={styles.continueButton}
-            onPress={continueToBodyZone}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.continueButtonText}>
-              Continuer
-            </Text>
-            <Text style={styles.buttonIcon}>→</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.skipButton}
-            onPress={skipContraindications}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.skipButtonText}>
-              Passer cette étape
-            </Text>
-          </TouchableOpacity>
-        </View>
-
         {/* Espace en bas */}
         <View style={styles.bottomSpacer} />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

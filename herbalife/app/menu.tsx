@@ -1,167 +1,47 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
-import { router } from 'expo-router';
-import { responsive } from '../utils/responsive';
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope%3Awght%40400%3B500%3B700%3B800&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
 
-const { width: screenWidth } = Dimensions.get('window');
+    <title>Stitch Design</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
 
-export default function MenuScreen() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        {/* Header simplifié */}
-        <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <View style={styles.leafIcon}>
-              <Text style={styles.leafEmoji}>🌿</Text>
-            </View>
-            <Text style={styles.appName}>PhytoConseil</Text>
-          </View>
-          <Text style={styles.subtitle}>
-            Découvrez des remèdes naturels personnalisés grâce à la phytothérapie et l'homéopathie
-          </Text>
-        </View>
-
-        {/* Menu principal - centré */}
-        <View style={styles.menuContainer}>
-          {/* Option 1: Recherche */}
-          <TouchableOpacity
-            style={[styles.menuCard, styles.searchCard]}
-            onPress={() => router.push('/contraindications')}
-            activeOpacity={0.85}
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <body>
+    <div
+      class="relative flex size-full min-h-screen flex-col bg-[#122118] dark justify-between group/design-root overflow-x-hidden"
+      style='font-family: Manrope, "Noto Sans", sans-serif;'
+    >
+      <div>
+        <div class="@container">
+          <div class="@[480px]:px-4 @[480px]:py-3">
+            <div
+              class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden bg-[#122118] @[480px]:rounded-xl min-h-80"
+              style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCq4uhm5cL4JcE04aKpq97mB2KytBKdTABqy_t5xm0OsP235yUmNxSdNS7HcjhO84H5_bDPu0n5F1QSqTnGNktgaxlqIMLlE_2Ymj1bxzvnmpplJSW7vSxdw1oTW4ylgPypzbPT-ks8pIM5JjTReqQVG2GRJVM7J877TIjYd3sdAZPzPpaO2qjNwZprw0e7OpgS5eaEweIvObQCYdCYFDKHoUTT2M9ma83f269VzHaj82UN4hAzxeVI5B_XPpX7DWp4AeaahYej5dQ");'
+            ></div>
+          </div>
+        </div>
+        <h2 class="text-white tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5">Welcome to HerbaLife</h2>
+        <p class="text-white text-base font-normal leading-normal pb-3 pt-1 px-4 text-center">
+          Discover the power of nature with our curated selection of medicinal plants. Start your journey to wellness today.
+        </p>
+      </div>
+      <div>
+        <div class="flex px-4 py-3">
+          <button
+            class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-5 flex-1 bg-[#39e079] text-[#122118] text-base font-bold leading-normal tracking-[0.015em]"
           >
-            <View style={styles.cardContent}>
-              <Text style={styles.menuIcon}>🔍</Text>
-              <Text style={styles.menuTitle}>Rechercher</Text>
-              <Text style={styles.menuSubtitle}>Trouvez vos remèdes</Text>
-            </View>
-          </TouchableOpacity>
-
-          {/* Option 2: Wishlist */}
-          <TouchableOpacity
-            style={[styles.menuCard, styles.wishlistCard]}
-            onPress={() => router.push('/wishlist')}
-            activeOpacity={0.85}
-          >
-            <View style={styles.cardContent}>
-              <Text style={styles.menuIcon}>💚</Text>
-              <Text style={styles.menuTitle}>Ma Wishlist</Text>
-              <Text style={styles.menuSubtitle}>Mes favoris</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8faf9',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'space-between',
-    paddingHorizontal: responsive.spacing.lg,
-    paddingVertical: responsive.spacing.xl,
-  },
-  
-  // Header simplifié
-  header: {
-    alignItems: 'center',
-    paddingTop: responsive.spacing.lg,
-  },
-  logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: responsive.spacing.sm,
-  },
-  leafIcon: {
-    backgroundColor: '#7c9885',
-    borderRadius: responsive.width < 428 ? 22 : 28,
-    width: responsive.width < 428 ? 44 : 56,
-    height: responsive.width < 428 ? 44 : 56,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: responsive.spacing.md,
-    ...responsive.shadow.small,
-  },
-  leafEmoji: {
-    fontSize: responsive.width < 428 ? 22 : 28,
-  },
-  appName: {
-    fontSize: responsive.fontSize.bigTitle,
-    fontWeight: '800',
-    color: '#2d5738',
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: responsive.fontSize.medium,
-    color: '#5a6b5d',
-    textAlign: 'center',
-    lineHeight: responsive.fontSize.medium * 1.4,
-    paddingHorizontal: responsive.spacing.sm,
-    maxWidth: '90%',
-    fontWeight: '500',
-  },
-
-  // Menu container centré
-  menuContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: responsive.spacing.lg,
-    paddingVertical: responsive.spacing.xl,
-  },
-
-  // Cards du menu
-  menuCard: {
-    width: '100%',
-    maxWidth: responsive.width < 428 ? 280 : 320,
-    borderRadius: responsive.borderRadius.large,
-    padding: responsive.spacing.xl,
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: responsive.width < 428 ? 140 : 160,
-    ...responsive.shadow.large,
-  },
-  searchCard: {
-    backgroundColor: '#ffffff',
-    borderWidth: 2,
-    borderColor: '#e8f5e8',
-  },
-  wishlistCard: {
-    backgroundColor: '#f0f7f1',
-    borderWidth: 2,
-    borderColor: '#d4e8d6',
-  },
-  cardContent: {
-    alignItems: 'center',
-    gap: responsive.spacing.sm,
-  },
-  menuIcon: {
-    fontSize: responsive.width < 428 ? 32 : 40,
-    marginBottom: responsive.spacing.xs,
-  },
-  menuTitle: {
-    fontSize: responsive.fontSize.large,
-    fontWeight: '700',
-    color: '#2d5738',
-    textAlign: 'center',
-  },
-  menuSubtitle: {
-    fontSize: responsive.fontSize.small,
-    color: '#5a6b5d',
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-});
+            <span class="truncate">Start My Journey</span>
+          </button>
+        </div>
+        <div class="h-5 bg-[#122118]"></div>
+      </div>
+    </div>
+  </body>
+</html>
