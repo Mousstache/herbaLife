@@ -15,7 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from '../i18n';
 import { getSymptomTranslation } from '../utils/symptomTranslations';
 import { getPlantImageFileName } from '../utils/imageHelper';
-import { getPlantImageUrl, isPlantImageAvailable } from '../constants/PlantImages';
+import { getPlantImageSource, isPlantImageAvailable } from '../constants/PlantImages';
 
 export default function SymptomResultsScreen() {
   const params = useLocalSearchParams();
@@ -47,9 +47,16 @@ export default function SymptomResultsScreen() {
       return <Text style={styles.plantEmoji}>{plant.emoji}</Text>;
     }
     
+    // Obtenir la source de l'image avec require()
+    const imageSource = getPlantImageSource(imageFileName);
+    
+    if (!imageSource) {
+      return <Text style={styles.plantEmoji}>{plant.emoji}</Text>;
+    }
+    
     return (
       <Image 
-        source={{ uri: getPlantImageUrl(imageFileName) }}
+        source={imageSource}
         style={styles.plantImage}
         onError={(error) => {
           console.log(`Image non trouvée pour ${plant.name}: ${imageFileName}.jpg`);

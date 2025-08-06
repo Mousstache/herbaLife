@@ -17,7 +17,7 @@ import { Plant } from '../data/DataPlant';
 import { useWishlist } from '../contexts/WishlistContext';
 import { Ionicons } from '@expo/vector-icons';
 import { getPlantImageFileName } from '../utils/imageHelper';
-import { getPlantImageUrl, isPlantImageAvailable } from '../constants/PlantImages';
+import { getPlantImageSource, isPlantImageAvailable } from '../constants/PlantImages';
 
 const { height: screenHeight } = Dimensions.get('window');
 
@@ -42,9 +42,16 @@ export default function PlantDetailModal({ plant, visible, onClose }: Props) {
       return <Text style={styles.plantEmoji}>{plant.emoji}</Text>;
     }
     
+    // Obtenir la source de l'image avec require()
+    const imageSource = getPlantImageSource(imageFileName);
+    
+    if (!imageSource) {
+      return <Text style={styles.plantEmoji}>{plant.emoji}</Text>;
+    }
+    
     return (
       <Image 
-        source={{ uri: getPlantImageUrl(imageFileName) }}
+        source={imageSource}
         style={styles.plantImage}
         onError={() => {
           console.log(`Image non trouvée pour ${plant.name}: ${imageFileName}.jpg`);

@@ -297,9 +297,6 @@ const BodyZonesScreen = () => {
           <Text style={styles.tabText}>{t('common.profile')}</Text>
         </TouchableOpacity>
       </View>
-      
-      {/* Espacement final */}
-      <View style={styles.bottomSpacer} />
     </SafeAreaView>
   );
 };
@@ -400,10 +397,6 @@ const styles = StyleSheet.create({
   activeTabText: {
     color: '#ffffff',
     fontWeight: '600',
-  },
-  bottomSpacer: {
-    height: 20,
-    backgroundColor: '#122118',
   },
 });
 
