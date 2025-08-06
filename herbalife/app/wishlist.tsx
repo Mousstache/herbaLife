@@ -1,170 +1,86 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
+import { router } from 'expo-router';
 import { useWishlist } from '../contexts/WishlistContext';
-import { useContraindications } from '../contexts/ContraindicationsContext';
-import { ModernCard } from '../components/ui/ModernCard';
-import { ModernButton } from '../components/ui/ModernButton';
-import { responsive } from '../utils/responsive';
+import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from '../i18n';
 
 export default function WishlistScreen() {
-  const { 
-    favorites, 
-    favoriteProducts, 
-    filteredFavorites, 
-    safeFavorites, 
-    dangerousFavorites,
-    filterBySafety, 
-    setFilterBySafety,
-    removeFromFavorites,
-    removeProductFromFavorites 
-  } = useWishlist();
-  
-  const { userContraindications } = useContraindications();
-  const [activeTab, setActiveTab] = useState<'plants' | 'products'>('plants');
-
-  const displayedFavorites = filterBySafety ? safeFavorites : filteredFavorites;
-
-  const renderPlantItem = ({ item }: { item: any }) => (
-    <ModernCard style={styles.plantCard}>
-      <View style={styles.plantHeader}>
-        <Text style={styles.plantEmoji}>{item.emoji}</Text>
-        <View style={styles.plantInfo}>
-          <Text style={styles.plantName}>{item.name}</Text>
-          <Text style={styles.plantLatinName}>{item.latinName}</Text>
-        </View>
-        
-        {/* Badge de sécurité */}
-        {dangerousFavorites.find(p => p.id === item.id) && (
-          <View style={styles.safetyBadge}>
-            <Text style={styles.safetyBadgeText}>⚠️ Attention</Text>
-          </View>
-        )}
-      </View>
-      
-      <Text style={styles.plantDescription}>{item.shortDescription}</Text>
-      
-      <ModernButton
-        title="Retirer de la wishlist"
-        variant="outline"
-        size="small"
-        onPress={() => removeFromFavorites(item.id)}
-        style={styles.removeButton}
-      />
-    </ModernCard>
-  );
-
-  const renderProductItem = ({ item }: { item: any }) => (
-    <ModernCard style={styles.productCard}>
-      <View style={styles.productHeader}>
-        <Text style={styles.productName}>{item.name}</Text>
-        <Text style={styles.productPrice}>{item.price}</Text>
-      </View>
-      
-      <Text style={styles.productDescription}>{item.description}</Text>
-      
-      <ModernButton
-        title="Retirer de la wishlist"
-        variant="outline"
-        size="small"
-        onPress={() => removeProductFromFavorites(item.id)}
-        style={styles.removeButton}
-      />
-    </ModernCard>
-  );
+  const { favorites } = useWishlist();
+  const { t } = useTranslation();
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header avec retour */}
       <View style={styles.header}>
-        <Text style={styles.title}>Ma Wishlist 🌿</Text>
-        
-        {/* Filtre de sécurité */}
-        {userContraindications.length > 0 && (
-          <View style={styles.filterContainer}>
-            <ModernButton
-              title={filterBySafety ? "Voir tout" : "Masquer les dangereuses"}
-              variant={filterBySafety ? "primary" : "outline"}
-              size="small"
-              onPress={() => setFilterBySafety(!filterBySafety)}
-              style={styles.filterButton}
-            />
-            
-            {dangerousFavorites.length > 0 && (
-              <View style={styles.warningBadge}>
-                <Text style={styles.warningBadgeText}>{dangerousFavorites.length} plante(s) à risque</Text>
-              </View>
-            )}
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>HerbaLife</Text>
+      </View>
+
+      {/* Titre et compteur */}
+      <Text style={styles.mainTitle}>{t('wishlist.title')}</Text>
+      <Text style={styles.subtitle}>{favorites.length} {t('common.plants')}</Text>
+
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Liste des plantes favorites */}
+        {favorites.length > 0 ? (
+          favorites.map((plant, index) => (
+            <View key={plant.id} style={styles.plantCardContainer}>
+              <TouchableOpacity style={styles.plantCard} activeOpacity={0.7}>
+                <View style={styles.plantContent}>
+                  <View style={styles.plantInfo}>
+                    <Text style={styles.plantName}>{plant.name}</Text>
+                    <Text style={styles.plantAction}>{t('common.viewDetails')}</Text>
+                  </View>
+                  <View style={styles.plantImageContainer}>
+                    <Text style={styles.plantEmoji}>{plant.emoji}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))
+        ) : (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyTitle}>{t('wishlist.emptyTitle')}</Text>
+            <Text style={styles.emptyText}>{t('wishlist.emptyText')}</Text>
           </View>
         )}
-      </View>
+      </ScrollView>
 
-      {/* Onglets */}
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'plants' && styles.activeTab]}
-          onPress={() => setActiveTab('plants')}
-        >
-          <Text style={[styles.tabText, activeTab === 'plants' && styles.activeTabText]}>
-            Plantes ({displayedFavorites.length})
-          </Text>
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/body-zones')}>
+          <Ionicons name="home-outline" size={24} color="#9eb7a8" />
+          <Text style={styles.navText}>{t('common.home')}</Text>
         </TouchableOpacity>
         
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'products' && styles.activeTab]}
-          onPress={() => setActiveTab('products')}
-        >
-          <Text style={[styles.tabText, activeTab === 'products' && styles.activeTabText]}>
-            Produits ({favoriteProducts.length})
-          </Text>
+                <TouchableOpacity style={styles.navItem} onPress={() => router.push('/plant-search')}>
+          <Ionicons name="search-outline" size={24} color="#96c5a8" />
+          <Text style={styles.navText}>Recherche</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="bookmark" size={24} color="#FFFFFF" />
+          <Text style={styles.navTextActive}>{t('common.favorites')}</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/profile')}>
+          <Ionicons name="person-outline" size={24} color="#9eb7a8" />
+          <Text style={styles.navText}>{t('common.profile')}</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Contenu */}
-      {activeTab === 'plants' ? (
-        displayedFavorites.length > 0 ? (
-          <FlatList
-            data={displayedFavorites}
-            renderItem={renderPlantItem}
-            keyExtractor={(item) => item.id.toString()}
-            style={styles.list}
-            showsVerticalScrollIndicator={false}
-          />
-        ) : (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>
-              {filterBySafety && dangerousFavorites.length > 0 
-                ? "Aucune plante sûre dans votre wishlist" 
-                : "Aucune plante dans votre wishlist"}
-            </Text>
-            <Text style={styles.emptySubtext}>
-              Explorez nos recommandations pour découvrir de nouvelles plantes !
-            </Text>
-          </View>
-        )
-      ) : (
-        favoriteProducts.length > 0 ? (
-          <FlatList
-            data={favoriteProducts}
-            renderItem={renderProductItem}
-            keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
-            style={styles.list}
-            showsVerticalScrollIndicator={false}
-          />
-        ) : (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>Aucun produit dans votre wishlist</Text>
-            <Text style={styles.emptySubtext}>
-              Consultez les fiches plantes pour découvrir nos produits !
-            </Text>
-          </View>
-        )
-      )}
+      
+      {/* Espacement final */}
+      <View style={styles.bottomSpacer} />
     </SafeAreaView>
   );
 }
@@ -172,82 +88,64 @@ export default function WishlistScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#122117',
+    backgroundColor: '#122118',
   },
   header: {
-    backgroundColor: '#fff',
-    padding: responsive.padding.container,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    paddingTop: 50,
+    backgroundColor: '#122118',
+    position: 'relative',
   },
-  title: {
-    fontSize: 28,
+  backButton: {
+    position: 'absolute',
+    left: 16,
+    top: 50,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  mainTitle: {
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: 16,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 8,
   },
-  filterContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  filterButton: {
-    flex: 0,
-  },
-  warningBadge: {
-    flex: 0,
-    backgroundColor: '#fff7ed',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#ea580c',
-  },
-  warningBadgeText: {
-    fontSize: 12,
-    color: '#ea580c',
-    fontWeight: '600',
-  },
-  tabContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: 16,
-    alignItems: 'center',
-    borderBottomWidth: 3,
-    borderBottomColor: 'transparent',
-  },
-  activeTab: {
-    borderBottomColor: '#7c9885',
-  },
-  tabText: {
+  subtitle: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#6b7280',
+    color: '#9eb7a8',
+    textAlign: 'center',
+    marginBottom: 20,
   },
-  activeTabText: {
-    color: '#7c9885',
-    fontWeight: '600',
-  },
-  list: {
+  content: {
     flex: 1,
-    padding: responsive.padding.container,
+    paddingHorizontal: 16,
   },
-  plantCard: {
-    marginBottom: responsive.spacing.md,
-  },
-  plantHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  plantCardContainer: {
     marginBottom: 12,
   },
-  plantEmoji: {
-    fontSize: 24,
-    marginRight: 12,
+  plantCard: {
+    backgroundColor: '#1a2f1f',
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#2d3e32',
+  },
+  plantContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   plantInfo: {
     flex: 1,
@@ -255,80 +153,72 @@ const styles = StyleSheet.create({
   plantName: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1f2937',
-    marginBottom: 2,
+    color: '#FFFFFF',
+    marginBottom: 4,
   },
-  plantLatinName: {
+  plantAction: {
     fontSize: 14,
-    color: '#6b7280',
-    fontStyle: 'italic',
+    color: '#96c5a8',
   },
-  safetyBadge: {
-    marginLeft: 8,
-    backgroundColor: '#fef2f2',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#dc2626',
-  },
-  safetyBadgeText: {
-    fontSize: 12,
-    color: '#dc2626',
-    fontWeight: '600',
-  },
-  plantDescription: {
-    fontSize: 14,
-    color: '#4b5563',
-    lineHeight: 20,
-    marginBottom: 16,
-  },
-  productCard: {
-    marginBottom: responsive.spacing.md,
-  },
-  productHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  plantImageContainer: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 8,
+    backgroundColor: '#2d3e32',
+    borderRadius: 25,
   },
-  productName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1f2937',
-    flex: 1,
-  },
-  productPrice: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#7c9885',
-  },
-  productDescription: {
-    fontSize: 14,
-    color: '#4b5563',
-    lineHeight: 20,
-    marginBottom: 16,
-  },
-  removeButton: {
-    alignSelf: 'flex-start',
+  plantEmoji: {
+    fontSize: 24,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: responsive.padding.container,
+    paddingVertical: 60,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginBottom: 8,
+    textAlign: 'center',
   },
   emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#6b7280',
+    fontSize: 16,
+    color: '#9eb7a8',
     textAlign: 'center',
-    marginBottom: 8,
+    lineHeight: 22,
   },
-  emptySubtext: {
-    fontSize: 14,
-    color: '#9ca3af',
-    textAlign: 'center',
-    lineHeight: 20,
+  bottomNav: {
+    flexDirection: 'row',
+    backgroundColor: '#1a2f1f',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#2d3e32',
+  },
+  navItem: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  navItemActive: {
+    // Pas de fond coloré, uniquement des changements de couleur d'icônes et de texte
+  },
+  navText: {
+    fontSize: 12,
+    color: '#9eb7a8',
+    marginTop: 4,
+  },
+  navTextActive: {
+    fontSize: 12,
+    color: '#FFFFFF',
+    marginTop: 4,
+    fontWeight: '600',
+  },
+  bottomSpacer: {
+    height: 20,
+    backgroundColor: '#122118',
   },
 });

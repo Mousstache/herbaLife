@@ -11,10 +11,13 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Colors } from '@/constants/Colors';
+import { useTranslation } from '../i18n';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 export default function MenuScreen() {
+  const { t } = useTranslation();
+  
   const handleStartJourney = () => {
     // Navigation vers la page suivante (à ajuster selon votre flow)
     router.push('/contraindications');
@@ -50,7 +53,7 @@ export default function MenuScreen() {
       {/* Bouton en bas */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.startButton} onPress={handleStartJourney}>
-          <Text style={styles.buttonText}>Start My Journey</Text>
+          <Text style={styles.buttonText}>{t('menu.startMyJourney')}</Text>
         </TouchableOpacity>
         <View style={styles.bottomSpacer} />
       </View>

@@ -1,0 +1,35 @@
+{
+  "common": {
+    "home": "الرئيسية",
+    "search": "بحث",
+    "favorites": "المفضلة",
+    "profile": "الملف الشخصي",
+    "plants": "نباتات",
+    "viewDetails": "عرض التفاصيل",
+    "back": "رجوع",
+    "selectSymptoms": "اختر الأعراض لاكتشاف النباتات التي يمكن أن تساعدك",
+    "selectedSymptoms": "الأعراض المختارة",
+    "settings": "الإعدادات",
+    "notifications": "الإشعارات",
+    "language": "اللغة"
+  },
+  "wishlist": {
+    "title": "❤️ نباتاتي المفضلة",
+    "emptyTitle": "لا توجد نباتات مفضلة",
+    "emptyText": "أضف نباتاتك المفضلة للعثور عليها بسهولة هنا"
+  },
+  "bodyZones": {
+    "title": "مناطق الجسم",
+    "subtitle": "اختر منطقة لاكتشاف النباتات المناسبة"
+  },
+  "profile": {
+    "title": "ملفي الشخصي",
+    "language": "اللغة",
+    "darkMode": "الوضع الداكن",
+    "contactUs": "اتصل بنا",
+    "aboutUs": "من نحن",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfService": "شروط الخدمة",
+    "logout": "تسجيل الخروج"
+  }
+}

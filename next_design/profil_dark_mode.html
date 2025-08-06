@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mon Profil - HerbaLife</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+  <link
+    rel="stylesheet"
+    as="style"
+    onload="this.rel='stylesheet'"
+    href="https://fonts.googleapis.com/css2?display=swap&family=Manrope:wght@400;500;700;800&family=Noto+Sans:wght@400;500;700;900"
+  />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+</head>
+<body>
+  <div class="relative flex min-h-screen flex-col bg-[#121714] text-white font-sans">
+    <div>
+      <div class="flex items-center p-4 pb-2 justify-between">
+        <div class="text-white flex size-12 shrink-0 items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+            <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/>
+          </svg>
+        </div>
+        <h2 class="text-lg font-bold flex-1 text-center pr-12">Mon Profil</h2>
+      </div>
+
+      <h2 class="text-[22px] font-bold px-4 pb-3 pt-5">Paramètres</h2>
+
+      <div class="flex items-center gap-4 px-4 min-h-14 justify-between">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center justify-center rounded-lg bg-[#2b362f] shrink-0 size-10">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+              <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216Z"/>
+            </svg>
+          </div>
+          <p class="text-base">Notifications</p>
+        </div>
+        <div class="shrink-0">
+          <label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full border-none bg-[#2b362f] p-0.5 has-[:checked]:justify-end has-[:checked]:bg-[#35e372]">
+            <div class="h-full w-[27px] rounded-full bg-white" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 8px;"></div>
+            <input type="checkbox" class="invisible absolute" />
+          </label>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 px-4 min-h-14 justify-between border-t border-[#404f46] mt-4">
+        <p class="text-base">Langue</p>
+        <p class="text-base text-white">Français</p>
+      </div>
+      <div class="flex items-center gap-4 px-4 min-h-14 justify-between">
+        <p class="text-base">Thème</p>
+        <p class="text-base text-white">Sombre</p>
+      </div>
+      <div class="flex items-center gap-4 px-4 min-h-14 justify-between">
+        <p class="text-base">Unités de mesure</p>
+        <p class="text-base text-white">Métrique</p>
+      </div>
+
+      <h2 class="text-[22px] font-bold px-4 pb-3 pt-5">Contre-indications</h2>
+      <div class="flex px-4 py-3 justify-start">
+        <button class="flex items-center gap-2 text-sm font-bold text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+            <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/>
+          </svg>
+          <span>Gérer mes contre-indications</span>
+        </button>
+      </div>
+    </div>
+
+    <footer class="mt-auto border-t border-[#404f46] bg-[#121714] px-4 pb-3 pt-2">
+      <div class="flex gap-2 text-xs font-medium text-[#648770] justify-around">
+        <a href="#" class="flex flex-col items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+            <path d="M218.83,103.77l-80-75.48a16,16,0,0,0-21.53,0l-80,75.48A16,16,0,0,0,32,115.55V208a16,16,0,0,0,16,16H96v-48h64v48h48a16,16,0,0,0,16-16V115.55A16,16,0,0,0,218.83,103.77Z"/>
+          </svg>
+          Accueil
+        </a>
+        <a href="#" class="flex flex-col items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+            <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/>
+          </svg>
+          Recherche
+        </a>
+        <a href="#" class="flex flex-col items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+            <path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Z"/>
+          </svg>
+          Favoris
+        </a>
+        <a href="#" class="flex flex-col items-center text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+            <path d="M230.93,220a8,8,0,0,1-6.93,4H32a8,8,0,0,1-6.92-12c15.23-26.33,38.7-45.21,66.09-54.16a72,72,0,1,1,73.66,0c27.39,8.95,50.86,27.83,66.09,54.16A8,8,0,0,1,230.93,220Z"/>
+          </svg>
+          Profil
+        </a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

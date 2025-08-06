@@ -12,12 +12,14 @@ import {
 import { router } from 'expo-router';
 import { responsive } from '../utils/responsive';
 import { firstLaunchService } from '../utils/firstLaunchService';
+import { useTranslation } from '../i18n';
 
 const { width: screenWidth } = Dimensions.get('window');
 
 export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [shouldShowWelcome, setShouldShowWelcome] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     checkFirstLaunch();
@@ -79,7 +81,7 @@ export default function HomeScreen() {
       <SafeAreaView style={[styles.container, styles.loadingContainer]}>
         <ActivityIndicator size="large" color="#7c9885" />
         <Text style={styles.loadingText}>
-          Chargement...
+          {t('common.loading')}
         </Text>
       </SafeAreaView>
     );
@@ -102,9 +104,9 @@ export default function HomeScreen() {
             <View style={styles.leafIcon}>
               <Text style={styles.leafEmoji}>🌿</Text>
             </View>
-            <Text style={styles.appName}>PhytoConseil</Text>
+            <Text style={styles.appName}>{t('home.appName')}</Text>
           </View>
-          <Text style={styles.tagline}>Votre guide naturel de bien-être</Text>
+          <Text style={styles.tagline}>{t('home.tagline')}</Text>
         </View>
 
         {/* Illustration principale */}
@@ -121,10 +123,10 @@ export default function HomeScreen() {
         {/* Section de bienvenue */}
         <View style={styles.welcomeSection}>
           <Text style={styles.welcomeTitle}>
-            Découvrez la puissance des plantes
+            {t('home.welcomeTitle')}
           </Text>
           <Text style={styles.welcomeText}>
-            Explorez des remèdes naturels personnalisés basés sur la phytothérapie et l'homéopathie pour améliorer votre bien-être.
+            {t('home.welcomeText')}
           </Text>
         </View>
 
@@ -132,15 +134,15 @@ export default function HomeScreen() {
         <View style={styles.featuresSection}>
           <View style={styles.featureCard}>
             <Text style={styles.featureEmoji}>🎯</Text>
-            <Text style={styles.featureText}>Conseils personnalisés</Text>
+            <Text style={styles.featureText}>{t('home.personalizedAdvice')}</Text>
           </View>
           <View style={styles.featureCard}>
             <Text style={styles.featureEmoji}>🌿</Text>
-            <Text style={styles.featureText}>100% naturel</Text>
+            <Text style={styles.featureText}>{t('home.naturalHundredPercent')}</Text>
           </View>
           <View style={styles.featureCard}>
             <Text style={styles.featureEmoji}>📚</Text>
-            <Text style={styles.featureText}>Base scientifique</Text>
+            <Text style={styles.featureText}>{t('home.scientificBasis')}</Text>
           </View>
         </View>
 
@@ -151,12 +153,12 @@ export default function HomeScreen() {
             onPress={handleStartPress}
             activeOpacity={0.8}
           >
-            <Text style={styles.startButtonText}>Commencer mon diagnostic</Text>
+            <Text style={styles.startButtonText}>{t('home.startDiagnosis')}</Text>
             <Text style={styles.startButtonIcon}>→</Text>
           </TouchableOpacity>
 
           <Text style={styles.actionSubtext}>
-            En quelques minutes, obtenez des recommandations adaptées
+            {t('home.actionSubtext')}
           </Text>
         </View>
 
@@ -164,7 +166,7 @@ export default function HomeScreen() {
         <View style={styles.footer}>
           <View style={styles.footerInfo}>
             <Text style={styles.footerEmoji}>🔒</Text>
-            <Text style={styles.footerText}>Confidentiel et gratuit</Text>
+            <Text style={styles.footerText}>{t('home.confidentialAndFree')}</Text>
           </View>
         </View>
       </ScrollView>
