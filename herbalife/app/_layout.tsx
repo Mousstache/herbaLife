@@ -9,6 +9,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { WishlistProvider } from '../contexts/WishlistContext';
 import { ContraindicationsProvider } from '../contexts/ContraindicationsContext';
 import { SplashScreen } from '../components/SplashScreen';
+import { LocalizationProvider } from '../i18n';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -37,113 +38,27 @@ export default function RootLayout() {
   console.log('Showing main app');
 
   return (
-    <ContraindicationsProvider>
-      <WishlistProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <StatusBar style="light" backgroundColor="#122117" />
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: '#122117',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: '600',
-            },
-          }}
-        >
-          <Stack.Screen 
-            name="index" 
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen 
-            name="menu" 
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen 
-            name="contraindications" 
-            options={{ title: 'Contre-indications' }}
-          />
-          <Stack.Screen 
-            name="body-zones" 
-            options={{ title: 'Zones du corps' }}
-          />
-          <Stack.Screen 
-            name="zone-symptoms" 
-            options={{ title: 'Symptômes' }}
-          />
-          <Stack.Screen 
-            name="recommendations" 
-            options={{ title: 'Plantes recommandées' }}
-          />
-          <Stack.Screen 
-            name="symptom-search" 
-            options={{ title: 'Recherche par symptômes' }}
-          />
-          <Stack.Screen 
-            name="symptom-results" 
-            options={{ title: 'Résultats' }}
-          />
-          <Stack.Screen 
-            name="wishlist" 
-            options={{ title: 'Ma Wishlist 🌿' }}
-          />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </ThemeProvider>
-    </WishlistProvider>
-    </ContraindicationsProvider>
+    <LocalizationProvider>
+      <ContraindicationsProvider>
+        <WishlistProvider>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <Stack>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen name="menu" options={{ headerShown: false }} />
+              <Stack.Screen name="contraindications" options={{ headerShown: false }} />
+              <Stack.Screen name="body-zones" options={{ headerShown: false }} />
+              <Stack.Screen name="zone-symptoms" options={{ title: 'Symptômes' }} />
+              <Stack.Screen name="recommendations" options={{ title: 'Plantes recommandées' }} />
+              <Stack.Screen name="symptom-search" options={{ title: 'Recherche par symptômes' }} />
+              <Stack.Screen name="plant-search" options={{ title: 'Recherche de plantes' }} />
+              <Stack.Screen name="symptom-results" options={{ title: 'Résultats' }} />
+              <Stack.Screen name="wishlist" options={{ title: 'Ma Wishlist 🌿' }} />
+              <Stack.Screen name="profile" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </ThemeProvider>
+        </WishlistProvider>
+      </ContraindicationsProvider>
+    </LocalizationProvider>
   );
 }
-
-// import React from 'react';
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import { StatusBar } from 'expo-status-bar';
-// import HomeScreen from './screens/HomeScreen';
-// import BodyZoneScreen from './screens/BodyZoneScreen';
-// import RecommendationsScreen from './screens/RecommendationsScreen';
-
-// export type RootStackParamList = {
-//   Home: undefined;
-//   BodyZone: undefined;
-//   Recommendations: { zone: string };
-// };
-
-// const Stack = createNativeStackNavigator<RootStackParamList>();
-
-// export default function App() {
-//   return (
-//     <NavigationContainer>
-//       <StatusBar style="dark" backgroundColor="#f8f9f5" />
-//       <Stack.Navigator
-//         initialRouteName="Home"
-//         screenOptions={{
-//           headerStyle: {
-//             backgroundColor: '#7c9885',
-//           },
-//           headerTintColor: '#fff',
-//           headerTitleStyle: {
-//             fontWeight: '600',
-//           },
-//         }}
-//       >
-//         <Stack.Screen 
-//           name="Home" 
-//           component={HomeScreen} 
-//           options={{ headerShown: false }}
-//         />
-//         <Stack.Screen 
-//           name="BodyZone" 
-//           component={BodyZoneScreen}
-//           options={{ title: 'Sélection de la zone' }}
-//         />
-//         <Stack.Screen 
-//           name="Recommendations" 
-//           component={RecommendationsScreen}
-//           options={{ title: 'Plantes recommandées' }}
-//         />
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   );
-// }

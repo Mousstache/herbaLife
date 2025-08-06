@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,358 +7,413 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
+  Dimensions,
+  FlatList,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { bodyZones } from '../data/DataPlant';
-import { responsive } from '../utils/responsive';
+import { bodyZones as bodyZonesData } from '../data/DataPlant';
+import { Stack } from 'expo-router';
+import { useTranslation } from '../i18n';
 
-// Mapping des images pour chaque zone
-const zoneImages: { [key: string]: any } = {
-  'nerveux-mental': require('../assets/images/systeme_hormonale.png'),
-  'cardiovasculaire': require('../assets/images/coeur_zone.png'),
-  'respiratoire': require('../assets/images/gorge.png'),
-  'digestif': require('../assets/images/systeme_digestif.png'),
-  'immunitaire': require('../assets/images/systeme_immunitaire.png'),
-  'musculo-squelettique': require('../assets/images/articulation.png'),
-  'peau-cheveux-ongles': require('../assets/images/peau.png'),
-  'hormonal-reproducteur': require('../assets/images/systeme_hormonale.png'),
-  'urinaire-detox': require('../assets/images/systeme_urinaire.png'),
-  'yeux-vision': require('../assets/images/oeil.png'),
+const getScreenData = () => {
+  const { width, height } = Dimensions.get('window');
+  return {
+    width,
+    height,
+    isTablet: width >= 768,
+    isLandscape: width > height,
+    isSmallScreen: width < 375,
+  };
 };
 
-export default function BodyZonesScreen() {
-  const handleZonePress = (zone: any) => {
-    router.push({
-      pathname: '/zone-symptoms' as any,
-      params: { 
-        zoneId: zone.id,
-        zoneName: zone.name,
-        zoneEmoji: zone.emoji,
-        zoneColor: zone.color
-      }
+interface BodyZone {
+  id: string;
+  title: string;
+  subtitle: string;
+  symptoms: string;
+  imageUrl: string;
+}
+
+const getBodyZonesLocalData = (t: any) => {
+  return [
+    {
+      id: '1',
+      title: t('bodyZones.head.title'),
+      subtitle: t('bodyZones.head.subtitle'),
+      symptoms: `12 ${t('bodyZones.head.symptoms')}`,
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAHxGyc55crS3v9uOxZCL0cyrSbBfqSThCojvGIwQCMt4rAmFaNzjEMgd5rXi90Aq45wlBbATWBiBAoZ6qeHZTylyTkROiHoVWJ21asCzLJ1FVX9-xFrQhU-F3s1aCr8evtG1RrQwJ9osxE5gHgdI_i8ejaFsDFhSOLLx5Viik5tWTeJ8TZAMHCndktibwgnpQXXvefIh2k4ePYYVYQRo41WSoesk-MANaaiaHvKv7VBwWLd10H4bhlo4kpLAUxtP8LWdciftYWerQ',
+    },
+    {
+      id: '2',
+      title: t('bodyZones.eyes.title'),
+      subtitle: t('bodyZones.eyes.subtitle'),
+      symptoms: `6 ${t('bodyZones.eyes.symptoms')}`,
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCR_fNjHobB_wYG9FWKUlJ5f_J2DNffHPonbXSJK5iMt2pt-a6n00nFO4p5qi6yAhIMGCQ-HhnT0d0TLZRaNvUjnQDIghvGcabfM4TSuCbLKaE6mPS3BtEZ4o-USr0jWavfqc2cKFQ7O8tuTaCpuuMyvPfOvTQ8ycOs6f1RmQLRl07yNk-SBv-Izp3jb3KRJrjeVJ9izGrxq0KD2VJXgQgKEq31apyxfWIc4osc4WxVU_dzp5KdArZlPo9gyB1GiaCyyHlARAOT5TI',
+    },
+    {
+      id: '3',
+      title: t('bodyZones.throat.title'),
+      subtitle: t('bodyZones.throat.subtitle'),
+      symptoms: `8 ${t('bodyZones.throat.symptoms')}`,
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4FtXTMyPw9pcqgB99_cRMNPo53SeQpF1nHCfOJBQzZuaVkIWW4N4qUQOoWjXsXt3oOm_vbF6JeOh-tCkTPqLWptED2oUbNA-_T_8NlUyKqw0BrLLxmDHsWsAete2Y9o7p1l0As3NVs9UutXrLCu3dWsEqp12uFbcDa2S378lXgxPPUe1Ku7UvQvqwiucYCQdHFGBYi9n-NNnEFq5On1lzpmqQIWeP9AInC7Hgnclpz_ICcnt-4ARlCo_FW-xazP-fePRHu3P7iQo',
+    },
+    {
+      id: '4',
+      title: t('bodyZones.heart.title'),
+      subtitle: t('bodyZones.heart.subtitle'),
+      symptoms: `10 ${t('bodyZones.heart.symptoms')}`,
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDXyyRtPCfpn9suWSR7RJRNmX8chuj8lKhvHfC8sqEb9SCwaL6xWF_hOy8XKrXzmGHlfwggv0mx_fyNm2BKwwMpKMA4aqFqAOgUAX8vRPZfAJ9sMaFlm3lZRzQpywHG2xwFZhtX5MERqe8x832tH7iDCU6JNIlZNT-Rx2ILvvehoxm7j1tmURuPFOj_IOaaDI9z_XUpU9FXkTl-pUGLrXO-z8Gv-nbRy7INDxfFItgqXtj5VZVfACxnqYhacb5GF6aOmny1hfOj9lA',
+    },
+    {
+      id: '5',
+      title: t('bodyZones.hormonal.title'),
+      subtitle: t('bodyZones.hormonal.subtitle'),
+      symptoms: `9 ${t('bodyZones.hormonal.symptoms')}`,
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6DstF4F7GcSf-Bm8UbEDeWPmOj0vYw3n7MzYKMFMro9xK4B3E86yzaFeZF2-XJCbfP7iJlSUadpStT-AzPk2X-ZDIu_5vpMKIYNgXZV17sKNUJ8i1O_mduRxqJx6yyVIO_03V-ej69ma5Rdud4MzGgxzjonOVU88HqaYdPTqmWKQophuFb6FOwOiFH6yEaq0tbj3-DM98_vlwOjtN2B7Dar5t1ynLexFTsubmqjwURe0dvupyTxHexxH3Rw2js2tOXvtsbT1Xh_4',
+    },
+    {
+      id: '6',
+      title: t('bodyZones.digestive.title'),
+      subtitle: t('bodyZones.digestive.subtitle'),
+      symptoms: `15 ${t('bodyZones.digestive.symptoms')}`,
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBf4ZT5GE5hc51gq1da62j1ke80Frbf7iUSHye-vvU_AWe4TIb30N_F59LQccVuCsobblOlGmIx8iNbL-m1DIh2WWCHEAJpmnehbXaNfecy5reNIBvTZ44z2osZvKS2qlUh7Aaty8duxlPUWjIsri_5N4kkofP-lRBUHY6m6iOKhY3RQyWGR_DZPZG3j8EwWkm84RNP7AOljB2AZ7UTwLPGOjkJDDlQiobqfx5y0SIhsYrUxp-Z64xqN3bGVRxHvDAN4AJXmT1dinM',
+    },
+    {
+      id: '7',
+      title: t('bodyZones.urinary.title'),
+      subtitle: t('bodyZones.urinary.subtitle'),
+      symptoms: `7 ${t('bodyZones.urinary.symptoms')}`,
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDgnQ-aGsAp72gjYUuZ0tMhMu7kNIAPnPB4hiyuhnAH_6v9ZN2YNvf0lU8lh_gpDfNlJRKfruSmZx9CnGIm_ZbyG8N78XkkiFgiAmDtHfrK74CpvtdeF8Wx3e7OWYosofKg13A6TbNkBHcmc-HSt6QDcAGCs1GjTEOU4k2CQICCKboT-EIPFtcrMehm0iavCZp71pkjkjYZw7ZSsQKagaTFCo9tc9A22H69eEVaBavRVWBENr-Ui7WipwXDWW2EAtxSSEIjLD-726o',
+    },
+    {
+      id: '8',
+      title: t('bodyZones.joints.title'),
+      subtitle: t('bodyZones.joints.subtitle'),
+      symptoms: `11 ${t('bodyZones.joints.symptoms')}`,
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC4yWRHl_cy0NZNLj_wdSoz49KLOBk39DPLhRnctDAZDhP5BpFELL2aCNyxVjdbByMiO357NqCjCf-5he9kvyRNoGbrfKdHGQzdZqOfnBGV8cHS-hScDr3L8eK4d2Cl1o9lnLmYUwSXT8tCqoTKveYp2uCOL1i4BX4QN5Ot8t_sdqDe2QnpRvnGiAcFH-aBy5ZXYBFNsLkTUICQkwYuJfMwC8JtN3XOjBE_reOIjdlM_4yzAWoQQsd4izBvBf20DvR9L-hvhJfMfSg',
+    },
+    {
+      id: '9',
+      title: t('bodyZones.skin.title'),
+      subtitle: t('bodyZones.skin.subtitle'),
+      symptoms: `13 ${t('bodyZones.skin.symptoms')}`,
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB1dNMznn4slqGbs8OGirESYokIfQ_38DLKsEwUjWAl75q4vcMWmE6s9dfLrdtXN_xYLga4q8fTcuBaYtR27f05hgM3WNCewseKnVgmuUSMtX-a2tNW1gvc74Io1EDLIziPri9umN0RhSbvm9BO0EVe_gMQq9aGTSxchOflKtN-ad1p5HHBoe9ztJi_fRbPrFS6Dj8oPEbt4cki0ZEHnSgKQ7AgiPjwQtgKEvEfchlSBCKisNXvzUNRj_rYf2sjUPuHdvegTyz26-k',
+    },
+    {
+      id: '10',
+      title: t('bodyZones.hairNails.title'),
+      subtitle: t('bodyZones.hairNails.subtitle'),
+      symptoms: `14 ${t('bodyZones.hairNails.symptoms')}`,
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDwL1B0UVTwBkPq6MwIcH7BRJKopFPL7q3KCWZOvchgsGy7VVHi3KHnaQJX07bgOJyW1SsnDXKU2wK1pRlI_-DSnAJOY6DCWpV7vYUiJrIMi28MUPpYaf6ZAVEJ59BvDcIflROuIFTUE75OM6WvWaO5ZBp2fIY1BaV7p7TG0EqhBEllOxNPohqKNMfSgW2mwBtcaUoBfl9S86-Nj2zC4xbxomCX8-KWJ9If4oLRxDdH0WSTQ5ldZEGsaGQw_V-R-iTfEDOcIC_9SgI',
+    },
+    {
+      id: '11',
+      title: t('bodyZones.immune.title'),
+      subtitle: t('bodyZones.immune.subtitle'),
+      symptoms: `10 ${t('bodyZones.immune.symptoms')}`,
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAph8hg5QYkmTkotDVqbObAhwGJtv-6zvRJFxb6b2geIpzly-IqajdHYNwLX6fXSx5XhvgGOkbkvbw8G4Sp_J-eB6h_hrhKl-FGvAnmcmPdsjWdElZpdnHKAmdD91uCJ5WknqLmqNMd1KpIRcasRht3lUSwotAj_h0UeuytZbHYicU1dZfteWp-y32xzBhoXpSzLJV8g0SDZ5zakpjo1XvHxLb4TMeup_odDaxHCWFYtwbDG_JAZQTnLysFfhDDKIIviZWuhuZhtpA',
+    },
+  ];
+};
+
+const BodyZonesScreen = () => {
+  const [screenData, setScreenData] = useState(getScreenData());
+  const { t } = useTranslation();
+  
+  // Get translated body zones data
+  const bodyZonesLocal = getBodyZonesLocalData(t);
+
+  // Mapping entre les zones locales et les données de DataPlant
+  const getZoneMapping = (localId: string) => {
+    const mappings: Record<string, string> = {
+      '1': 'nerveux-mental',           // Tête -> Système nerveux
+      '2': 'yeux-vision',              // Yeux & Vision -> Yeux & vision
+      '3': 'respiratoire',             // Gorge -> Système respiratoire
+      '4': 'cardiovasculaire',         // Cœur -> Système cardiovasculaire
+      '5': 'hormonal-reproducteur',    // Système hormonal & reproducteur
+      '6': 'digestif',                 // Système digestif
+      '7': 'urinaire-detox',          // Système urinaire & détox
+      '8': 'musculo-squelettique',    // Articulations & Muscles
+      '9': 'peau-cheveux-ongles',     // Peau
+      '10': 'peau-cheveux-ongles',    // Cheveux & Ongles (même zone)
+      '11': 'immunitaire',            // Système Immunitaire
+    };
+    
+    const dataPlantId = mappings[localId];
+    return bodyZonesData.find(zone => zone.id === dataPlantId);
+  };
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', () => {
+      setScreenData(getScreenData());
     });
+
+    return () => subscription?.remove();
+  }, []);
+
+  // Responsive calculations
+  const getResponsiveValues = () => {
+    const { width, isTablet, isLandscape, isSmallScreen } = screenData;
+    
+    const padding = isSmallScreen ? 12 : 16;
+    const numColumns = isTablet ? (isLandscape ? 4 : 3) : 2;
+    const gap = isSmallScreen ? 8 : 12;
+    const cardWidth = (width - (padding * 2) - (gap * (numColumns - 1))) / numColumns;
+    
+    return {
+      padding,
+      numColumns,
+      gap,
+      cardWidth,
+      headerPadding: isSmallScreen ? 12 : 16,
+      titleFontSize: isTablet ? 28 : isSmallScreen ? 20 : 22,
+      cardTitleSize: isTablet ? 18 : isSmallScreen ? 14 : 16,
+      cardSubtitleSize: isTablet ? 15 : isSmallScreen ? 12 : 13,
+    };
+  };
+
+  const responsive = getResponsiveValues();
+
+  const renderZoneCard = ({ item }: { item: BodyZone; index: number }) => {
+    const dataPlantZone = getZoneMapping(item.id);
+    
+    const handleZonePress = () => {
+      if (dataPlantZone) {
+        router.push({
+          pathname: '/zone-symptoms' as any,
+          params: {
+            zoneId: dataPlantZone.id,
+            zoneName: dataPlantZone.name,
+            zoneEmoji: dataPlantZone.emoji,
+            zoneColor: dataPlantZone.color
+          }
+        });
+      }
+    };
+
+    return (
+      <TouchableOpacity
+        style={[
+          styles.card,
+          { 
+            width: responsive.cardWidth,
+            marginBottom: responsive.gap,
+          }
+        ]}
+        onPress={handleZonePress}
+        activeOpacity={0.8}
+      >
+        <Image source={{ uri: item.imageUrl }} style={styles.cardImage} />
+        <View style={styles.cardContent}>
+          <Text style={[
+            styles.cardTitle,
+            { fontSize: responsive.cardTitleSize }
+          ]}>
+            {item.title}
+          </Text>
+          <Text style={[
+            styles.cardSubtitle,
+            { fontSize: responsive.cardSubtitleSize }
+          ]}>
+            {item.subtitle}
+          </Text>
+          <Text style={[
+            styles.cardSymptoms,
+            { fontSize: responsive.cardSubtitleSize }
+          ]}>
+            {dataPlantZone ? `${dataPlantZone.symptoms.length} ${t('bodyZones.' + item.id + '.symptoms')}` : item.symptoms}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* En-tête */}
-        <View style={styles.header}>
-          <Text style={styles.title}>🎯</Text>
-          <Text style={styles.stepIndicator}>Étape 2/3</Text>
-          <View style={styles.progressBar}>
-            <View style={styles.progressFill} />
-          </View>
-          <Text style={styles.subtitle}>
-            Sélectionnez la zone qui vous préoccupe pour découvrir les symptômes et remèdes naturels associés
-          </Text>
-          <View style={styles.progressIndicator}>
-            <Text style={styles.progressText}>
-              {bodyZones.length} zones disponibles
-            </Text>
-          </View>
+      <View style={styles.content}>
+        {/* Header */}
+        <View style={[styles.header, { paddingHorizontal: responsive.headerPadding }]}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.push('/')}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>HerbaLife</Text>
+          <View style={styles.placeholder} />
         </View>
 
-        {/* Grille des zones */}
-        <View style={styles.gridContainer}>
-          {bodyZones.map((zone) => (
-            <TouchableOpacity
-              key={zone.id}
-              style={styles.zoneCard}
-              onPress={() => handleZonePress(zone)}
-              activeOpacity={0.8}
-            >
-              {/* Image de la zone */}
-              <View style={styles.imageContainer}>
-                <Image
-                  source={zoneImages[zone.id]}
-                  style={styles.zoneImage}
-                  resizeMode="contain"
-                />
-              </View>
+        {/* Page Title */}
+        <Text style={[
+          styles.pageTitle,
+          { 
+            fontSize: responsive.titleFontSize,
+            marginHorizontal: responsive.headerPadding,
+          }
+        ]}>
+          {t('bodyZones.subtitle')}
+        </Text>
 
-              {/* Titre et description */}
-              <Text style={styles.zoneTitle}>{zone.name}</Text>
-              <Text style={styles.zoneDescription}>
-                {zone.description}
-              </Text>
+        {/* Zones Grid */}
+        <FlatList
+          data={bodyZonesLocal}
+          renderItem={renderZoneCard}
+          numColumns={responsive.numColumns}
+          contentContainerStyle={[
+            styles.grid,
+            { paddingHorizontal: responsive.padding }
+          ]}
+          columnWrapperStyle={responsive.numColumns > 1 ? [
+            styles.row,
+            { gap: responsive.gap }
+          ] : null}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item: BodyZone) => item.id}
+          extraData={responsive.numColumns} // Force re-render when columns change
+        />
+      </View>
 
-              {/* Compteur de symptômes */}
-              <View style={styles.symptomCounter}>
-                <Text style={styles.symptomIcon}>💊</Text>
-                <Text style={styles.symptomCountText}>
-                  {zone.symptoms.length} symptômes
-                </Text>
-              </View>
-
-              {/* Indicateur de navigation */}
-              <View style={styles.navigationIndicator}>
-                <Text style={styles.arrowIcon}>→</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* Information supplémentaire */}
-        <View style={styles.infoContainer}>
-          <View style={styles.infoCard}>
-            <Text style={styles.infoEmoji}>🌿</Text>
-            <Text style={styles.infoText}>
-              Chaque zone propose des remèdes naturels spécifiquement adaptés à vos symptômes
-            </Text>
-          </View>
-        </View>
-
-        {/* Raccourcis rapides */}
-        <View style={styles.shortcutsContainer}>
-          <Text style={styles.shortcutsTitle}>🔍 Accès rapide</Text>
-          <View style={styles.shortcutsGrid}>
-            <TouchableOpacity
-              style={styles.shortcutButton}
-              onPress={() => router.push('/contraindications')}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.shortcutEmoji}>🔍</Text>
-              <Text style={styles.shortcutText}>Recherche par symptôme</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.shortcutButton}
-              onPress={() => router.push('/wishlist')}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.shortcutEmoji}>❤️</Text>
-              <Text style={styles.shortcutText}>Ma liste de favoris</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Espace en bas */}
-        <View style={styles.bottomSpacer} />
-      </ScrollView>
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.tab}>
+          <Ionicons name="home" size={24} color="#FFFFFF" />
+          <Text style={styles.activeTabText}>{t('common.home')}</Text>
+        </TouchableOpacity>
+        
+                <TouchableOpacity style={styles.tab} onPress={() => router.push('/plant-search')}>
+          <Ionicons name="search-outline" size={24} color="#9eb7a8" />
+          <Text style={styles.tabText}>Recherche</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.tab} onPress={() => router.push('/wishlist')}>
+          <Ionicons name="bookmark-outline" size={24} color="#9eb7a8" />
+          <Text style={styles.tabText}>{t('common.favorites')}</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.tab} onPress={() => router.push('/profile')}>
+          <Ionicons name="person-outline" size={24} color="#9eb7a8" />
+          <Text style={styles.tabText}>{t('common.profile')}</Text>
+        </TouchableOpacity>
+      </View>
+      
+      {/* Espacement final */}
+      <View style={styles.bottomSpacer} />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#122117',
+    backgroundColor: '#122118',
   },
-  scrollView: {
+  content: {
     flex: 1,
   },
   header: {
-    paddingHorizontal: responsive.spacing.md,
-    paddingTop: responsive.spacing.lg,
-    paddingBottom: responsive.spacing.md,
-    backgroundColor: 'transparent',
-    marginBottom: responsive.spacing.sm,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  title: {
-    fontSize: responsive.fontSize.title,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: responsive.spacing.sm,
-  },
-  stepIndicator: {
-    fontSize: responsive.fontSize.small,
-    color: '#96C4A8',
-    textAlign: 'center',
-    fontWeight: '600',
-    marginBottom: responsive.spacing.xs,
-  },
-  progressBar: {
-    width: '100%',
-    height: 4,
-    backgroundColor: 'rgba(150, 196, 168, 0.2)',
-    borderRadius: 2,
-    marginBottom: responsive.spacing.md,
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#38E078',
-    borderRadius: 2,
-    width: '66%', // Étape 2/3
-  },
-  subtitle: {
-    fontSize: responsive.fontSize.medium,
-    color: '#96C4A8',
-    textAlign: 'center',
-    lineHeight: responsive.fontSize.medium * 1.4,
-    marginBottom: responsive.spacing.md,
-  },
-  progressIndicator: {
-    backgroundColor: 'rgba(124, 152, 133, 0.1)',
-    paddingHorizontal: responsive.spacing.md,
-    paddingVertical: responsive.spacing.xs,
-    borderRadius: responsive.borderRadius.large,
-    alignSelf: 'center',
-  },
-  progressText: {
-    fontSize: responsive.fontSize.small,
-    color: '#96C4A8',
-    fontWeight: '600',
-  },
-  gridContainer: {
-    paddingHorizontal: responsive.spacing.md,
-    flexDirection: responsive.width < 428 ? 'column' : 'row',
-    flexWrap: responsive.width < 428 ? 'nowrap' : 'wrap',
-    justifyContent: responsive.width < 428 ? 'flex-start' : 'space-between',
-  },
-  zoneCard: {
-    width: responsive.width < 428 ? '100%' : '48%', // Une seule colonne sur petits écrans
-    backgroundColor: 'transparent',
-    borderRadius: responsive.borderRadius.medium,
-    padding: responsive.spacing.md,
-    marginBottom: responsive.spacing.md,
-    marginHorizontal: responsive.width < 428 ? 0 : responsive.spacing.xs,
-    borderWidth: 0,
-    borderColor: 'transparent',
-    position: 'relative',
-    minHeight: responsive.width < 428 ? 140 : 180, // Hauteur adaptative agrandie
-    flexDirection: 'column',
-    alignItems: 'center',
-    ...responsive.shadow.medium,
-  },
-  imageContainer: {
-    backgroundColor: 'transparent',
-    padding: 0,
-    borderRadius: 0,
-    marginBottom: responsive.spacing.md,
-    marginRight: 0,
-    width: responsive.width < 428 ? 90 : 110,
-    height: responsive.width < 428 ? 90 : 110,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  zoneImage: {
-    width: responsive.width < 428 ? 80 : 100,
-    height: responsive.width < 428 ? 80 : 100,
-  },
-  zoneTitle: {
-    fontSize: responsive.width < 428 ? responsive.fontSize.medium : responsive.fontSize.medium,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: responsive.spacing.xs,
-    flex: 0,
-  },
-  zoneDescription: {
-    fontSize: responsive.fontSize.small,
-    color: '#96C4A8',
-    textAlign: 'center',
-    lineHeight: responsive.fontSize.small * 1.2,
-    marginBottom: responsive.width < 428 ? 0 : responsive.spacing.xs,
-  },
-  symptomCounter: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(150, 196, 168, 0.2)',
-    paddingHorizontal: responsive.spacing.sm,
-    paddingVertical: 4,
-    borderRadius: responsive.borderRadius.small,
-    marginBottom: responsive.spacing.xs,
-    alignSelf: 'center',
-  },
-  symptomIcon: {
-    fontSize: responsive.fontSize.small,
-    marginRight: 4,
-  },
-  symptomCountText: {
-    fontSize: responsive.fontSize.xs,
-    color: '#96C4A8',
-    fontWeight: '600',
-  },
-  navigationIndicator: {
-    position: 'absolute',
-    bottom: responsive.spacing.xs,
-    right: responsive.spacing.xs,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#38E078',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  arrowIcon: {
-    color: '#ffffff',
-    fontSize: responsive.fontSize.medium,
-    fontWeight: 'bold',
-  },
-  infoContainer: {
-    paddingHorizontal: responsive.spacing.md,
-    marginVertical: responsive.spacing.md,
-  },
-  infoCard: {
-    backgroundColor: '#e8f4f8',
-    borderRadius: responsive.borderRadius.medium,
-    padding: responsive.spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderLeftWidth: 4,
-    borderLeftColor: '#4a90a4',
-  },
-  infoEmoji: {
-    fontSize: responsive.fontSize.large,
-    marginRight: responsive.spacing.sm,
-  },
-  infoText: {
-    flex: 1,
-    fontSize: responsive.fontSize.small,
-    color: '#96C4A8',
-    lineHeight: responsive.fontSize.small * 1.4,
-  },
-  shortcutsContainer: {
-    paddingHorizontal: responsive.spacing.md,
-    marginBottom: responsive.spacing.lg,
-  },
-  shortcutsTitle: {
-    fontSize: responsive.fontSize.large,
-    fontWeight: 'bold',
-    color: '#2d5738',
-    marginBottom: responsive.spacing.md,
-  },
-  shortcutsGrid: {
-    flexDirection: responsive.width < 428 ? 'column' : 'row',
     justifyContent: 'space-between',
-    gap: responsive.width < 428 ? responsive.spacing.sm : 0,
+    paddingTop: 16,
+    paddingBottom: 8,
   },
-  shortcutButton: {
-    flex: responsive.width < 428 ? 0 : 1,
-    backgroundColor: '#ffffff',
-    borderRadius: responsive.borderRadius.medium,
-    padding: responsive.spacing.md,
+  backButton: {
+    width: 48,
+    height: 48,
     alignItems: 'center',
-    marginHorizontal: responsive.width < 428 ? 0 : responsive.spacing.xs,
-    borderWidth: 2,
-    borderColor: '#e8f0e8',
-    ...responsive.shadow.small,
+    justifyContent: 'center',
+    borderRadius: 12,
   },
-  shortcutEmoji: {
-    fontSize: responsive.fontSize.title,
-    marginBottom: responsive.spacing.xs,
-  },
-  shortcutText: {
-    fontSize: responsive.fontSize.small,
-    color: '#5a6b5d',
+  headerTitle: {
+    flex: 1,
     textAlign: 'center',
-    fontWeight: '500',
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#ffffff',
+    letterSpacing: -0.015,
+    marginRight: 48, // to center visually vs back button
+  },
+  placeholder: {
+    width: 48,
+  },
+  pageTitle: {
+    fontWeight: '800',
+    color: '#ffffff',
+    letterSpacing: -0.015,
+    marginVertical: 12,
+  },
+  grid: {
+    paddingBottom: 16,
+  },
+  row: {
+    justifyContent: 'space-between',
+  },
+  card: {
+    backgroundColor: 'transparent',
+  },
+  cardImage: {
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 16,
+    marginBottom: 10,
+  },
+  cardContent: {
+    paddingBottom: 12,
+  },
+  cardTitle: {
+    fontWeight: '700',
+    color: '#ffffff',
+    marginBottom: 2,
+  },
+  cardSubtitle: {
+    color: '#96c5a8',
+    lineHeight: 15,
+    marginBottom: 2,
+  },
+  cardSymptoms: {
+    color: '#96c5a8',
+    lineHeight: 15,
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    backgroundColor: '#1a2f1f',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#2d3e32',
+  },
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  activeTab: {
+    // Pas de fond coloré, uniquement des changements de couleur d'icônes et de texte
+  },
+  tabText: {
+    fontSize: 12,
+    color: '#9eb7a8',
+    marginTop: 4,
+  },
+  activeTabText: {
+    color: '#ffffff',
+    fontWeight: '600',
   },
   bottomSpacer: {
-    height: responsive.spacing.xl,
-  },
-  mobileContentContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  mobileHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: responsive.spacing.xs,
+    height: 20,
+    backgroundColor: '#122118',
   },
 });
+
+export default BodyZonesScreen;
+
+export function BodyZonesLayout() {
+  return (
+    <Stack.Screen
+      name="body-zones"
+      options={{ headerShown: false }}
+    />
+  );
+}

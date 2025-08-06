@@ -1,0 +1,267 @@
+{
+  "common": {
+    "home": "Home",
+    "search": "Search",
+    "favorites": "Favorites",
+    "profile": "Profile",
+    "plants": "plants",
+    "viewDetails": "View details",
+    "back": "Back",
+    "selectSymptoms": "Select your symptoms to discover plants that can help you",
+    "selectedSymptoms": "Selected symptoms",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "language": "Language",
+    "loading": "Loading...",
+    "zoneNotFound": "Zone not found"
+  },
+  "wishlist": {
+    "title": "❤️ My favorite plants",
+    "emptyTitle": "No favorite plants",
+    "emptyText": "Add your favorite plants to find them easily here"
+  },
+  "bodyZones": {
+    "title": "Body zones",
+    "subtitle": "Choose your area of interest",
+    "head": {
+      "title": "Head",
+      "subtitle": "Brain, mental",
+      "symptoms": "symptoms"
+    },
+    "eyes": {
+      "title": "Eyes & Vision",
+      "subtitle": "Eye health",
+      "symptoms": "symptoms"
+    },
+    "throat": {
+      "title": "Throat",
+      "subtitle": "Respiratory",
+      "symptoms": "symptoms"
+    },
+    "heart": {
+      "title": "Heart",
+      "subtitle": "Cardio & circulation",
+      "symptoms": "symptoms"
+    },
+    "hormonal": {
+      "title": "Hormonal & reproductive system",
+      "subtitle": "Hormones & fertility",
+      "symptoms": "symptoms"
+    },
+    "digestive": {
+      "title": "Digestive system",
+      "subtitle": "Digestion",
+      "symptoms": "symptoms"
+    },
+    "urinary": {
+      "title": "Urinary system & detox",
+      "subtitle": "Detoxification",
+      "symptoms": "symptoms"
+    },
+    "joints": {
+      "title": "Joints & Muscles",
+      "subtitle": "Mobility & comfort",
+      "symptoms": "symptoms"
+    },
+    "skin": {
+      "title": "Skin",
+      "subtitle": "Skin health",
+      "symptoms": "symptoms"
+    },
+    "hairNails": {
+      "title": "Hair & Nails",
+      "subtitle": "Beauty & vitality",
+      "symptoms": "symptoms"
+    },
+    "immune": {
+      "title": "Immune System",
+      "subtitle": "Natural defenses",
+      "symptoms": "symptoms"
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "language": "Language",
+    "darkMode": "Dark mode",
+    "contactUs": "Contact us",
+    "aboutUs": "About us",
+    "privacyPolicy": "Privacy policy",
+    "termsOfService": "Terms of service",
+    "logout": "Log out"
+  },
+  "recommendations": {
+    "title": "Our Personalized Recommendations",
+    "viewDetails": "View details",
+    "adaptogen": "Adaptogen",
+    "zones": {
+      "tete": "Head & Brain",
+      "gorge": "Throat & Respiratory",
+      "coeur": "Heart & Circulation",
+      "ventre": "Belly & Digestion",
+      "articulations": "Joints & Muscles",
+      "peau": "Skin & Beauty",
+      "sommeil": "Sleep & Relaxation",
+      "immunite": "Immunity & Energy"
+    }
+  },
+  "symptomSearch": {
+    "title": "Search by symptoms 🔍",
+    "subtitle": "Select your symptoms to discover plants that can help you",
+    "searchButton": "Search for plants",
+    "symptom": "symptom",
+    "symptoms": "symptoms",
+    "selectedSymptoms": "Selected symptoms"
+  },
+  "symptomResults": {
+    "title": "Search Results 🌿",
+    "searchedSymptoms": "Searched symptoms:",
+    "plantsFound": "plant(s) found",
+    "noResultsTitle": "No plants found 😔",
+    "noResultsText": "We don't have plants referenced for these specific symptoms yet.",
+    "modifySearch": "Modify my search",
+    "newSearch": "New search",
+    "plant": "plant",
+    "plants": "plants"
+  },
+  "home": {
+    "appName": "PhytoConseil",
+    "tagline": "Your natural wellness guide",
+    "welcomeTitle": "Discover the power of plants",
+    "welcomeText": "Explore personalized natural remedies based on phytotherapy and homeopathy to improve your well-being.",
+    "personalizedAdvice": "Personalized advice",
+    "naturalHundredPercent": "100% natural",
+    "scientificBasis": "Scientific basis",
+    "startDiagnosis": "Start my diagnosis",
+    "actionSubtext": "Get personalized recommendations in just a few minutes",
+    "confidentialAndFree": "Confidential and free"
+  },
+  "menu": {
+    "startMyJourney": "Start My Journey"
+  },
+  "zoneSymptoms": {
+    "symptomsFor": "Symptoms for",
+    "search": "Search"
+  },
+  "contraindications": {
+    "title": "Your Personal Preferences",
+    "label": "Contraindications",
+    "next": "Next",
+    "close": "✕",
+    "footerText": "Your information remains confidential and is used only to personalize your recommendations.",
+    "conditions": {
+      "grossesse": {
+        "title": "Pregnancy",
+        "description": "Some plants may be contraindicated during pregnancy."
+      },
+      "cardiovasculaire": {
+        "title": "Cardiovascular Problems",
+        "description": "If you have heart problems, some plants may interact with your medications."
+      },
+      "allergies": {
+        "title": "Allergies",
+        "description": "Please indicate if you have known allergies to certain plants."
+      },
+      "diabete": {
+        "title": "Diabetes",
+        "description": "Some plants may affect blood sugar levels."
+      },
+      "hypertension": {
+        "title": "Hypertension",
+        "description": "Some plants may influence blood pressure."
+      },
+      "hypotension": {
+        "title": "Hypotension",
+        "description": "Some plants may influence blood pressure."
+      },
+      "reins": {
+        "title": "Kidney Problems",
+        "description": "If you have kidney problems, some plants may be contraindicated."
+      },
+      "hepatique": {
+        "title": "Liver Problems",
+        "description": "If you have liver problems, some plants may be contraindicated."
+      },
+      "coagulation": {
+        "title": "Coagulation Disorders",
+        "description": "Some plants may affect blood clotting."
+      },
+      "medicaments": {
+        "title": "Taking Medications",
+        "description": "Indicate if you are taking medications, as some plants may interact."
+      },
+      "autres": {
+        "title": "Other Medical Conditions",
+        "description": "If you have other medical conditions, please specify them."
+      }
+    }
+  },
+  "symptoms": {
+    "categories": {
+      "nervous_mental": "Nervous & mental system",
+      "cardiovascular": "Cardiovascular & circulation system",
+      "respiratory": "Respiratory system",
+      "digestive": "Digestive system",
+      "immune": "Immune system"
+    },
+    "list": {
+      "chronic_fatigue": "Chronic fatigue",
+      "sleep_disorders": "Sleep disorders / insomnia",
+      "stress": "Stress",
+      "anxiety": "Anxiety",
+      "irritability": "Irritability",
+      "nervousness": "Nervousness",
+      "memory_problems": "Memory problems",
+      "concentration_difficulty": "Difficulty concentrating",
+      "headaches": "Headaches",
+      "migraines": "Migraines",
+      "dizziness": "Dizziness",
+      "burnout": "Burn-out",
+      "mild_depression": "Mild depression",
+      "nervous_tics": "Nervous tics",
+      "stress_muscle_spasms": "Stress-related muscle spasms",
+      "sensory_hypersensitivity": "Sensory hypersensitivity",
+      "brain_fog": "Brain fog",
+      "temporary_confusion": "Temporary confusion",
+      "hypertension": "Hypertension",
+      "hypotension": "Hypotension",
+      "palpitations": "Palpitations",
+      "heavy_legs": "Heavy legs",
+      "varicose_veins": "Varicose veins",
+      "edema": "Edema",
+      "poor_circulation": "Poor peripheral circulation (cold hands/feet)",
+      "mild_tachycardia": "Mild tachycardia",
+      "chest_tightness": "Chest tightness (non-cardiac)",
+      "dry_cough": "Dry cough",
+      "productive_cough": "Productive cough",
+      "cold": "Cold",
+      "allergic_rhinitis": "Allergic rhinitis",
+      "sinusitis": "Sinusitis",
+      "bronchitis": "Bronchitis",
+      "mild_asthma": "Mild asthma",
+      "shortness_of_breath": "Shortness of breath",
+      "hoarseness": "Hoarseness",
+      "mucous_dryness": "Mucous membrane dryness",
+      "sore_throat": "Sore throat",
+      "bloating": "Bloating",
+      "intestinal_gas": "Intestinal gas",
+      "constipation": "Constipation",
+      "diarrhea": "Diarrhea",
+      "slow_digestion": "Slow digestion",
+      "nausea": "Nausea",
+      "acid_reflux": "Acid reflux",
+      "intestinal_cramps": "Intestinal cramps",
+      "loss_of_appetite": "Loss of appetite",
+      "liver_congestion": "Liver congestion",
+      "bad_breath": "Bad breath (halitosis)",
+      "heavy_feeling_after_meals": "Heavy feeling after meals",
+      "early_ulcer": "Early ulcer",
+      "morning_mouth_coating": "Morning mouth coating",
+      "frequent_infections": "Frequent infections",
+      "post_infectious_fatigue": "Post-infectious fatigue",
+      "low_general_immunity": "Low general immunity",
+      "recurrent_ent_infections": "Recurrent ENT infections",
+      "chronic_inflammation": "Chronic inflammation",
+      "slightly_swollen_lymph_nodes": "Slightly swollen lymph nodes"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,14 @@ import {
   PanResponder,
   Animated,
   Dimensions,
+  Image,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Plant } from '../data/DataPlant';
 import { useWishlist } from '../contexts/WishlistContext';
+import { Ionicons } from '@expo/vector-icons';
+import { getPlantImageFileName } from '../utils/imageHelper';
+import { getPlantImageUrl, isPlantImageAvailable } from '../constants/PlantImages';
 
 const { height: screenHeight } = Dimensions.get('window');
 
@@ -26,26 +30,47 @@ interface Props {
 export default function PlantDetailModal({ plant, visible, onClose }: Props) {
   const translateY = useRef(new Animated.Value(0)).current;
   const { favoriteProducts, toggleProductFavorite, isProductFavorite, isFavorite, toggleFavorite } = useWishlist();
+  const [activeTab, setActiveTab] = useState('description');
+  const [imageError, setImageError] = useState(false);
+  
+  // Fonction pour obtenir l'image de la plante
+  const getPlantImage = () => {
+    const imageFileName = getPlantImageFileName(plant.name);
+    
+    // Vérifier si l'image est disponible dans notre liste
+    if (!isPlantImageAvailable(imageFileName) || imageError) {
+      return <Text style={styles.plantEmoji}>{plant.emoji}</Text>;
+    }
+    
+    return (
+      <Image 
+        source={{ uri: getPlantImageUrl(imageFileName) }}
+        style={styles.plantImage}
+        onError={() => {
+          console.log(`Image non trouvée pour ${plant.name}: ${imageFileName}.jpg`);
+          setImageError(true);
+        }}
+        onLoad={() => {
+          console.log(`Image chargée avec succès pour ${plant.name}: ${imageFileName}.jpg`);
+        }}
+      />
+    );
+  };
   
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: (evt, gestureState) => {
-      // Ne déclencher que si c'est un mouvement vertical vers le bas
       return gestureState.dy > 10 && Math.abs(gestureState.dx) < Math.abs(gestureState.dy);
     },
-    onPanResponderGrant: () => {
-      // Commencer la gestion du geste
-    },
+    onPanResponderGrant: () => {},
     onPanResponderMove: (evt, gestureState) => {
-      // Seuls les mouvements vers le bas sont autorisés
       if (gestureState.dy > 0) {
         translateY.setValue(gestureState.dy);
       }
     },
     onPanResponderRelease: (evt, gestureState) => {
-      const threshold = screenHeight * 0.25; // 25% de l'écran
+      const threshold = screenHeight * 0.25;
       
       if (gestureState.dy > threshold || gestureState.vy > 0.5) {
-        // Fermer le modal avec animation
         Animated.timing(translateY, {
           toValue: screenHeight,
           duration: 300,
@@ -55,7 +80,6 @@ export default function PlantDetailModal({ plant, visible, onClose }: Props) {
           onClose();
         });
       } else {
-        // Remettre en position
         Animated.spring(translateY, {
           toValue: 0,
           useNativeDriver: true,
@@ -65,6 +89,130 @@ export default function PlantDetailModal({ plant, visible, onClose }: Props) {
       }
     },
   });
+
+  const tabs = [
+    { id: 'description', label: 'Description' },
+    { id: 'preparation', label: 'Preparation & Dosage' },
+    { id: 'effects', label: 'Side Effects' },
+    { id: 'botany', label: 'Botany' },
+  ];
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'description':
+        return (
+          <View>
+            <Text style={styles.tabContent}>
+              {plant.shortDescription || plant.latinName}
+            </Text>
+            {plant.systemsTargeted && plant.systemsTargeted.length > 0 && (
+              <View style={styles.descriptionSection}>
+                <Text style={styles.descriptionSubtitle}>Systèmes ciblés :</Text>
+                <Text style={styles.tabContent}>
+                  Cette plante agit principalement sur {plant.systemsTargeted.join(', ').toLowerCase()}, 
+                  offrant un soutien naturel et efficace pour votre bien-être.
+                </Text>
+              </View>
+            )}
+            {plant.targetedSymptoms && plant.targetedSymptoms.length > 0 && (
+              <View style={styles.descriptionSection}>
+                <Text style={styles.descriptionSubtitle}>Bienfaits principaux :</Text>
+                <Text style={styles.tabContent}>
+                  {plant.name} est particulièrement recommandée pour traiter {plant.targetedSymptoms.slice(0, 4).join(', ')}.
+                  {plant.targetedSymptoms.length > 4 && ` et ${plant.targetedSymptoms.length - 4} autres symptômes`}.
+                </Text>
+              </View>
+            )}
+            <View style={styles.descriptionSection}>
+              <Text style={styles.descriptionSubtitle}>Utilisation traditionnelle :</Text>
+              <Text style={styles.tabContent}>
+                Cette plante médicinale est utilisée depuis des siècles dans la phytothérapie traditionnelle. 
+                Son efficacité reconnue en fait un choix privilégié pour un traitement naturel et respectueux de votre organisme.
+              </Text>
+            </View>
+          </View>
+        );
+      case 'preparation':
+        return (
+          <View>
+            <Text style={styles.tabContent}>
+              {plant.usage || 'Informations de préparation non disponibles.'}
+            </Text>
+            <View style={styles.descriptionSection}>
+              <Text style={styles.descriptionSubtitle}>Dosage recommandé :</Text>
+              <Text style={styles.tabContent}>
+                • Infusion : 1 à 2 cuillères à café par tasse d'eau chaude, 2 à 3 fois par jour
+                {'\n'}• Décoction : Faire bouillir 5 minutes, laisser infuser 10 minutes
+                {'\n'}• Extrait : Suivre les indications du fabricant
+              </Text>
+            </View>
+            <View style={styles.descriptionSection}>
+              <Text style={styles.descriptionSubtitle}>Conseils d'utilisation :</Text>
+              <Text style={styles.tabContent}>
+                Pour une efficacité optimale, consommer de préférence à jeun ou entre les repas. 
+                Une cure de 3 semaines avec une pause d'une semaine est généralement recommandée.
+              </Text>
+            </View>
+          </View>
+        );
+      case 'effects':
+        return (
+          <View>
+            <Text style={styles.tabContent}>
+              {plant.contraindications || 'Aucune contre-indication spécifiée.'}
+            </Text>
+            <View style={styles.descriptionSection}>
+              <Text style={styles.descriptionSubtitle}>Précautions d'emploi :</Text>
+              <Text style={styles.tabContent}>
+                • Déconseillé aux femmes enceintes et allaitantes sans avis médical
+                {'\n'}• Ne pas dépasser les doses recommandées
+                {'\n'}• Conserver dans un endroit sec et à l'abri de la lumière
+                {'\n'}• Tenir hors de portée des enfants
+              </Text>
+            </View>
+            <View style={styles.descriptionSection}>
+              <Text style={styles.descriptionSubtitle}>Interactions possibles :</Text>
+              <Text style={styles.tabContent}>
+                En cas de traitement médicamenteux, consultez votre médecin ou pharmacien avant utilisation. 
+                Certaines plantes peuvent interagir avec des médicaments.
+              </Text>
+            </View>
+          </View>
+        );
+      case 'botany':
+        return (
+          <View>
+            <Text style={styles.tabContent}>
+              Nom latin: {plant.latinName}
+              {plant.systemsTargeted && `\nSystèmes ciblés: ${plant.systemsTargeted.join(', ')}`}
+            </Text>
+            <View style={styles.descriptionSection}>
+              <Text style={styles.descriptionSubtitle}>Classification botanique :</Text>
+              <Text style={styles.tabContent}>
+                {plant.name} ({plant.latinName}) appartient à une famille de plantes médicinales 
+                reconnues pour leurs propriétés thérapeutiques exceptionnelles.
+              </Text>
+            </View>
+            <View style={styles.descriptionSection}>
+              <Text style={styles.descriptionSubtitle}>Habitat naturel :</Text>
+              <Text style={styles.tabContent}>
+                Cette plante pousse dans des conditions spécifiques qui lui confèrent ses propriétés uniques. 
+                La qualité du terroir et les méthodes de récolte influencent directement son efficacité.
+              </Text>
+            </View>
+            <View style={styles.descriptionSection}>
+              <Text style={styles.descriptionSubtitle}>Partie utilisée :</Text>
+              <Text style={styles.tabContent}>
+                Les parties actives de la plante sont soigneusement sélectionnées pour garantir 
+                une concentration optimale en principes actifs bénéfiques pour la santé.
+              </Text>
+            </View>
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <Modal
@@ -77,143 +225,112 @@ export default function PlantDetailModal({ plant, visible, onClose }: Props) {
         <Animated.View 
           style={[
             styles.modalContent,
-            {
-              transform: [{ translateY }]
-            }
+            { transform: [{ translateY }] }
           ]}
           {...panResponder.panHandlers}
         >
+          {/* Header avec retour */}
           <View style={styles.header}>
-            {/* Indicateur de swipe */}
-            <View style={styles.swipeIndicator} />
-            
-            {/* Espace vide pour centrer l'indicateur */}
-            <View style={{ flex: 1 }} />
-            
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Text style={styles.closeText}>✕</Text>
+            <TouchableOpacity onPress={onClose} style={styles.backButton}>
+              <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
             </TouchableOpacity>
+            <Text style={styles.headerTitle}>HerbaLife</Text>
           </View>
 
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-            <View style={styles.plantHeader}>
-              <Text style={styles.emoji}>{plant.emoji}</Text>
-              <Text style={styles.name}>{plant.name}</Text>
-              <Text style={styles.latinName}>{plant.latinName}</Text>
-              
-              {/* Bouton pour ajouter la plante aux favoris */}
-              <TouchableOpacity
-                style={[styles.plantFavoriteButton, isFavorite(plant.id) && styles.plantFavoriteActive]}
-                onPress={() => toggleFavorite(plant)}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.plantFavoriteIcon, isFavorite(plant.id) && styles.plantFavoriteIconActive]}>
-                  {isFavorite(plant.id) ? '♥' : '♡'}
-                </Text>
-                <Text style={[styles.plantFavoriteText, isFavorite(plant.id) && styles.plantFavoriteTextActive]}>
-                  {isFavorite(plant.id) ? 'Dans ma wishlist' : 'Ajouter à ma wishlist'}
-                </Text>
-              </TouchableOpacity>
+            {/* Image de la plante */}
+            <View style={styles.imageContainer}>
+              {getPlantImage()}
             </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Description</Text>
-            <Text style={styles.description}>{plant.fullDescription}</Text>
-          </View>
+            {/* Nom et informations principales */}
+            <Text style={styles.plantName}>{plant.name}</Text>
+            <Text style={styles.plantLatinName}>{plant.latinName}</Text>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Bienfaits principaux</Text>
-            {plant.mainBenefits.map((benefit, index) => (
-              <View key={index} style={styles.benefitItem}>
-                <Text style={styles.bulletPoint}>•</Text>
-                <Text style={styles.benefitText}>{benefit}</Text>
-              </View>
-            ))}
-          </View>
+            {/* Bouton favoris */}
+            <TouchableOpacity
+              style={styles.favoriteButton}
+              onPress={() => toggleFavorite(plant)}
+            >
+              <Ionicons 
+                name={isFavorite(plant.id) ? "heart" : "heart-outline"} 
+                size={20} 
+                color="#FFFFFF" 
+              />
+              <Text style={styles.favoriteButtonText}>Add to favorites</Text>
+            </TouchableOpacity>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Mode d'utilisation</Text>
-            <Text style={styles.usage}>{plant.usage}</Text>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Contre-indications</Text>
-            <Text style={styles.contraindications}>{plant.contraindications}</Text>
-          </View>
-
-          <View style={styles.section}>
-            <View style={styles.productsHeader}>
-              <Text style={styles.sectionTitle}>Produits disponibles</Text>
-              <TouchableOpacity 
-                style={styles.wishlistAccessButton}
-                onPress={() => {
-                  onClose();
-                  setTimeout(() => router.push('/wishlist' as any), 100);
-                }}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.wishlistAccessIcon}>♥</Text>
-                <Text style={styles.wishlistAccessText}>Ma Wishlist</Text>
-                {favoriteProducts.length > 0 && (
-                  <View style={styles.wishlistBadge}>
-                    <Text style={styles.wishlistBadgeText}>{favoriteProducts.length}</Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-            </View>
-            
-            {plant.products.map((product, index) => {
-              const productId = product.id || `${plant.id}-product-${index}`;
-              const isFav = product.id ? isProductFavorite(product.id) : false;
-              
-              return (
-                <View key={index} style={styles.productCard}>
-                  <View style={styles.productHeader}>
-                    <View style={styles.productTitleSection}>
-                      <Text style={styles.productName}>{product.name}</Text>
-                      <Text style={styles.productPrice}>{product.price}</Text>
-                    </View>
-                    
-                    {product.id && (
-                      <TouchableOpacity
-                        style={[styles.productFavoriteButton, isFav && styles.productFavoriteActive]}
-                        onPress={() => toggleProductFavorite({ ...product, id: productId })}
-                        activeOpacity={0.7}
-                      >
-                        <Text style={[styles.productFavoriteIcon, isFav && styles.productFavoriteIconActive]}>
-                          {isFav ? '♥' : '♡'}
-                        </Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                  
-                  <Text style={styles.productDescription}>{product.description}</Text>
-                  <Text style={styles.productComposition}>
-                    Composition: {product.composition}
-                  </Text>
-                  
-                  <View style={styles.productActions}>
-                    <TouchableOpacity style={styles.buyButton}>
-                      <Text style={styles.buyButtonText}>Voir le produit</Text>
+            {/* Onglets */}
+            <View style={styles.tabsContainer}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View style={styles.tabsWrapper}>
+                  {tabs.map((tab) => (
+                    <TouchableOpacity
+                      key={tab.id}
+                      style={[
+                        styles.tab,
+                        activeTab === tab.id && styles.tabActive
+                      ]}
+                      onPress={() => setActiveTab(tab.id)}
+                    >
+                      <Text style={[
+                        styles.tabText,
+                        activeTab === tab.id && styles.tabTextActive
+                      ]}>
+                        {tab.label}
+                      </Text>
                     </TouchableOpacity>
-                    
-                    {product.id && (
-                      <TouchableOpacity 
-                        style={[styles.addToWishlistButton, isFav && styles.addToWishlistButtonActive]}
-                        onPress={() => toggleProductFavorite({ ...product, id: productId })}
-                        activeOpacity={0.7}
-                      >
-                        <Text style={[styles.addToWishlistText, isFav && styles.addToWishlistTextActive]}>
-                          {isFav ? 'Retiré ♥' : 'Ajouter ♡'}
-                        </Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
+                  ))}
                 </View>
-              );
-            })}
-          </View>
-        </ScrollView>
+              </ScrollView>
+            </View>
+
+            {/* Contenu de l'onglet */}
+            <View style={styles.tabContentContainer}>
+              {renderTabContent()}
+            </View>
+
+            {/* Symptômes traités */}
+            <Text style={styles.sectionTitle}>Symptoms Treated</Text>
+            <View style={styles.symptomsContainer}>
+              {plant.targetedSymptoms?.slice(0, 3).map((symptom, index) => (
+                <View key={index} style={styles.symptomTag}>
+                  <Text style={styles.symptomTagText}>
+                    {symptom.charAt(0).toUpperCase() + symptom.slice(1)}
+                  </Text>
+                </View>
+              ))}
+            </View>
+
+            {/* Contre-indications */}
+            <Text style={styles.sectionTitle}>Contraindications</Text>
+            <View style={styles.contraindicationItem}>
+              <View style={styles.warningIcon}>
+                <Ionicons name="warning" size={24} color="#FFFFFF" />
+              </View>
+              <Text style={styles.contraindicationText}>
+                {plant.contraindications || 'Consulter un professionnel de santé'}
+              </Text>
+            </View>
+
+            {/* Produits disponibles */}
+            {plant.products && plant.products.length > 0 && (
+              <>
+                <Text style={styles.sectionTitle}>Available Products</Text>
+                {plant.products.map((product, index) => (
+                  <View key={index} style={styles.productItem}>
+                    <View style={styles.productInfo}>
+                      <Text style={styles.productName}>{product.name}</Text>
+                      <Text style={styles.productDescription}>{product.description}</Text>
+                    </View>
+                    <TouchableOpacity style={styles.productButton}>
+                      <Text style={styles.productButtonText}>Add to Cart</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </>
+            )}
+          </ScrollView>
         </Animated.View>
       </SafeAreaView>
     </Modal>
@@ -223,282 +340,236 @@ export default function PlantDetailModal({ plant, visible, onClose }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9f5',
+    backgroundColor: '#121714',
   },
   modalContent: {
     flex: 1,
-    backgroundColor: '#f8f9f5',
+    backgroundColor: '#121714',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e8ede8',
-    position: 'relative',
+    backgroundColor: '#121714',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    justifyContent: 'space-between',
   },
-  swipeIndicator: {
-    width: 40,
-    height: 4,
-    backgroundColor: '#d1d9d1',
-    borderRadius: 2,
-    position: 'absolute',
-    left: '50%',
-    top: 8,
-    marginLeft: -20, // Centrage
-  },
-  closeButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#e8ede8',
+  backButton: {
+    width: 48,
+    height: 48,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
-  closeText: {
-    fontSize: 16,
-    color: '#5a6c57',
-    fontWeight: '600',
+  headerTitle: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    letterSpacing: -0.015,
+    flex: 1,
+    textAlign: 'center',
+    paddingRight: 48,
   },
   content: {
     flex: 1,
-    padding: 20,
-  },
-  plantHeader: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  emoji: {
-    fontSize: 64,
-    marginBottom: 16,
-  },
-  name: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#2d5016',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  latinName: {
-    fontSize: 18,
-    color: '#7c9885',
-    fontStyle: 'italic',
-    textAlign: 'center',
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#2d5016',
-    marginBottom: 12,
-  },
-  description: {
-    fontSize: 16,
-    color: '#5a6c57',
-    lineHeight: 24,
-  },
-  benefitItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 8,
-  },
-  bulletPoint: {
-    fontSize: 16,
-    color: '#7c9885',
-    marginRight: 8,
-    marginTop: 2,
-  },
-  benefitText: {
-    fontSize: 16,
-    color: '#5a6c57',
-    flex: 1,
-    lineHeight: 22,
-  },
-  usage: {
-    fontSize: 16,
-    color: '#5a6c57',
-    lineHeight: 24,
-  },
-  contraindications: {
-    fontSize: 16,
-    color: '#d97706',
-    lineHeight: 24,
-    fontWeight: '500',
-  },
-  productCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    borderLeftWidth: 3,
-    borderLeftColor: '#7c9885',
-  },
-  productHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  productName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#2d5016',
-    flex: 1,
-  },
-  productPrice: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#7c9885',
-  },
-  productDescription: {
-    fontSize: 14,
-    color: '#5a6c57',
-    marginBottom: 8,
-    lineHeight: 20,
-  },
-  productComposition: {
-    fontSize: 12,
-    color: '#8a9688',
-    marginBottom: 12,
-    fontStyle: 'italic',
-  },
-  buyButton: {
-    backgroundColor: '#7c9885',
-    paddingVertical: 10,
     paddingHorizontal: 16,
-    borderRadius: 8,
+  },
+  imageContainer: {
+    width: '100%',
+    height: 320,
+    backgroundColor: '#121714',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  plantEmoji: {
+    fontSize: 80,
+  },
+  plantImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 12,
+    resizeMode: 'cover',
+  },
+  plantName: {
+    color: '#FFFFFF',
+    fontSize: 22,
+    fontWeight: 'bold',
+    letterSpacing: -0.015,
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    paddingTop: 20,
+  },
+  plantLatinName: {
+    color: '#a2b4a9',
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 20,
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    paddingTop: 4,
+  },
+  favoriteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#2b362f',
+    borderRadius: 20,
+    height: 40,
+    paddingHorizontal: 16,
+    gap: 8,
+    marginHorizontal: 16,
+    marginVertical: 12,
     alignSelf: 'flex-start',
   },
-  buyButtonText: {
-    color: '#fff',
+  favoriteButtonText: {
+    color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
-  },
-  // Nouveaux styles pour la wishlist des produits
-  productsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  wishlistAccessButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(124, 152, 133, 0.1)',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-    position: 'relative',
-  },
-  wishlistAccessIcon: {
-    fontSize: 16,
-    color: '#7c9885',
-    marginRight: 6,
-  },
-  wishlistAccessText: {
-    fontSize: 14,
-    color: '#7c9885',
-    fontWeight: '600',
-  },
-  wishlistBadge: {
-    position: 'absolute',
-    top: -4,
-    right: -4,
-    backgroundColor: '#ff4444',
-    borderRadius: 10,
-    minWidth: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  wishlistBadgeText: {
-    color: '#fff',
-    fontSize: 12,
     fontWeight: 'bold',
+    letterSpacing: 0.015,
   },
-  productTitleSection: {
-    flex: 1,
+  tabsContainer: {
+    paddingBottom: 12,
+    paddingTop: 20,
+  },
+  tabsWrapper: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  productFavoriteButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(124, 152, 133, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 12,
-  },
-  productFavoriteActive: {
-    backgroundColor: '#7c9885',
-  },
-  productFavoriteIcon: {
-    fontSize: 16,
-    color: '#7c9885',
-  },
-  productFavoriteIconActive: {
-    color: '#fff',
-  },
-  productActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 12,
-  },
-  addToWishlistButton: {
-    backgroundColor: 'rgba(124, 152, 133, 0.1)',
-    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#404f46',
     paddingHorizontal: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#7c9885',
+    gap: 32,
   },
-  addToWishlistButtonActive: {
-    backgroundColor: '#7c9885',
-  },
-  addToWishlistText: {
-    color: '#7c9885',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  addToWishlistTextActive: {
-    color: '#fff',
-  },
-  plantFavoriteButton: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(124, 152, 133, 0.1)',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#7c9885',
+  tab: {
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 16,
-    gap: 8,
+    borderBottomWidth: 3,
+    borderBottomColor: 'transparent',
+    paddingBottom: 13,
+    paddingTop: 16,
   },
-  plantFavoriteActive: {
-    backgroundColor: '#7c9885',
+  tabActive: {
+    borderBottomColor: '#FFFFFF',
   },
-  plantFavoriteIcon: {
-    fontSize: 20,
-    color: '#7c9885',
+  tabText: {
+    color: '#a2b4a9',
+    fontSize: 14,
     fontWeight: 'bold',
+    letterSpacing: 0.015,
   },
-  plantFavoriteIconActive: {
-    color: '#fff',
+  tabTextActive: {
+    color: '#FFFFFF',
   },
-  plantFavoriteText: {
-    color: '#7c9885',
+  tabContentContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  tabContent: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 24,
+    paddingBottom: 12,
+    paddingTop: 4,
+  },
+  descriptionSection: {
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  descriptionSubtitle: {
+    color: '#96c5a8',
     fontSize: 16,
     fontWeight: '600',
+    lineHeight: 24,
+    marginBottom: 8,
   },
-  plantFavoriteTextActive: {
-    color: '#fff',
+  sectionTitle: {
+    color: '#FFFFFF',
+    fontSize: 22,
+    fontWeight: 'bold',
+    letterSpacing: -0.015,
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    paddingTop: 20,
+  },
+  symptomsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  symptomTag: {
+    backgroundColor: '#2b362f',
+    borderRadius: 16,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  symptomTagText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  contraindicationItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    backgroundColor: '#121714',
+    paddingHorizontal: 16,
+    minHeight: 56,
+  },
+  warningIcon: {
+    backgroundColor: '#2b362f',
+    borderRadius: 8,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contraindicationText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 24,
+    flex: 1,
+  },
+  productItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    backgroundColor: '#121714',
+    paddingHorizontal: 16,
+    minHeight: 72,
+    paddingVertical: 8,
+    justifyContent: 'space-between',
+  },
+  productInfo: {
+    flex: 1,
+  },
+  productName: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 24,
+  },
+  productDescription: {
+    color: '#a2b4a9',
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 20,
+  },
+  productButton: {
+    backgroundColor: '#2b362f',
+    borderRadius: 16,
+    height: 32,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  productButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '500',
   },
 });

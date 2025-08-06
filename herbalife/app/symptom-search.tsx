@@ -10,10 +10,14 @@ import {
 import { router } from 'expo-router';
 import { symptomCategories, findPlantsBySymptoms } from '../data/DataPlant';
 import { responsive } from '../utils/responsive';
+import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from '../i18n';
+import { getSymptomTranslation, getCategoryTranslation } from '../utils/symptomTranslations';
 
 export default function SymptomSearchScreen() {
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const { t } = useTranslation();
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories(prev =>
@@ -49,11 +53,11 @@ export default function SymptomSearchScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.content}>
         <Text style={[styles.title, { fontSize: responsive.fontSize.title }]}>
-          Recherche par symptômes 🔍
+          {t('symptomSearch.title')}
         </Text>
         
         <Text style={[styles.subtitle, { fontSize: responsive.fontSize.medium }]}>
-          Sélectionnez vos symptômes pour découvrir les plantes qui peuvent vous aider
+          {t('symptomSearch.subtitle')}
         </Text>
 
         {selectedSymptoms.length > 0 && (
@@ -63,7 +67,7 @@ export default function SymptomSearchScreen() {
             marginBottom: responsive.spacing.lg
           }]}>
             <Text style={[styles.selectedTitle, { fontSize: responsive.fontSize.large }]}>
-              Symptômes sélectionnés ({selectedSymptoms.length})
+              {t('symptomSearch.selectedSymptoms')} ({selectedSymptoms.length})
             </Text>
             <View style={styles.selectedGrid}>
               {selectedSymptoms.map((symptom, index) => (
@@ -76,7 +80,7 @@ export default function SymptomSearchScreen() {
                   onPress={() => toggleSymptom(symptom)}
                 >
                   <Text style={[styles.selectedSymptomText, { fontSize: responsive.fontSize.small }]}>
-                    {symptom} ✕
+                    {getSymptomTranslation(symptom, t)} ✕
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -91,7 +95,7 @@ export default function SymptomSearchScreen() {
               onPress={searchPlants}
             >
               <Text style={[styles.searchButtonText, { fontSize: responsive.fontSize.medium }]}>
-                Rechercher les plantes ({selectedSymptoms.length} symptôme{selectedSymptoms.length > 1 ? 's' : ''})
+                {t('symptomSearch.searchButton')} ({selectedSymptoms.length} {selectedSymptoms.length > 1 ? t('symptomSearch.symptoms') : t('symptomSearch.symptom')})
               </Text>
             </TouchableOpacity>
           </View>
@@ -115,7 +119,7 @@ export default function SymptomSearchScreen() {
                   {category.emoji}
                 </Text>
                 <Text style={[styles.categoryName, { fontSize: responsive.fontSize.medium }]}>
-                  {category.name}
+                  {getCategoryTranslation(category.name, t)}
                 </Text>
                 <Text style={[styles.categoryCount, { fontSize: responsive.fontSize.small }]}>
                   {category.symptoms.length}
@@ -150,7 +154,7 @@ export default function SymptomSearchScreen() {
                       { fontSize: responsive.fontSize.small },
                       selectedSymptoms.includes(symptom) && styles.symptomTextSelected
                     ]}>
-                      {symptom}
+                      {getSymptomTranslation(symptom, t)}
                     </Text>
                     <View style={[
                       styles.checkbox,
@@ -167,6 +171,32 @@ export default function SymptomSearchScreen() {
           </View>
         ))}
       </ScrollView>
+      
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/body-zones')}>
+          <Ionicons name="home-outline" size={24} color="#9eb7a8" />
+          <Text style={styles.navText}>{t('common.home')}</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="search" size={24} color="#FFFFFF" />
+          <Text style={styles.navTextActive}>{t('common.search')}</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/wishlist')}>
+          <Ionicons name="bookmark-outline" size={24} color="#9eb7a8" />
+          <Text style={styles.navText}>{t('common.favorites')}</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/profile')}>
+          <Ionicons name="person-outline" size={24} color="#9eb7a8" />
+          <Text style={styles.navText}>{t('common.profile')}</Text>
+        </TouchableOpacity>
+      </View>
+      
+      {/* Espacement final */}
+      <View style={styles.bottomSpacer} />
     </SafeAreaView>
   );
 }
@@ -301,5 +331,36 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    backgroundColor: '#1a2f1f',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#2d3e32',
+  },
+  navItem: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  navItemActive: {
+    // Pas de fond coloré, uniquement des changements de couleur d'icônes et de texte
+  },
+  navText: {
+    fontSize: 12,
+    color: '#9eb7a8',
+    marginTop: 4,
+  },
+  navTextActive: {
+    fontSize: 12,
+    color: '#FFFFFF',
+    marginTop: 4,
+    fontWeight: '600',
+  },
+  bottomSpacer: {
+    height: 20,
+    backgroundColor: '#122118',
   },
 });

@@ -1,507 +1,275 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
-  Alert,
-  ActivityIndicator,
   Image,
-  StatusBar,
-  Platform,
+  SafeAreaView,
+  Dimensions,
 } from 'react-native';
 import { router } from 'expo-router';
-import { responsive } from '../utils/responsive';
-import { useContraindications } from '../contexts/ContraindicationsContext';
-import { firstLaunchService } from '../utils/firstLaunchService';
-import { useMobileResponsive } from '../hooks/useMobileResponsive';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import { useContraindications } from '@/contexts/ContraindicationsContext';
+import { useTranslation } from '../i18n';
 
-// Mapping des images pour chaque contre-indication
-const contraindicationImages: { [key: string]: any } = {
-  'grossesse': require('../assets/images/grossesse.png'),
-  'allaitement': require('../assets/images/grossesse.png'), // Réutilise grossesse pour allaitement
-  'hypertension': require('../assets/images/hypertension.png'),
-  'anticoagulants': require('../assets/images/medicaments.png'),
-  'allergies_asteracees': require('../assets/images/medecin.png'),
-  'diabete': require('../assets/images/diabete.png'),
-  'troubles_hepatiques': require('../assets/images/hepatique.png'),
-  'troubles_renaux': require('../assets/images/reins.png'),
-  'epilepsie': require('../assets/images/medecin.png'),
-  'chirurgie': require('../assets/images/medecin.png'),
-};
+const { width } = Dimensions.get('window');
 
-interface Contraindication {
+interface ContraindicationItem {
   id: string;
-  label: string;
+  title: string;
   description: string;
-  emoji: string;
-  category: string;
+  imageUrl: string;
 }
-
-const contraindications: Contraindication[] = [
-  {
-    id: 'grossesse',
-    label: 'Grossesse',
-    description: 'Éviter les plantes déconseillées pendant la grossesse',
-    emoji: '🤱',
-    category: 'Femmes'
-  },
-  {
-    id: 'allaitement',
-    label: 'Allaitement',
-    description: 'Prudence avec les plantes pendant l\'allaitement',
-    emoji: '🍼',
-    category: 'Femmes'
-  },
-  {
-    id: 'hypertension',
-    label: 'Hypertension',
-    description: 'Éviter les plantes qui peuvent augmenter la tension',
-    emoji: '💓',
-    category: 'Cardiovasculaire'
-  },
-  {
-    id: 'anticoagulants',
-    label: 'Anticoagulants',
-    description: 'Interactions possibles avec les médicaments anticoagulants',
-    emoji: '💊',
-    category: 'Médicaments'
-  },
-  {
-    id: 'allergies_asteracees',
-    label: 'Allergies Astéracées',
-    description: 'Allergie aux plantes de la famille des astéracées',
-    emoji: '🌼',
-    category: 'Allergies'
-  },
-  {
-    id: 'diabete',
-    label: 'Diabète',
-    description: 'Surveiller les plantes qui affectent la glycémie',
-    emoji: '🩸',
-    category: 'Métabolisme'
-  },
-  {
-    id: 'troubles_hepatiques',
-    label: 'Troubles hépatiques',
-    description: 'Éviter les plantes hépatotoxiques',
-    emoji: '🫘',
-    category: 'Organes'
-  },
-  {
-    id: 'troubles_renaux',
-    label: 'Troubles rénaux',
-    description: 'Prudence avec les plantes diurétiques',
-    emoji: '🫘',
-    category: 'Organes'
-  },
-  {
-    id: 'epilepsie',
-    label: 'Épilepsie',
-    description: 'Éviter les plantes convulsivantes',
-    emoji: '🧠',
-    category: 'Neurologique'
-  },
-  {
-    id: 'chirurgie',
-    label: 'Chirurgie prévue',
-    description: 'Arrêter certaines plantes avant une intervention',
-    emoji: '🏥',
-    category: 'Médical'
-  }
-];
 
 export default function ContraindicationsScreen() {
   const [selectedContraindications, setSelectedContraindications] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const { userContraindications, saveContraindications, clearContraindications } = useContraindications();
-  const mobile = useMobileResponsive();
-  const insets = useSafeAreaInsets();
+  const contraindicationsContext = useContraindications();
+  const { t } = useTranslation();
 
-  useEffect(() => {
-    if (!isLoading) {
-      setSelectedContraindications(userContraindications);
+  const contraindicationsData: ContraindicationItem[] = [
+    {
+      id: 'grossesse',
+      title: t('contraindications.conditions.grossesse.title'),
+      description: t('contraindications.conditions.grossesse.description'),
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCA-IIMGpk2vAGMIkE8Xnl7HVuaWD4aZDLqFMOhxh9lXQZ0H8QZ4mILFmjAOyQr0OlQqfPahkjyEzukeHVmnPAAFAY7VevjdjqgyIlsoGoLmj0sfET-297BUJNUd66UZpcG6GZ6DpHB0yoCjjIIe_VDBzCCH-i4S6HuR42yCrqQTGSQE0DjeKy14spRZ-dmA46ZLkXU4LBrC4zY-99vEM3bt1J7Qco9J5DElK2U2o_gE2HPXmAJGLyLS9wOpdAlrWIOHA9IflOLWJE'
+    },
+    {
+      id: 'cardiovasculaire',
+      title: t('contraindications.conditions.cardiovasculaire.title'),
+      description: t('contraindications.conditions.cardiovasculaire.description'),
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD9-9Pt9OJugsMzbU5BVo1coy5DVzClfcyGdxg_J4N3jlA9qEJ36bHAVDJHkZlOx2enzdfvvAMTM5c0ffG-sIJqBthIG8UdFwOPa_wD1yaOpK_JwVP3HiDZCb8HF91glmwafJfxSlPMo9BCmPFsh5O8Uns6tbu3NWXjJ06BszWPvt5YHpVqx6uHZoeQM_ulGSRTTcffQqcggG6ofvmSOO6GbK_E8nGkhDqCuHbWInB_hCmJwQqz1swFgcRCooEWkxbKeF4aBGBRmFU'
+    },
+    {
+      id: 'allergies',
+      title: t('contraindications.conditions.allergies.title'),
+      description: t('contraindications.conditions.allergies.description'),
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuATk4kefTNt_Fx93GO09QhmCv9-_gadOPGP0B-iijQk-EaoNwuhCAheYthRZpN62XvAVRDvGkA130esBHO3aY4GSa_UrxoBA-ak7TNBTIh5NdKIxHX8SlTlC1YE5YY2m9_MY7o7Pv2RkOZfbdElYzhl044eP6NOGAU1oms-coKW6x9GZkb6UnO0SjKBCLOHC_DTFJn3VTPtQ-O1dZSpTGl-3YFTMmkRSk33DDrh23V09gQXhXl-VnX9FsFGVJKGqOzYV8upVZ-ZQuY'
+    },
+    {
+      id: 'diabete',
+      title: t('contraindications.conditions.diabete.title'),
+      description: t('contraindications.conditions.diabete.description'),
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBg1WgrQRbxRbmMpK9dewaTYCPw5Ux825M09O0fjwXxnNkjySlTqsqgVN2ZzgiS3SiuzzvPVlgciBq4I8eI10YZZy-pX9tg1lSWoLw54zhosD4-rQh_NGFBdjgTMOpRdbU1CbCE6rbd3VYTgR9ah3dDM8taJEv5Ue2ctXOz4Lg09d0EkbHegV61LM3-5XtuVlN6LN-6_UCxrKBLLUG4-nig-wUQYkFJlnApf5ztXqr0Vkwsr9cz8EHV4UPAyKWYIey-QpRH-8tYsrU'
+    },
+    {
+      id: 'hypertension',
+      title: t('contraindications.conditions.hypertension.title'),
+      description: t('contraindications.conditions.hypertension.description'),
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCXhvzf40eZz8npZeDtrX63rfeE2ooKLc8-oc-Wqfl3a3ZCMIESlULbSnEieUdV9cXtCnPMH7M3lOoba87mLDV8c1lNxRUAr2Bw4ckZrMGo6a6KucOHsNzAK1Cne7JFGkVZNSpbHVuNcfyEhdFrTvOT_58yTrnl5dikUls8NLj6t5RrkBRUvQM1sB2x0OcgQoMCTHLmYviXp6Yxhr_cd0w4TcJqkxQT_2UHeuYTuZrnY5YlAwwpkGOnwpUIaG4_zy6zQN8_P538qto'
+    },
+    {
+      id: 'hypotension',
+      title: t('contraindications.conditions.hypotension.title'),
+      description: t('contraindications.conditions.hypotension.description'),
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCrT0A_mYvsBq8nEWjh01OYPVCXUqBes5WRCsghvCbRo6czA-j5P5Ol97GM5goBNd37z4lHEX9E-7YOwS5Vd4-S4VfXC1h9iDf0RoWHgz3MrmfQBDJME2HqjvaJN6PLzErx9uY9_8aFYfz1IwWPxbLAKNx6w-8e6nL7G5A7Jw0u4cs6SDwslnczrzBWwsSDmm0tMk6crbuCqq4ZRgVcviW7N7PUBxF9F7sQbO6dGqJOzayz0xeBQjA63njWBiaHwugic9mcdamc-II'
+    },
+    {
+      id: 'reins',
+      title: t('contraindications.conditions.reins.title'),
+      description: t('contraindications.conditions.reins.description'),
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCYcl_ysPng12BVaULJdqPiONGmRsi5BPFgnhLywDw5t7b55Tc_K2NQho3r6TYQnRerNrlUCRC0uogY9j1CUH1-k-A9M0RU7_v-5GwjtknRDGSqQ0Dw1nkg4wM90w9hfC-NvPMRA4DMAeu8WFbcvPeLVlzxinWzG6ZaT47QiHhq8JLIC4GZNI6OljGXwxoGpXu4pnfovyCFp6bisdkrIwJ2sBEn7lxMedb_ZbzZw--v7WykfVC9nWyLY7TNMjNIcpdh2Ky40t0vnw8'
+    },
+    {
+      id: 'hepatique',
+      title: t('contraindications.conditions.hepatique.title'),
+      description: t('contraindications.conditions.hepatique.description'),
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDESgpUDeEiwM49WlizzB1w0KtFrtRYXSudoN3SvY_CVk4S6qFKCi41pAieVqeumv7zo-b52_HbB8uMB1Xh8g5QqBcQcETrSJ88AlIpv4W9oBFv42iM0Mbt2Ukhk50_0XD5_QnRzhRqadIO2SHHMQh03nC4SegktieN4VROKCaq2yfzUadSduCQXAD24fRMvbpkLm1prIycDYxzzb7SIPl2hv7qsiUecfcrzJ1PGs_f9eSGgrT4dkbyY5E6yDV-wzKdc_N3tgVnUUs'
+    },
+    {
+      id: 'coagulation',
+      title: t('contraindications.conditions.coagulation.title'),
+      description: t('contraindications.conditions.coagulation.description'),
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAJVr-acelubJIgdJdLl7leE_HYJNaal7JtUsgtfrtEpruKJt2xr3DLGNauIKxvxA3yQbxVv8JNfhVsBv1fjqzVyRTAqPEpDKm0FWD1i6159aMNgwFVmPy4XkyGmPpwTKRccsuTFGeKPTL2XfR7rjJrcvL7C-OohC9-hNYR6M2lwjZTQwbWXBloG82x7fa35YzxymIJY2lpT94tBT9PyTjraHdEbaAig4r5PgsRHcsuaB6DTtwukDzol2roq9Inr2jfCO80JRql3SA'
+    },
+    {
+      id: 'medicaments',
+      title: t('contraindications.conditions.medicaments.title'),
+      description: t('contraindications.conditions.medicaments.description'),
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBPhAjVsm8htUV-d4tAGWDYnD9OudWMX06MMFk7d4QLbwnuMi8MoWO2tCfe75VcR_cXIP1nbo2cBA0DgEU8Os4DbaixphIVVA4oNwzGQAOitRhwLIA1N9QetZA4v07nY5ddjbiTm42gZ-TsOnQeHng5LI_WX34gRLhndAiG1NrpYQanJ2-K47tt7llowxJU1H6ZjNLFBYiddwtCPKOSZkUwdXo9-9G8oneUKV9BOUQbmW-OvK5adcvVj7iOovPBV8uqLirgBYK-PNk'
+    },
+    {
+      id: 'autres',
+      title: t('contraindications.conditions.autres.title'),
+      description: t('contraindications.conditions.autres.description'),
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBGH9_IH93Nb4M58Xh3exO2-coAUuI5TRPAxBimgDf4wgGAKaMUfdCmt6zsJ-SqzOS6ND-FnXg9vqo1WqGXzbAYwkqKsa6ncSDbGsCD_EWzMjDlS5rVmP7UlKdLUKzHNSQMCPYhHC8MbYqyLB3D3eGl5a0MsoBF1CfAVt8OgRGx6Pm3iqSe5JwtLn2_gJk05cYsuNMr3hYwuWqlwQE9_xrV-URSXb1wLggjSiIUi0MXLVl8bV0bfEZwfAz4Di79BzeoOpqLeiTDhDw'
     }
-  }, [userContraindications, isLoading]);
-
-  useEffect(() => {
-    // Simuler un petit délai de chargement pour une meilleure UX
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
+  ];
 
   const toggleContraindication = (id: string) => {
-    setSelectedContraindications(prev => {
-      if (prev.includes(id)) {
-        return prev.filter(item => item !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
-  };
-
-  const continueToBodyZone = async () => {
-    try {
-      // Sauvegarder les contre-indications sélectionnées
-      await saveContraindications(selectedContraindications);
-      
-      // Marquer l'onboarding comme complété
-      await firstLaunchService.markOnboardingCompleted();
-      
-      // Naviguer vers les zones du corps
-      router.push('/body-zones');
-    } catch (error) {
-      console.error('Erreur lors de la sauvegarde:', error);
-      Alert.alert('Erreur', 'Impossible de sauvegarder les contre-indications');
-    }
-  };
-
-  const skipContraindications = async () => {
-    try {
-      await clearContraindications();
-      await firstLaunchService.markOnboardingCompleted();
-      router.push('/body-zones');
-    } catch (error) {
-      console.error('Erreur lors de la suppression:', error);
-      router.push('/body-zones');
-    }
-  };
-
-  // Fonction pour créer des styles dynamiques basés sur la taille d'écran
-  const createStyles = () => StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#122117',
-      paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight || 0, // Gestion Android
-    },
-    scrollView: {
-      flex: 1,
-    },
-    loadingContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: mobile.contentPadding,
-    },
-    loadingText: {
-      marginTop: mobile.safeSpacing,
-      fontSize: mobile.bodySize,
-      color: '#96C4A8',
-      textAlign: 'center',
-      fontWeight: '500',
-    },
-    
-    // Header Section
-    header: {
-      paddingHorizontal: mobile.contentPadding,
-      paddingTop: Math.max(insets.top, mobile.safeSpacing * 1.5), // Respecte les safe areas
-      paddingBottom: mobile.safeSpacing,
-      backgroundColor: 'transparent',
-      marginBottom: mobile.safeSpacing,
-      borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 0,
-    },
-    headerTop: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: mobile.safeSpacing / 2,
-    },
-    continueHeaderButton: {
-      backgroundColor: '#38E078',
-      paddingHorizontal: mobile.safeSpacing,
-      paddingVertical: mobile.safeSpacing / 2,
-      borderRadius: mobile.isMobile ? 8 : 10,
-    },
-    continueHeaderButtonText: {
-      color: '#ffffff',
-      fontSize: mobile.bodySize - 2,
-      fontWeight: '600',
-    },
-    nextButton: {
-      backgroundColor: '#38E078',
-      paddingHorizontal: mobile.safeSpacing,
-      paddingVertical: mobile.safeSpacing / 2,
-      borderRadius: mobile.isMobile ? 8 : 10,
-    },
-    nextButtonText: {
-      color: '#ffffff',
-      fontSize: mobile.bodySize - 2,
-      fontWeight: '600',
-    },
-    title: {
-      fontSize: mobile.titleSize,
-      fontWeight: 'bold',
-      color: '#FFFFFF',
-      textAlign: 'center',
-      marginBottom: 0,
-      flex: 1,
-    },
-    subtitle: {
-      fontSize: mobile.bodySize,
-      color: '#96C4A8',
-      textAlign: 'center',
-      lineHeight: mobile.bodySize * 1.4,
-      marginBottom: mobile.safeSpacing,
-    },
-    progressIndicator: {
-      backgroundColor: 'rgba(124, 152, 133, 0.1)',
-      paddingHorizontal: mobile.safeSpacing,
-      paddingVertical: mobile.safeSpacing / 2,
-      borderRadius: mobile.isMobile ? 12 : 16,
-      alignSelf: 'center',
-    },
-    progressText: {
-      fontSize: mobile.bodySize - 2,
-      color: '#96C4A8',
-      fontWeight: '600',
-    },
-    skipButtonHeader: {
-      backgroundColor: 'transparent',
-      borderWidth: 1,
-      borderColor: '#96C4A8',
-      borderRadius: mobile.isMobile ? 8 : 10,
-      paddingHorizontal: mobile.safeSpacing,
-      paddingVertical: mobile.safeSpacing / 2,
-      alignSelf: 'center',
-      marginBottom: mobile.safeSpacing / 2,
-    },
-    skipButtonHeaderText: {
-      color: '#96C4A8',
-      fontSize: mobile.bodySize - 3,
-      fontWeight: '600',
-      textAlign: 'center',
-    },
-
-    // Grid Container
-    gridContainer: {
-      paddingHorizontal: mobile.contentPadding,
-      flexDirection: 'column',
-      gap: mobile.safeSpacing / 2,
-    },
-
-    // Card Styles
-    contraindicationCard: {
-      width: '100%',
-      backgroundColor: 'transparent',
-      borderRadius: mobile.isMobile ? 8 : 10,
-      padding: mobile.safeSpacing / 1.5,
-      marginBottom: 0,
-      borderWidth: 0,
-      borderColor: 'transparent',
-      position: 'relative',
-      minHeight: mobile.isMobile ? 80 : 100,
-      flexDirection: 'row',
-      alignItems: 'center',
-      ...responsive.shadow.small,
-    },
-    selectedCard: {
-      borderWidth: 2,
-      borderColor: '#38E078',
-      backgroundColor: 'rgba(56, 224, 120, 0.1)',
-    },
-
-    // Image Container
-    imageContainer: {
-      backgroundColor: 'transparent',
-      padding: 0,
-      borderRadius: 0,
-      marginBottom: 0,
-      marginLeft: mobile.safeSpacing / 2,
-      width: mobile.isMobile ? 60 : 80,
-      height: mobile.isMobile ? 60 : 80,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    contraindicationImage: {
-      width: mobile.isMobile ? 50 : 70,
-      height: mobile.isMobile ? 50 : 70,
-    },
-
-    // Content Container
-    contentContainer: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'flex-start',
-      paddingRight: mobile.safeSpacing / 2,
-    },
-
-    // Text Styles
-    contraindicationTitle: {
-      fontSize: mobile.isMobile ? mobile.bodySize : mobile.bodySize + 1,
-      fontWeight: 'bold',
-      color: '#FFFFFF',
-      textAlign: 'left',
-      marginBottom: mobile.safeSpacing / 4,
-      flex: 0,
-    },
-    contraindicationDescription: {
-      fontSize: mobile.bodySize - 2,
-      color: '#96C4A8',
-      textAlign: 'left',
-      lineHeight: (mobile.bodySize - 2) * 1.2,
-      marginBottom: 0,
-    },
-
-    // Selection Indicator
-    selectionIndicator: {
-      position: 'absolute',
-      bottom: mobile.safeSpacing / 2,
-      right: mobile.safeSpacing / 2,
-      width: 24,
-      height: 24,
-      borderRadius: 12,
-      backgroundColor: '#38E078',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    checkIcon: {
-      color: '#ffffff',
-      fontSize: mobile.bodySize,
-      fontWeight: 'bold',
-    },
-
-    // Info Container
-    infoContainer: {
-      paddingHorizontal: mobile.contentPadding,
-      marginVertical: mobile.safeSpacing,
-    },
-    infoCard: {
-      backgroundColor: '#e8f4f8',
-      borderRadius: mobile.isMobile ? 12 : 16,
-      padding: mobile.safeSpacing,
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderLeftWidth: 4,
-      borderLeftColor: '#4a90a4',
-    },
-    infoEmoji: {
-      fontSize: mobile.bodySize + 2,
-      marginRight: mobile.safeSpacing / 2,
-    },
-    infoText: {
-      flex: 1,
-      fontSize: mobile.bodySize - 1,
-      color: '#2d4a52',
-      lineHeight: (mobile.bodySize - 1) * 1.4,
-    },
-    bottomSpacer: {
-      height: mobile.safeSpacing * 2,
-    },
-  });
-
-  const styles = createStyles();
-
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor="#122117" />
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#7c9885" />
-          <Text style={styles.loadingText}>
-            Préparation de vos contre-indications...
-          </Text>
-        </View>
-      </View>
+    setSelectedContraindications(prev => 
+      prev.includes(id) 
+        ? prev.filter(item => item !== id)
+        : [...prev, id]
     );
-  }
+  };
+
+  const handleClose = () => {
+    router.push('/')
+  };
+
+  const handleNext = async () => {
+    await contraindicationsContext.saveContraindications(selectedContraindications);
+    router.push('/body-zones');
+  };
+
+  const renderContraindicationItem = (item: ContraindicationItem) => {
+    const isSelected = selectedContraindications.includes(item.id);
+    
+    return (
+      <TouchableOpacity
+        key={item.id}
+        style={[styles.contraindicationItem, isSelected && styles.selectedItem]}
+        onPress={() => toggleContraindication(item.id)}
+      >
+        <View style={styles.contraindicationContent}>
+          <Text style={styles.contraindicationLabel}>{t('contraindications.label')}</Text>
+          <Text style={styles.contraindicationTitle}>{item.title}</Text>
+          <Text style={styles.contraindicationDescription}>{item.description}</Text>
+        </View>
+        <Image source={{ uri: item.imageUrl }} style={styles.contraindicationImage} />
+      </TouchableOpacity>
+    );
+  };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#122117" />
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* En-tête */}
+    <SafeAreaView style={styles.container}>
+      <ThemedView style={styles.wrapper}>
+        {/* Header */}
         <View style={styles.header}>
-          <View style={styles.headerTop}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => router.back()}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.backIcon}>←</Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.subtitle}>
-            Sélectionnez vos conditions médicales pour recevoir des recommandations sécurisées
-          </Text>
-          <TouchableOpacity
-            style={styles.skipButtonHeader}
-            onPress={skipContraindications}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.skipButtonHeaderText}>
-              Ignorer cette étape
-            </Text>
+          <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+            <Text style={styles.closeIcon}>{t('contraindications.close')}</Text>
           </TouchableOpacity>
-          <View style={styles.progressIndicator}>
-            <Text style={styles.progressText}>
-              {selectedContraindications.length} sélectionnée(s)
-            </Text>
-          </View>
+          <TouchableOpacity onPress={handleNext} style={styles.nextButton}>
+            <Text style={styles.nextText}>{t('contraindications.next')}</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Liste des contre-indications */}
-        <View style={styles.gridContainer}>
-          {contraindications.map((contraindication) => {
-            const isSelected = selectedContraindications.includes(contraindication.id);
-            
-            return (
-              <TouchableOpacity
-                key={contraindication.id}
-                style={[
-                  styles.contraindicationCard,
-                  isSelected && styles.selectedCard
-                ]}
-                onPress={() => toggleContraindication(contraindication.id)}
-                activeOpacity={0.8}
-              >
-                {/* Contenu principal avec titre et description à gauche */}
-                <View style={styles.contentContainer}>
-                  <Text style={styles.contraindicationTitle}>{contraindication.label}</Text>
-                  <Text style={styles.contraindicationDescription}>
-                    {contraindication.description}
-                  </Text>
-                </View>
+        {/* Title */}
+        <Text style={styles.title}>{t('contraindications.title')}</Text>
+        {/* Content */}
+        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+          {contraindicationsData.map(renderContraindicationItem)}
+        </ScrollView>
 
-                {/* Image principale à droite */}
-                <View style={styles.imageContainer}>
-                  <Image
-                    source={contraindicationImages[contraindication.id]}
-                    style={styles.contraindicationImage}
-                    resizeMode="contain"
-                  />
-                </View>
-
-                {/* Indicateur de sélection */}
-                {isSelected && (
-                  <View style={styles.selectionIndicator}>
-                    <Text style={styles.checkIcon}>✓</Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-            );
-          })}
+        {/* Footer */}
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>
+            {t('contraindications.footerText')}
+          </Text>
         </View>
-
-        {/* Information supplémentaire */}
-        <View style={styles.infoContainer}>
-          <View style={styles.infoCard}>
-            <Text style={styles.infoEmoji}>ℹ️</Text>
-            <Text style={styles.infoText}>
-              Ces informations nous aident à filtrer les plantes qui pourraient ne pas vous convenir
-            </Text>
-          </View>
-        </View>
-
-        {/* Espace en bas */}
-        <View style={styles.bottomSpacer} />
-      </ScrollView>
-    </View>
+      </ThemedView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#122118',
+  },
+  wrapper: {
+    flex: 1,
+    backgroundColor: '#122118',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    paddingBottom: 8,
+  },
+  closeButton: {
+    width: 48,
+    height: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeIcon: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontWeight: '400',
+  },
+  nextButton: {
+    width: 48,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
+  nextText: {
+    color: '#96c5a8',
+    fontSize: 16,
+    fontWeight: 'bold',
+    letterSpacing: 0.015,
+  },
+  title: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontWeight: 'bold',
+    lineHeight: 28,
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 8,
+    textAlign: 'left',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  contraindicationItem: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    gap: 16,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  selectedItem: {
+    backgroundColor: '#1a2a1f',
+    borderColor: '#39e079',
+  },
+  contraindicationContent: {
+    flex: 2,
+    gap: 4,
+  },
+  contraindicationLabel: {
+    color: '#96c5a8',
+    fontSize: 14,
+    fontWeight: '400',
+  },
+  contraindicationTitle: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+    lineHeight: 20,
+  },
+  contraindicationDescription: {
+    color: '#96c5a8',
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 18,
+  },
+  contraindicationImage: {
+    flex: 1,
+    aspectRatio: 16 / 9,
+    borderRadius: 12,
+    backgroundColor: '#366347',
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 20,
+  },
+  footerText: {
+    color: '#96c5a8',
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 18,
+  },
+});

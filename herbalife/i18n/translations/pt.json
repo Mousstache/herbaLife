@@ -1,0 +1,161 @@
+{
+  "common": {
+    "home": "Início",
+    "search": "Pesquisa",
+    "favorites": "Favoritos",
+    "profile": "Perfil",
+    "plants": "plantas",
+    "viewDetails": "Ver detalhes",
+    "back": "Voltar",
+    "selectSymptoms": "Selecione seus sintomas para descobrir plantas que podem ajudar",
+    "selectedSymptoms": "Sintomas selecionados",
+    "settings": "Configurações",
+    "notifications": "Notificações",
+    "language": "Idioma"
+  },
+  "wishlist": {
+    "title": "❤️ Minhas plantas favoritas",
+    "emptyTitle": "Sem plantas favoritas",
+    "emptyText": "Adicione suas plantas favoritas para encontrá-las facilmente aqui"
+  },
+  "bodyZones": {
+    "title": "Zonas do corpo",
+    "subtitle": "Selecione uma zona para descobrir plantas adequadas"
+  },
+  "profile": {
+    "title": "Meu Perfil",
+    "language": "Idioma",
+    "darkMode": "Modo escuro",
+    "contactUs": "Contate-nos",
+    "aboutUs": "Sobre nós",
+    "privacyPolicy": "Política de privacidade",
+    "termsOfService": "Termos de serviço",
+    "logout": "Sair"
+  },
+  "zoneSymptoms": {
+    "symptomsFor": "Sintomas para",
+    "search": "Pesquisar"
+  },
+  "contraindications": {
+    "title": "Suas Preferências Pessoais",
+    "label": "Contraindicações",
+    "next": "Próximo",
+    "close": "✕",
+    "footerText": "Suas informações permanecem confidenciais e são usadas apenas para personalizar suas recomendações.",
+    "conditions": {
+      "grossesse": {
+        "title": "Gravidez",
+        "description": "Algumas plantas podem ser contraindicadas durante a gravidez."
+      },
+      "cardiovasculaire": {
+        "title": "Problemas Cardiovasculares",
+        "description": "Se você tem problemas cardíacos, algumas plantas podem interagir com seus medicamentos."
+      },
+      "allergies": {
+        "title": "Alergias",
+        "description": "Por favor indique se você tem alergias conhecidas a certas plantas."
+      },
+      "diabete": {
+        "title": "Diabetes",
+        "description": "Algumas plantas podem afetar os níveis de açúcar no sangue."
+      },
+      "hypertension": {
+        "title": "Hipertensão",
+        "description": "Algumas plantas podem influenciar a pressão arterial."
+      },
+      "hypotension": {
+        "title": "Hipotensão",
+        "description": "Algumas plantas podem influenciar a pressão arterial."
+      },
+      "reins": {
+        "title": "Problemas Renais",
+        "description": "Se você tem problemas renais, algumas plantas podem ser contraindicadas."
+      },
+      "hepatique": {
+        "title": "Problemas Hepáticos",
+        "description": "Se você tem problemas hepáticos, algumas plantas podem ser contraindicadas."
+      },
+      "coagulation": {
+        "title": "Distúrbios de Coagulação",
+        "description": "Algumas plantas podem afetar a coagulação sanguínea."
+      },
+      "medicaments": {
+        "title": "Uso de Medicamentos",
+        "description": "Indique se você está tomando medicamentos, pois algumas plantas podem interagir."
+      },
+      "autres": {
+        "title": "Outras Condições Médicas",
+        "description": "Se você tem outras condições médicas, por favor especifique-as."
+      }
+    }
+  },
+  "symptoms": {
+    "categories": {
+      "nervous_mental": "Sistema nervoso e mental",
+      "cardiovascular": "Sistema cardiovascular e circulação",
+      "respiratory": "Sistema respiratório",
+      "digestive": "Sistema digestivo",
+      "immune": "Sistema imunitário"
+    },
+    "list": {
+      "chronic_fatigue": "Fadiga crônica",
+      "sleep_disorders": "Distúrbios do sono / insônia",
+      "stress": "Estresse",
+      "anxiety": "Ansiedade",
+      "irritability": "Irritabilidade",
+      "nervousness": "Nervosismo",
+      "memory_problems": "Problemas de memória",
+      "concentration_difficulty": "Dificuldade de concentração",
+      "headaches": "Dores de cabeça",
+      "migraines": "Enxaquecas",
+      "dizziness": "Tonturas",
+      "burnout": "Esgotamento",
+      "mild_depression": "Depressão leve",
+      "nervous_tics": "Tiques nervosos",
+      "stress_muscle_spasms": "Espasmos musculares por estresse",
+      "sensory_hypersensitivity": "Hipersensibilidade sensorial",
+      "brain_fog": "Névoa mental",
+      "temporary_confusion": "Confusão temporária",
+      "hypertension": "Hipertensão",
+      "hypotension": "Hipotensão",
+      "palpitations": "Palpitações",
+      "heavy_legs": "Pernas pesadas",
+      "varicose_veins": "Varizes",
+      "edema": "Edemas",
+      "poor_circulation": "Circulação periférica fraca (mãos/pés frios)",
+      "mild_tachycardia": "Taquicardia leve",
+      "chest_tightness": "Sensação de opressão torácica (não cardíaca)",
+      "dry_cough": "Tosse seca",
+      "productive_cough": "Tosse produtiva",
+      "cold": "Resfriado",
+      "allergic_rhinitis": "Rinite alérgica",
+      "sinusitis": "Sinusite",
+      "bronchitis": "Bronquite",
+      "mild_asthma": "Asma leve",
+      "shortness_of_breath": "Falta de ar",
+      "hoarseness": "Rouquidão",
+      "mucous_dryness": "Secura das mucosas",
+      "sore_throat": "Garganta irritada",
+      "bloating": "Inchaço",
+      "intestinal_gas": "Gases intestinais",
+      "constipation": "Constipação",
+      "diarrhea": "Diarreia",
+      "slow_digestion": "Digestão lenta",
+      "nausea": "Náuseas",
+      "acid_reflux": "Refluxo ácido",
+      "intestinal_cramps": "Cólicas intestinais",
+      "loss_of_appetite": "Perda de apetite",
+      "liver_congestion": "Congestão hepática",
+      "bad_breath": "Mau hálito (halitose)",
+      "heavy_feeling_after_meals": "Sensação de peso após as refeições",
+      "early_ulcer": "Úlcera inicial",
+      "morning_mouth_coating": "Boca pastosa ao acordar",
+      "frequent_infections": "Infecções frequentes",
+      "post_infectious_fatigue": "Fadiga pós-infecciosa",
+      "low_general_immunity": "Baixa imunidade geral",
+      "recurrent_ent_infections": "Infecções ORL recorrentes",
+      "chronic_inflammation": "Inflamação crônica",
+      "slightly_swollen_lymph_nodes": "Gânglios ligeiramente inchados"
+    }
+  }
+}

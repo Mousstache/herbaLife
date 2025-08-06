@@ -1,0 +1,267 @@
+{
+  "common": {
+    "home": "Accueil",
+    "search": "Recherche",
+    "favorites": "Favoris",
+    "profile": "Profil",
+    "plants": "plantes",
+    "viewDetails": "Voir détails",
+    "back": "Retour",
+    "selectSymptoms": "Sélectionnez vos symptômes pour découvrir les plantes qui peuvent vous aider",
+    "selectedSymptoms": "Symptômes sélectionnés",
+    "settings": "Paramètres",
+    "notifications": "Notifications",
+    "language": "Langue",
+    "loading": "Chargement...",
+    "zoneNotFound": "Zone non trouvée"
+  },
+  "wishlist": {
+    "title": "❤️ Mes plantes favorites",
+    "emptyTitle": "Aucune plante favorite",
+    "emptyText": "Ajoutez vos plantes préférées pour les retrouver facilement ici"
+  },
+  "bodyZones": {
+    "title": "Zones du corps",
+    "subtitle": "Choisissez votre zone d'intérêt",
+    "head": {
+      "title": "Tête",
+      "subtitle": "Cerveau, mental",
+      "symptoms": "symptômes"
+    },
+    "eyes": {
+      "title": "Yeux & Vision",
+      "subtitle": "Santé oculaire",
+      "symptoms": "symptômes"
+    },
+    "throat": {
+      "title": "Gorge",
+      "subtitle": "Respiratoire",
+      "symptoms": "symptômes"
+    },
+    "heart": {
+      "title": "Cœur",
+      "subtitle": "Cardio & circulation",
+      "symptoms": "symptômes"
+    },
+    "hormonal": {
+      "title": "Système hormonal & reproducteur",
+      "subtitle": "Hormones & fertilité",
+      "symptoms": "symptômes"
+    },
+    "digestive": {
+      "title": "Système digestif",
+      "subtitle": "Digestion",
+      "symptoms": "symptômes"
+    },
+    "urinary": {
+      "title": "Système urinaire & détox",
+      "subtitle": "Détoxification",
+      "symptoms": "symptômes"
+    },
+    "joints": {
+      "title": "Articulations & Muscles",
+      "subtitle": "Mobilité & confort",
+      "symptoms": "symptômes"
+    },
+    "skin": {
+      "title": "Peau",
+      "subtitle": "Santé cutanée",
+      "symptoms": "symptômes"
+    },
+    "hairNails": {
+      "title": "Cheveux & Ongles",
+      "subtitle": "Beauté & vitalité",
+      "symptoms": "symptômes"
+    },
+    "immune": {
+      "title": "Système Immunitaire",
+      "subtitle": "Défenses naturelles",
+      "symptoms": "symptômes"
+    }
+  },
+  "profile": {
+    "title": "Mon Profil",
+    "language": "Langue",
+    "darkMode": "Mode sombre",
+    "contactUs": "Nous contacter",
+    "aboutUs": "À propos de nous",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfService": "Conditions d'utilisation",
+    "logout": "Déconnexion"
+  },
+  "recommendations": {
+    "title": "Nos Recommandations Personnalisées",
+    "viewDetails": "Voir les détails",
+    "adaptogen": "Adaptogène",
+    "zones": {
+      "tete": "Tête & Cerveau",
+      "gorge": "Gorge & Respiratoire",
+      "coeur": "Cœur & Circulation",
+      "ventre": "Ventre & Digestion",
+      "articulations": "Articulations & Muscles",
+      "peau": "Peau & Beauté",
+      "sommeil": "Sommeil & Détente",
+      "immunite": "Immunité & Énergie"
+    }
+  },
+  "symptomSearch": {
+    "title": "Recherche par symptômes 🔍",
+    "subtitle": "Sélectionnez vos symptômes pour découvrir les plantes qui peuvent vous aider",
+    "searchButton": "Rechercher les plantes",
+    "symptom": "symptôme",
+    "symptoms": "symptômes",
+    "selectedSymptoms": "Symptômes sélectionnés"
+  },
+  "symptomResults": {
+    "title": "Résultats de la recherche 🌿",
+    "searchedSymptoms": "Symptômes recherchés :",
+    "plantsFound": "plante(s) trouvée(s)",
+    "noResultsTitle": "Aucune plante trouvée 😔",
+    "noResultsText": "Nous n'avons pas encore de plantes référencées pour ces symptômes spécifiques.",
+    "modifySearch": "Modifier ma recherche",
+    "newSearch": "Nouvelle recherche",
+    "plant": "plante",
+    "plants": "plantes"
+  },
+  "home": {
+    "appName": "PhytoConseil",
+    "tagline": "Votre guide naturel de bien-être",
+    "welcomeTitle": "Découvrez la puissance des plantes",
+    "welcomeText": "Explorez des remèdes naturels personnalisés basés sur la phytothérapie et l'homéopathie pour améliorer votre bien-être.",
+    "personalizedAdvice": "Conseils personnalisés",
+    "naturalHundredPercent": "100% naturel",
+    "scientificBasis": "Base scientifique",
+    "startDiagnosis": "Commencer mon diagnostic",
+    "actionSubtext": "En quelques minutes, obtenez des recommandations adaptées",
+    "confidentialAndFree": "Confidentiel et gratuit"
+  },
+  "menu": {
+    "startMyJourney": "Commencer mon parcours"
+  },
+  "zoneSymptoms": {
+    "symptomsFor": "Symptômes pour",
+    "search": "Rechercher"
+  },
+  "contraindications": {
+    "title": "Vos Préférences Personnelles",
+    "label": "Contre-indications",
+    "next": "Suivant",
+    "close": "✕",
+    "footerText": "Vos informations restent confidentielles et sont utilisées uniquement pour personnaliser vos recommandations.",
+    "conditions": {
+      "grossesse": {
+        "title": "Grossesse",
+        "description": "Certaines plantes peuvent être déconseillées pendant la grossesse."
+      },
+      "cardiovasculaire": {
+        "title": "Problèmes Cardiovasculaires",
+        "description": "Si vous avez des problèmes cardiaques, certaines plantes peuvent interagir avec vos médicaments."
+      },
+      "allergies": {
+        "title": "Allergies",
+        "description": "Veuillez indiquer si vous avez des allergies connues à certaines plantes."
+      },
+      "diabete": {
+        "title": "Diabète",
+        "description": "Certaines plantes peuvent affecter la glycémie."
+      },
+      "hypertension": {
+        "title": "Hypertension",
+        "description": "Certaines plantes peuvent influencer la tension artérielle."
+      },
+      "hypotension": {
+        "title": "Hypotension",
+        "description": "Certaines plantes peuvent influencer la tension artérielle."
+      },
+      "reins": {
+        "title": "Problèmes Rénaux",
+        "description": "Si vous avez des problèmes rénaux, certaines plantes peuvent être déconseillées."
+      },
+      "hepatique": {
+        "title": "Problèmes Hépatiques",
+        "description": "Si vous avez des problèmes hépatiques, certaines plantes peuvent être déconseillées."
+      },
+      "coagulation": {
+        "title": "Troubles de la Coagulation",
+        "description": "Certaines plantes peuvent affecter la coagulation sanguine."
+      },
+      "medicaments": {
+        "title": "Prise de Médicaments",
+        "description": "Indiquez si vous prenez des médicaments, car certaines plantes peuvent interagir."
+      },
+      "autres": {
+        "title": "Autres Conditions Médicales",
+        "description": "Si vous avez d'autres conditions médicales, veuillez les préciser."
+      }
+    }
+  },
+  "symptoms": {
+    "categories": {
+      "nervous_mental": "Système nerveux & mental",
+      "cardiovascular": "Système cardiovasculaire & circulation",
+      "respiratory": "Système respiratoire",
+      "digestive": "Système digestif",
+      "immune": "Système immunitaire"
+    },
+    "list": {
+      "chronic_fatigue": "Fatigue chronique",
+      "sleep_disorders": "Troubles du sommeil / insomnie",
+      "stress": "Stress",
+      "anxiety": "Anxiété",
+      "irritability": "Irritabilité",
+      "nervousness": "Nervosité",
+      "memory_problems": "Troubles de la mémoire",
+      "concentration_difficulty": "Difficulté de concentration",
+      "headaches": "Maux de tête",
+      "migraines": "Migraines",
+      "dizziness": "Vertiges",
+      "burnout": "Burn-out",
+      "mild_depression": "Dépression légère",
+      "nervous_tics": "Tics nerveux",
+      "stress_muscle_spasms": "Spasmes musculaires liés au stress",
+      "sensory_hypersensitivity": "Hypersensibilité sensorielle",
+      "brain_fog": "Brouillard mental (\"brouillard cérébral\")",
+      "temporary_confusion": "Confusion passagère",
+      "hypertension": "Hypertension",
+      "hypotension": "Hypotension",
+      "palpitations": "Palpitations",
+      "heavy_legs": "Jambes lourdes",
+      "varicose_veins": "Varices",
+      "edema": "Œdèmes",
+      "poor_circulation": "Circulation périphérique faible (mains/pieds froids)",
+      "mild_tachycardia": "Tachycardie légère",
+      "chest_tightness": "Sensation d'oppression thoracique (non cardiaque)",
+      "dry_cough": "Toux sèche",
+      "productive_cough": "Toux grasse",
+      "cold": "Rhume",
+      "allergic_rhinitis": "Rhinite allergique",
+      "sinusitis": "Sinusite",
+      "bronchitis": "Bronchite",
+      "mild_asthma": "Asthme léger",
+      "shortness_of_breath": "Essoufflement",
+      "hoarseness": "Enrouement",
+      "mucous_dryness": "Sécheresse des muqueuses",
+      "sore_throat": "Gorge irritée",
+      "bloating": "Ballonnements",
+      "intestinal_gas": "Gaz intestinaux",
+      "constipation": "Constipation",
+      "diarrhea": "Diarrhée",
+      "slow_digestion": "Digestion lente",
+      "nausea": "Nausées",
+      "acid_reflux": "Reflux acide",
+      "intestinal_cramps": "Crampes intestinales",
+      "loss_of_appetite": "Perte d'appétit",
+      "liver_congestion": "Foie engorgé",
+      "bad_breath": "Mauvaise haleine (halitose)",
+      "heavy_feeling_after_meals": "Sensation de lourdeur après repas",
+      "early_ulcer": "Ulcère débutant",
+      "morning_mouth_coating": "Bouche pâteuse au réveil",
+      "frequent_infections": "Infections fréquentes",
+      "post_infectious_fatigue": "Fatigue post-infectieuse",
+      "low_general_immunity": "Faible immunité générale",
+      "recurrent_ent_infections": "Infections ORL récurrentes",
+      "chronic_inflammation": "Inflammation chronique",
+      "slightly_swollen_lymph_nodes": "Ganglions légèrement enflés"
+    }
+  }
+}
